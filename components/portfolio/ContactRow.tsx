@@ -4,8 +4,9 @@ import { cn } from '@/lib/utils'
 type ContactLink = {
   label: string
   href: string
-  arrow: '→' | '↗'
+  arrow: '→' | '↗' | '↓'
   external?: boolean
+  download?: boolean
 }
 
 const links: ContactLink[] = [
@@ -26,6 +27,12 @@ const links: ContactLink[] = [
     arrow: '↗',
     external: true,
   },
+  {
+    label: 'Resume.pdf',
+    href: profile.resumeUrl,
+    arrow: '↓',
+    download: true,
+  },
 ]
 
 export function ContactRow({ className }: { className?: string }) {
@@ -41,12 +48,25 @@ export function ContactRow({ className }: { className?: string }) {
           <a
             href={l.href}
             target={l.external ? '_blank' : undefined}
-            rel={l.external ? 'noopener noreferrer' : undefined}
+            rel={
+              l.external
+                ? 'noopener noreferrer'
+                : l.download
+                  ? 'noopener'
+                  : undefined
+            }
+            download={l.download ? '' : undefined}
             className="group inline-flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
           >
             <span
               aria-hidden="true"
-              className="inline-block w-3 text-muted-foreground/60 transition-[color,transform] duration-200 group-hover:text-primary group-hover:translate-x-0.5"
+              className={cn(
+                'inline-block w-3 text-muted-foreground/60 transition-[color,transform] duration-200',
+                // Download arrow nudges down on hover; navigation arrows nudge right.
+                l.arrow === '↓'
+                  ? 'group-hover:text-foreground/85 group-hover:translate-y-0.5'
+                  : 'group-hover:text-primary group-hover:translate-x-0.5',
+              )}
             >
               {l.arrow}
             </span>

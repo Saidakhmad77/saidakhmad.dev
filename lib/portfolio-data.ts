@@ -7,6 +7,7 @@ export type Profile = {
   beliefs: string
   hobbies: string[]
   location: string
+  resumeUrl: string
   contact: {
     email: string
     github: string
@@ -97,6 +98,7 @@ export const profile: Profile = {
   beliefs: "Simulators should fail honestly.",
   hobbies: ["Football", "F1"],
   location: "Seoul, South Korea",
+  resumeUrl: "/resume.pdf",
   contact: {
     email: "lionuz669@gmail.com",
     github: "Saidakhmad77",

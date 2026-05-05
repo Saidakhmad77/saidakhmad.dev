@@ -221,18 +221,15 @@ function FeaturedEntry({
           {project.name}
         </h3>
 
-        {/* Tagline — body, foreground. */}
+        {/* Tagline — body, foreground. The longer "detail" copy that used to
+            sit below this lives in the PDF resume now; the website specializes
+            in identity + present-state, not full project changelogs. */}
         <p className="mt-4 max-w-[36rem] text-pretty text-[15px] leading-relaxed text-foreground/85 sm:text-base">
           {project.tagline}
         </p>
 
-        {/* Detail — secondary body, slightly muted. Always shown for featured. */}
-        <p className="mt-3 max-w-[36rem] text-pretty text-[14px] leading-relaxed text-muted-foreground sm:text-[15px]">
-          {project.detail}
-        </p>
-
         {/* Stack chips — mono, border-only, sharp corners. */}
-        <ul className="mt-7 flex flex-wrap gap-x-2 gap-y-2">
+        <ul className="mt-6 flex flex-wrap gap-x-2 gap-y-2">
           {project.stack.map((s) => (
             <li key={s}>
               <span className="inline-flex items-center border border-border/70 px-2.5 py-1 font-mono text-[11px] tracking-tight text-foreground/75">
@@ -306,18 +303,13 @@ function SupportingEntry({
           {project.name}
         </h3>
 
-        {/* Tagline. */}
+        {/* Tagline — the second-line "detail" copy lives in the PDF resume. */}
         <p className="mt-3 max-w-[34rem] text-pretty text-[14.5px] leading-relaxed text-foreground/80 sm:text-[15px]">
           {project.tagline}
         </p>
 
-        {/* Detail — secondary, muted. */}
-        <p className="mt-2.5 max-w-[34rem] text-pretty text-[13.5px] leading-relaxed text-muted-foreground sm:text-[14px]">
-          {project.detail}
-        </p>
-
         {/* Stack chips. */}
-        <ul className="mt-6 flex flex-wrap gap-x-2 gap-y-2">
+        <ul className="mt-5 flex flex-wrap gap-x-2 gap-y-2">
           {project.stack.map((s) => (
             <li key={s}>
               <span className="inline-flex items-center border border-border/70 px-2.5 py-1 font-mono text-[11px] tracking-tight text-foreground/75">

@@ -216,11 +216,10 @@ function RoleEntry({
   const period = formatPeriod(role.period)
   const isMaum = role.current === true
 
-  // Pick the most signal-carrying bullets for each role. Maum.ai is rendered
-  // compact (no bullets — its depth lives in §01 / NOW). The others get 2–3
-  // hand-pickable-by-position bullets, taken in source order. We keep this
-  // dumb on purpose — no curation arrays the reviewer can flag as fragile.
-  const visibleBullets = isMaum ? [] : role.bullets.slice(0, 3)
+  // No bullets in Trajectory. Maum.ai cross-references §01 / Now; the older
+  // roles (ChoiceTech, STEMON) point at the PDF resume for their breakdowns.
+  // The website surfaces summary + stack so the trajectory reads as a *shape*,
+  // not a CV listing.
 
   return (
     <motion.li
@@ -295,27 +294,9 @@ function RoleEntry({
           </div>
         ) : null}
 
-        {/* Bullets — only for non-current roles. 2–3 entries from source order. */}
-        {visibleBullets.length > 0 ? (
-          <ul className="mt-5 space-y-2.5">
-            {visibleBullets.map((b, i) => (
-              <li
-                key={i}
-                className="grid grid-cols-[1.25rem_1fr] items-start gap-x-2 text-pretty text-[14px] leading-relaxed text-foreground/80 sm:text-[14.5px]"
-              >
-                <span
-                  aria-hidden="true"
-                  className="pt-2 font-mono text-[10px] tracking-[0.05em] text-muted-foreground/45"
-                >
-                  ·
-                </span>
-                <span>{b}</span>
-              </li>
-            ))}
-          </ul>
-        ) : null}
-
-        {/* Stack chips — same chip pattern as NowBlock + ProjectsGrid. */}
+        {/* Stack chips — same chip pattern as NowBlock + ProjectsGrid.
+            Per-role bullet content lives in the PDF resume; this section
+            surfaces the trajectory's shape, not its line items. */}
         <ul className="mt-6 flex flex-wrap gap-x-2 gap-y-2">
           {role.stack.map((s) => (
             <li key={s}>

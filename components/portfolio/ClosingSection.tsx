@@ -350,8 +350,9 @@ type ContactLink = {
   label: string
   display: string
   href: string
-  arrow: '→' | '↗'
+  arrow: '→' | '↗' | '↓'
   external?: boolean
+  download?: boolean
 }
 
 function buildContactLinks(): ContactLink[] {
@@ -378,6 +379,14 @@ function buildContactLinks(): ContactLink[] {
       href: profile.contact.linkedinUrl,
       arrow: '↗',
       external: true,
+    },
+    {
+      key: 'resume',
+      label: 'Resume',
+      display: 'resume.pdf',
+      href: profile.resumeUrl,
+      arrow: '↓',
+      download: true,
     },
   ]
 }
@@ -445,12 +454,20 @@ function ClosingContactRow({
   link: ContactLink
   variants: Variants | undefined
 }) {
+  const isDownload = link.arrow === '↓'
   return (
     <motion.li variants={variants}>
       <a
         href={link.href}
         target={link.external ? '_blank' : undefined}
-        rel={link.external ? 'noopener noreferrer' : undefined}
+        rel={
+          link.external
+            ? 'noopener noreferrer'
+            : link.download
+              ? 'noopener'
+              : undefined
+        }
+        download={link.download ? '' : undefined}
         className={cn(
           'group grid grid-cols-[5.5rem_1fr_auto] items-center gap-x-4 py-5 sm:grid-cols-[7rem_1fr_auto] sm:gap-x-6 md:py-6',
           'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background',
@@ -467,10 +484,15 @@ function ClosingContactRow({
         </span>
 
         {/* Arrow — sits in its own column so the row is a clean three-column
-            manifest entry. Slides on hover, no color flip (cyan budget). */}
+            manifest entry. Slides on hover, no color flip (cyan budget).
+            Download arrow nudges down (save direction); navigation arrows
+            nudge right (forward direction). */}
         <span
           aria-hidden="true"
-          className="inline-block w-4 text-right font-mono text-base text-muted-foreground/60 transition-[color,transform] duration-200 group-hover:translate-x-0.5 group-hover:text-foreground/90 sm:text-lg"
+          className={cn(
+            'inline-block w-4 text-right font-mono text-base text-muted-foreground/60 transition-[color,transform] duration-200 group-hover:text-foreground/90 sm:text-lg',
+            isDownload ? 'group-hover:translate-y-0.5' : 'group-hover:translate-x-0.5',
+          )}
         >
           {link.arrow}
         </span>

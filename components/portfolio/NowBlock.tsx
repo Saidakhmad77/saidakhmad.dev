@@ -2,7 +2,6 @@
 
 import { motion, useReducedMotion, type Variants } from 'framer-motion'
 import { experience, now } from '@/lib/portfolio-data'
-import { cn } from '@/lib/utils'
 
 // Match the hero's motion grammar exactly: opacity + small y, ease-out cubic-bezier, ~400ms.
 const EASE = [0.16, 1, 0.3, 1] as const
@@ -13,16 +12,6 @@ const itemVariants: Variants = {
     opacity: 1,
     y: 0,
     transition: { duration: 0.4, ease: EASE },
-  },
-}
-
-const bulletsContainer: Variants = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.05,
-    },
   },
 }
 
@@ -43,82 +32,10 @@ function formatPeriod(period: string): string {
   return `${fmtStart} → ${fmtEnd}`
 }
 
-// Phrases that, when present in a bullet, get pulled into <code> for technical signal.
-// Order matters: longer, more specific tokens first so they match before shorter substrings.
-const TECH_TOKENS: { token: string; emphasis?: 'primary' | 'mono' }[] = [
-  { token: 'worv.env.lights', emphasis: 'primary' },
-  { token: 'worv.env.climate', emphasis: 'primary' },
-  { token: 'worv.core.logging', emphasis: 'primary' },
-  { token: 'JoyMapping dataclass', emphasis: 'primary' },
-  { token: 'BaseExporter', emphasis: 'primary' },
-  { token: 'PositionTracker', emphasis: 'mono' },
-  { token: 'PointInstancer', emphasis: 'mono' },
-  { token: 'OmniGraph', emphasis: 'mono' },
-  { token: 'Ackermann', emphasis: 'mono' },
-  { token: 'NavMesh', emphasis: 'mono' },
-  { token: 'Nucleus', emphasis: 'mono' },
-  { token: 'PhysX', emphasis: 'mono' },
-  { token: 'teleop_node', emphasis: 'mono' },
-]
-
-// Render a bullet, replacing each known TECH_TOKEN with a styled <code>.
-// Cyan budget: only `emphasis: 'primary'` tokens get the accent. Cap at 1 cyan per bullet
-// so we don't blow the section's accent budget.
-function renderBullet(text: string): React.ReactNode {
-  const segments: { kind: 'text' | 'code'; value: string; emphasis?: 'primary' | 'mono' }[] = [
-    { kind: 'text', value: text },
-  ]
-
-  let primaryUsed = false
-
-  for (const { token, emphasis } of TECH_TOKENS) {
-    for (let i = 0; i < segments.length; i++) {
-      const seg = segments[i]
-      if (seg.kind !== 'text') continue
-      const idx = seg.value.indexOf(token)
-      if (idx === -1) continue
-      const before = seg.value.slice(0, idx)
-      const after = seg.value.slice(idx + token.length)
-      // Decide accent. Only one cyan per bullet — degrade to mono if budget already spent.
-      let resolved: 'primary' | 'mono' = emphasis ?? 'mono'
-      if (resolved === 'primary' && primaryUsed) resolved = 'mono'
-      if (resolved === 'primary') primaryUsed = true
-
-      const replacement: typeof segments = [
-        { kind: 'text', value: before },
-        { kind: 'code', value: token, emphasis: resolved },
-        { kind: 'text', value: after },
-      ].filter((s) => !(s.kind === 'text' && s.value === '')) as typeof segments
-
-      segments.splice(i, 1, ...replacement)
-      i += replacement.length - 1
-    }
-  }
-
-  return segments.map((s, i) => {
-    if (s.kind === 'text') return <span key={i}>{s.value}</span>
-    const isPrimary = s.emphasis === 'primary'
-    return (
-      <code
-        key={i}
-        className={cn(
-          'rounded-[3px] px-1 py-px font-mono text-[0.92em] tracking-tight',
-          isPrimary
-            ? 'bg-primary/8 text-primary'
-            : 'bg-foreground/5 text-foreground/85',
-        )}
-      >
-        {s.value}
-      </code>
-    )
-  })
-}
-
 export function NowBlock() {
   const reduceMotion = useReducedMotion()
   const role = experience.find((e) => e.current) ?? experience[0]
   const variantsItem = reduceMotion ? undefined : itemVariants
-  const variantsBullets = reduceMotion ? undefined : bulletsContainer
 
   const period = formatPeriod(role.period)
   const stack = role.stack
@@ -200,49 +117,28 @@ export function NowBlock() {
           </div>
         </motion.div>
 
-        {/* Two-column body on lg+: summary (left, narrower) | bullets (right, wider).
-            Single-column stack on mobile/tablet so prose stays readable. */}
-        <div className="mt-12 grid grid-cols-1 gap-y-12 lg:grid-cols-12 lg:gap-x-12 lg:gap-y-0">
-          {/* Summary column. */}
-          <motion.div
-            variants={variantsItem}
-            initial={reduceMotion ? false : 'hidden'}
-            whileInView="show"
-            viewport={{ once: true, margin: '-15%' }}
-            className="lg:col-span-4 lg:sticky lg:top-24 lg:self-start"
-          >
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
-              Mandate
-            </p>
-            <p className="mt-3 max-w-[34rem] text-pretty text-base leading-relaxed text-foreground/85 lg:text-[17px]">
-              {role.summary}
-            </p>
-          </motion.div>
+        {/* Mandate — single sentence stating what the role is. The detailed
+            "what I shipped" content lives in the PDF resume; this section
+            specializes in present-state ("where I am, what's true this month")
+            rather than career-CV impact bullets. */}
+        <motion.div
+          variants={variantsItem}
+          initial={reduceMotion ? false : 'hidden'}
+          whileInView="show"
+          viewport={{ once: true, margin: '-15%' }}
+          className="mt-12"
+        >
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
+            Mandate
+          </p>
+          <p className="mt-3 max-w-[42rem] text-pretty text-base leading-relaxed text-foreground/85 lg:text-[17px]">
+            {role.summary}
+          </p>
+        </motion.div>
 
-          {/* Bullets column. */}
-          <motion.ol
-            variants={variantsBullets}
-            initial={reduceMotion ? false : 'hidden'}
-            whileInView="show"
-            viewport={{ once: true, margin: '-15%' }}
-            className="lg:col-span-8"
-          >
-            {role.bullets.map((b, i) => (
-              <BulletRow
-                key={i}
-                index={i + 1}
-                text={b}
-                isLast={i === role.bullets.length - 1}
-                variants={variantsItem}
-              />
-            ))}
-          </motion.ol>
-        </div>
-
-        {/* /now sub-block — what's true *this month*. Lives between the impact bullets
-            (where I work) and the Stack chips (what I work with). No new big header;
-            this is metadata extending the section. Manifest divider matches the
-            "Also shipped" / "Education" idiom used elsewhere. Zero new cyan. */}
+        {/* /now sub-block — what's true *this month*. The new center of gravity
+            for this section: not "here's what I shipped at this job" but "here's
+            where my head is right now." */}
         <NowSubBlock reduceMotion={!!reduceMotion} variantsItem={variantsItem} />
 
         {/* Stack chips — bottom row, full-width, mono caps. */}
@@ -271,47 +167,6 @@ export function NowBlock() {
         </motion.div>
       </div>
     </section>
-  )
-}
-
-// ─── Sub-components ─────────────────────────────────────────────────────────
-
-function BulletRow({
-  index,
-  text,
-  isLast,
-  variants,
-}: {
-  index: number
-  text: string
-  isLast: boolean
-  variants: Variants | undefined
-}) {
-  const idx = index.toString().padStart(2, '0')
-  return (
-    <motion.li
-      variants={variants}
-      className={cn(
-        'group relative grid grid-cols-[2.25rem_1fr] gap-x-4 py-5 sm:grid-cols-[2.5rem_1fr] sm:gap-x-6',
-        isLast ? '' : 'border-b border-border/40',
-      )}
-    >
-      {/* Index — small mono, with a hairline tick that subtly extends on hover. */}
-      <div className="relative flex items-start pt-[0.2rem]">
-        <span className="font-mono text-[11px] tracking-[0.05em] text-muted-foreground/60">
-          {idx}
-        </span>
-        <span
-          aria-hidden="true"
-          className="absolute left-7 top-[0.6rem] h-px w-3 bg-border transition-all duration-300 group-hover:w-5 group-hover:bg-primary/60 sm:left-8"
-        />
-      </div>
-
-      {/* Bullet body — comfortable line-height, mid-weight foreground. */}
-      <p className="text-pretty text-[15px] leading-relaxed text-foreground/85 sm:text-base">
-        {renderBullet(text)}
-      </p>
-    </motion.li>
   )
 }
 
