@@ -93,10 +93,26 @@ export function Hero() {
             {profile.name}
           </motion.h1>
 
+          {/* Nickname — small mono callsign directly under the formal name.
+              Reads as "and people call me Sam" — a personal annotation, not a
+              rebrand. Same mono / tracking grammar as the eyebrow above the
+              name so it ties the identity block together. The leading slash
+              echoes the "/now" / "/uses" manifest idiom used elsewhere. */}
+          <motion.p
+            variants={variantsItem}
+            aria-label={`Also known as ${profile.nickname}`}
+            className="mt-3 font-mono text-[11.5px] uppercase tracking-[0.22em] text-muted-foreground/70"
+          >
+            <span aria-hidden="true" className="text-muted-foreground/45">
+              {'/ '}
+            </span>
+            <span className="text-foreground/65">a.k.a. {profile.nickname}</span>
+          </motion.p>
+
           {/* Title — substantial but secondary. */}
           <motion.p
             variants={variantsItem}
-            className="mt-3 text-balance text-xl text-muted-foreground md:text-2xl"
+            className="mt-4 text-balance text-xl text-muted-foreground md:text-2xl"
           >
             {profile.title}
           </motion.p>

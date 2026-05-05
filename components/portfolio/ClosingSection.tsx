@@ -93,28 +93,33 @@ export function ClosingSection() {
           className="mt-4 h-px w-full bg-border/60"
         />
 
-        {/* (a) Stack + (b) About — side-by-side at lg+, stacked below.
-            About on the left (narrow text column, 5/12) so the prose anchors
-            the section's intellectual weight; Stack on the right (7/12) reads
-            as a manifest of capability. Mobile: About first, then Stack. */}
-        <div className="mt-12 grid grid-cols-1 gap-y-16 md:mt-16 lg:grid-cols-12 lg:gap-x-12 lg:gap-y-0">
-          <AboutBlock variants={variantsItem} reduceMotion={!!reduceMotion} />
+        {/* (a) About — single column, full prose width. Pulled out of the
+            previous side-by-side grid with Stack so the light zone below can
+            cleanly wrap Stack + Uses without splitting on the diagonal. About
+            stays on the dark surface — it's personal voice, not capability
+            inventory, and reads better against the engineered-dark backdrop. */}
+        <AboutBlock variants={variantsItem} reduceMotion={!!reduceMotion} />
+
+        {/* (b + c) Stack + /uses — wrapped in light-section. This is the second
+            inverted-spotlight zone on the page: "what I know" (Stack as
+            professional capability) and "what I actually use" (/uses as daily
+            drivers) live together on the warm off-white surface. The negative
+            inset (-mx-6 md:-mx-10) breaks the wrapper out of the section's
+            horizontal padding so the light bleeds full-width to the viewport
+            edges; inner padding restores the gutter. The 1px hairlines above
+            and below are the seams between dark and light — no gradients. */}
+        <div className="light-section mt-16 -mx-6 border-y border-border/60 px-6 pt-16 pb-20 md:-mx-10 md:mt-20 md:px-10 md:pt-20 md:pb-24">
           <StackBlock
             variantsList={variantsList}
             variantsItem={variantsItem}
             reduceMotion={!!reduceMotion}
           />
+          <UsesBlock
+            variantsList={variantsList}
+            variantsItem={variantsItem}
+            reduceMotion={!!reduceMotion}
+          />
         </div>
-
-        {/* (c) /uses — daily-driver tooling. Distinct from Stack (which is
-            "professional capability") via a manifest divider, smaller chips,
-            and an inline label-prefix on each category. Same chip grammar so
-            the section reads as one block, not two unrelated things. */}
-        <UsesBlock
-          variantsList={variantsList}
-          variantsItem={variantsItem}
-          reduceMotion={!!reduceMotion}
-        />
 
         {/* (d) Closing contact — the final ask. Larger type than the hero's
             ContactRow, separated by a "Reach out" manifest divider. */}
@@ -148,13 +153,15 @@ function AboutBlock({
       initial={reduceMotion ? false : 'hidden'}
       whileInView="show"
       viewport={{ once: true, margin: '-15%' }}
-      className="lg:col-span-5 lg:order-1"
+      // Standalone block now (no longer in a 12-col grid with Stack). Constrained
+      // to a single readable prose column; sits on dark, above the light Stack/Uses zone.
+      className="mt-12 md:mt-16"
     >
       <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
         About
       </p>
 
-      <div className="mt-6 max-w-[34rem] space-y-5 text-pretty text-[15px] leading-relaxed text-foreground/85 sm:text-base">
+      <div className="mt-6 max-w-[36rem] space-y-5 text-pretty text-[15px] leading-relaxed text-foreground/85 sm:text-base">
         <p>
           I build robotics simulation infrastructure. Currently at Maum.ai,
           shipping production extensions on NVIDIA Isaac Sim — a stdlib-only
@@ -208,13 +215,16 @@ function StackBlock({
       initial={reduceMotion ? false : 'hidden'}
       whileInView="show"
       viewport={{ once: true, margin: '-15%' }}
-      className="lg:col-span-7 lg:order-2"
+      // Stands alone inside the light-section wrapper now (no longer paired
+      // with About in a 12-col grid). Full width within the wrapper; the inner
+      // 2-col chip grid still gives it lateral rhythm.
+      className=""
     >
       <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
         Stack
       </p>
 
-      <ul className="mt-6 grid grid-cols-1 gap-y-8 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-10">
+      <ul className="mt-6 grid grid-cols-1 gap-y-8 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-10 lg:grid-cols-3 lg:gap-x-12">
         {skills.map((cat) => (
           <StackCategory key={cat.category} cat={cat} variants={variantsItem} />
         ))}
@@ -284,7 +294,10 @@ function UsesBlock({
       initial={reduceMotion ? false : 'hidden'}
       whileInView="show"
       viewport={{ once: true, margin: '-10%' }}
-      className="mt-24 md:mt-28"
+      // Spacing reduced: Uses now lives inside the same light-section wrapper
+      // as Stack, so it doesn't need to re-establish a fresh visual zone — the
+      // shared warm surface already groups them as siblings.
+      className="mt-16 md:mt-20"
     >
       {/* Manifest divider — same idiom as "Also shipped" / "Reach out" / "/now". */}
       <motion.div

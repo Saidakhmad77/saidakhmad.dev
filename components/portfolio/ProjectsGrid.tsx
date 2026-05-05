@@ -64,7 +64,13 @@ export function ProjectsGrid() {
     <section
       id="projects"
       aria-labelledby="projects-heading"
-      className="relative w-full scroll-mt-16"
+      // light-section: this is the first of two inverted-spotlight zones on the
+      // page (Field Notes + the Stack/Uses zone in Contact). The class flips the
+      // CSS variable subtree — every descendant using bg-background /
+      // text-foreground / border-border / text-primary inverts automatically.
+      // The 1px hairline at the top is the seam between dark NowBlock above
+      // and the warm off-white surface here — no gradient, hard cut.
+      className="light-section relative w-full scroll-mt-16 border-t border-border/60"
     >
       <div className="relative mx-auto w-full max-w-(--breakpoint-2xl) px-6 pt-24 pb-24 md:px-10 md:pt-32 md:pb-32">
         {/* Header row — § 02 / SELECTED  +  span summary on the right. */}

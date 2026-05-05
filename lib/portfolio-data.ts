@@ -2,6 +2,7 @@
 
 export type Profile = {
   name: string
+  nickname: string
   title: string
   brief: string
   beliefs: string
@@ -92,13 +93,14 @@ export type Certificate = {
 
 export const profile: Profile = {
   name: "Saidakhmad Nuriddinov",
+  nickname: "Sam",
   title: "Autonomous Driving Simulation Engineer",
   brief:
     "Building autonomous yard-tractor simulation at Maum.ai — Isaac Sim, Omniverse, USD, PhysX, ROS 2. Backend & full-stack engineer at heart. F1 watcher.",
   beliefs: "Simulators should fail honestly.",
   hobbies: ["Football", "F1"],
   location: "Seoul, South Korea",
-  resumeUrl: "/resume.pdf",
+  resumeUrl: "/resume_saidakhmad.pdf",
   contact: {
     email: "lionuz669@gmail.com",
     github: "Saidakhmad77",

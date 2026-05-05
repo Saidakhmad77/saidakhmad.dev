@@ -134,6 +134,35 @@
   --animate-spotlight: spotlight 2s ease 0.75s 1 forwards;
 }
 
+/* ─── Light-section variant ──────────────────────────────────────────────────
+   Inverted-spotlight tokens for sections that get the warm "instrument panel"
+   off-white treatment instead of the dark default. Apply `.light-section` to
+   any element to flip its subtree. Same token names, different values — every
+   descendant using `bg-background` / `text-foreground` / `border-border`
+   automatically inverts. The accent (`--primary`) shifts to a deeper teal so
+   the cyan still reads against the light background. */
+.light-section {
+  --background: oklch(0.94 0.008 85);
+  --foreground: oklch(0.22 0.008 80);
+  --card: oklch(0.96 0.008 85);
+  --card-foreground: oklch(0.22 0.008 80);
+  --popover: oklch(0.96 0.008 85);
+  --popover-foreground: oklch(0.22 0.008 80);
+  --primary: oklch(0.55 0.16 220);
+  --primary-foreground: oklch(0.96 0.008 85);
+  --secondary: oklch(0.88 0.008 85);
+  --secondary-foreground: oklch(0.22 0.008 80);
+  --muted: oklch(0.88 0.008 85);
+  --muted-foreground: oklch(0.45 0.008 80);
+  --accent: oklch(0.86 0.008 85);
+  --accent-foreground: oklch(0.22 0.008 80);
+  --border: oklch(0.78 0.008 80);
+  --input: oklch(0.78 0.008 80);
+  --ring: oklch(0.55 0.16 220);
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
 @keyframes spotlight {
   0% {
     opacity: 0;
