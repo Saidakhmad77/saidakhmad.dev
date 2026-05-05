@@ -1,7 +1,7 @@
 'use client'
 
 import { motion, useReducedMotion, type Variants } from 'framer-motion'
-import { experience } from '@/lib/portfolio-data'
+import { experience, now } from '@/lib/portfolio-data'
 import { cn } from '@/lib/utils'
 
 // Match the hero's motion grammar exactly: opacity + small y, ease-out cubic-bezier, ~400ms.
@@ -239,6 +239,12 @@ export function NowBlock() {
           </motion.ol>
         </div>
 
+        {/* /now sub-block — what's true *this month*. Lives between the impact bullets
+            (where I work) and the Stack chips (what I work with). No new big header;
+            this is metadata extending the section. Manifest divider matches the
+            "Also shipped" / "Education" idiom used elsewhere. Zero new cyan. */}
+        <NowSubBlock reduceMotion={!!reduceMotion} variantsItem={variantsItem} />
+
         {/* Stack chips — bottom row, full-width, mono caps. */}
         <motion.div
           initial={reduceMotion ? false : { opacity: 0, y: 8 }}
@@ -306,6 +312,137 @@ function BulletRow({
         {renderBullet(text)}
       </p>
     </motion.li>
+  )
+}
+
+// ─── /now sub-block ─────────────────────────────────────────────────────────
+// Three labeled rows: LEARNING / READING / TINKERING. Manifest divider above
+// matches the "Also shipped" / "Reach out" idiom. Two-column rows on sm+
+// (mono caps label left, value right), single-column stack on mobile. No
+// header — the divider's "/now" eyebrow does the framing.
+
+function NowSubBlock({
+  reduceMotion,
+  variantsItem,
+}: {
+  reduceMotion: boolean
+  variantsItem: Variants | undefined
+}) {
+  // Filter out empty rows (`tinkering` is currently []). The data layer is the
+  // truth; render decides whether a row earns its keep this month.
+  const rows: { label: string; render: () => React.ReactNode }[] = []
+
+  if (now.learning.length > 0) {
+    rows.push({
+      label: 'Learning',
+      render: () => (
+        <span className="font-mono text-[13px] tracking-tight text-foreground/85">
+          {now.learning.map((item, i) => (
+            <span key={item}>
+              {item}
+              {i < now.learning.length - 1 ? (
+                <span aria-hidden="true" className="text-border/80">{', '}</span>
+              ) : null}
+            </span>
+          ))}
+        </span>
+      ),
+    })
+  }
+
+  if (now.reading.length > 0) {
+    rows.push({
+      label: 'Reading',
+      render: () => (
+        <span className="font-mono text-[13px] tracking-tight text-foreground/85">
+          {now.reading.map((book, i) => (
+            <span key={book.title}>
+              <em className="not-italic font-mono italic text-foreground/90">
+                {book.title}
+              </em>
+              <span className="text-muted-foreground/70">{' — '}</span>
+              <span className="text-foreground/70">{book.author}</span>
+              {i < now.reading.length - 1 ? (
+                <span aria-hidden="true" className="text-border/80">{', '}</span>
+              ) : null}
+            </span>
+          ))}
+        </span>
+      ),
+    })
+  }
+
+  if (now.tinkering.length > 0) {
+    rows.push({
+      label: 'Tinkering',
+      render: () => (
+        <span className="font-mono text-[13px] tracking-tight text-foreground/85">
+          {now.tinkering.map((item, i) => (
+            <span key={item}>
+              {item}
+              {i < now.tinkering.length - 1 ? (
+                <span aria-hidden="true" className="text-border/80">{', '}</span>
+              ) : null}
+            </span>
+          ))}
+        </span>
+      ),
+    })
+  } else {
+    // Surface an honest "nothing this month" rather than dropping the row.
+    // Keeps the structure visible so /now feels like a habit, not a one-shot.
+    rows.push({
+      label: 'Tinkering',
+      render: () => (
+        <span className="font-mono text-[13px] tracking-tight text-muted-foreground/55">
+          (later)
+        </span>
+      ),
+    })
+  }
+
+  return (
+    <motion.div
+      initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-10%' }}
+      transition={{ duration: 0.4, ease: EASE, delay: 0.08 }}
+      className="mt-16 md:mt-20"
+    >
+      {/* Manifest divider — "/now" eyebrow + hairline. Same idiom as Stack below. */}
+      <div className="flex items-center gap-3">
+        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
+          /now
+        </span>
+        <span aria-hidden="true" className="h-px flex-1 bg-border/40" />
+        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/55">
+          this month
+        </span>
+      </div>
+
+      {/* Rows — small mono caps label on the left, value on the right.
+          Single column on mobile, two-column at sm+. Hairline between rows
+          (only between rows; not above the first or below the last). */}
+      <motion.dl
+        variants={variantsItem}
+        initial={reduceMotion ? false : 'hidden'}
+        whileInView="show"
+        viewport={{ once: true, margin: '-10%' }}
+        className="mt-6 divide-y divide-border/30"
+      >
+        {rows.map((row) => (
+          <div
+            key={row.label}
+            className="grid grid-cols-1 gap-y-1.5 py-3.5 sm:grid-cols-[7rem_1fr] sm:items-baseline sm:gap-x-6 sm:gap-y-0"
+          >
+            <dt className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/60">
+              {row.label}
+            </dt>
+            <dd className="text-pretty leading-relaxed">{row.render()}</dd>
+          </div>
+        ))}
+      </motion.dl>
+    </motion.div>
   )
 }
 

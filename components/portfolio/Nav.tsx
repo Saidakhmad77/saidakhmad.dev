@@ -4,12 +4,13 @@ import { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
-type SectionId = 'work' | 'projects' | 'experience' | 'contact'
+type SectionId = 'work' | 'projects' | 'experience' | 'writing' | 'contact'
 
 const SECTIONS: { id: SectionId; label: string }[] = [
   { id: 'work', label: 'Work' },
   { id: 'projects', label: 'Projects' },
   { id: 'experience', label: 'Experience' },
+  { id: 'writing', label: 'Writing' },
   { id: 'contact', label: 'Contact' },
 ]
 

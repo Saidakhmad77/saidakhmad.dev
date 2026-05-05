@@ -4,7 +4,9 @@ import { motion, useReducedMotion, type Variants } from 'framer-motion'
 import {
   profile,
   skills,
+  uses,
   type SkillCategory,
+  type Uses,
 } from '@/lib/portfolio-data'
 import { cn } from '@/lib/utils'
 
@@ -57,7 +59,7 @@ export function ClosingSection() {
       className="relative w-full scroll-mt-16"
     >
       <div className="relative mx-auto w-full max-w-(--breakpoint-2xl) px-6 pt-24 pb-16 md:px-10 md:pt-32 md:pb-20">
-        {/* Header row — § 04 / CONTACT.  Right side carries an open-to status. */}
+        {/* Header row — § 05 / CONTACT.  Right side carries an open-to status. */}
         <motion.div
           initial={reduceMotion ? false : { opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -67,7 +69,7 @@ export function ClosingSection() {
         >
           <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
             <span aria-hidden="true" className="text-muted-foreground/50">§</span>
-            <span>04</span>
+            <span>05</span>
             <span aria-hidden="true" className="h-3 w-px bg-border" />
             <h2 id="contact-heading" className="text-foreground/80">
               Contact
@@ -104,7 +106,17 @@ export function ClosingSection() {
           />
         </div>
 
-        {/* (c) Closing contact — the final ask. Larger type than the hero's
+        {/* (c) /uses — daily-driver tooling. Distinct from Stack (which is
+            "professional capability") via a manifest divider, smaller chips,
+            and an inline label-prefix on each category. Same chip grammar so
+            the section reads as one block, not two unrelated things. */}
+        <UsesBlock
+          variantsList={variantsList}
+          variantsItem={variantsItem}
+          reduceMotion={!!reduceMotion}
+        />
+
+        {/* (d) Closing contact — the final ask. Larger type than the hero's
             ContactRow, separated by a "Reach out" manifest divider. */}
         <ClosingContact
           variants={variantsItem}
@@ -154,17 +166,21 @@ function AboutBlock({
           STEMON.
         </p>
         <p>
-          B.S. Computer Engineering, Gachon University. Based in Seongnam on a
+          B.S. Computer Engineering, Gachon University. Based in Seoul on a
           D-10 visa. Hireable in Korean{' '}
           <span className="font-mono text-[12.5px] text-foreground/70">
             (TOPIK 4)
           </span>
-          , English{' '}
+          {' '}and English{' '}
           <span className="font-mono text-[12.5px] text-foreground/70">
             (IELTS 7)
           </span>
-          , and Russian. Open to roles in robotics simulation, autonomous
-          systems, or senior backend.
+          . Open to roles in robotics simulation, autonomous systems, or
+          senior backend.
+        </p>
+        <p className="text-foreground/70">
+          Football and Formula 1 outside work — Sunday races are the
+          best free lecture on control problems and team strategy I&rsquo;ve found.
         </p>
       </div>
     </motion.div>
@@ -232,6 +248,88 @@ function StackCategory({
         {cat.items.map((item) => (
           <li key={item}>
             <span className="inline-flex items-center border border-border/70 px-2.5 py-1 font-mono text-[11px] tracking-tight text-foreground/75">
+              {item}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </motion.li>
+  )
+}
+
+// ─── /uses block ────────────────────────────────────────────────────────────
+// Daily-driver tooling — distinct from Stack (professional capability) via:
+//   1. Manifest divider eyebrow ("/uses · daily drivers") instead of a sidebar
+//      "Stack" label, signaling personal-not-professional framing.
+//   2. Inline category label (left column, mono caps) per row rather than a
+//      stacked block, so the rhythm differs from Stack's 2-column grid.
+//   3. Slightly smaller chips, slightly more muted, so they read as
+//      "annotation" not "manifest of capability".
+// Same chip grammar (border-only, mono, sharp corners) keeps it visually in
+// the same family — these are siblings, not strangers.
+// Zero new cyan elements.
+
+function UsesBlock({
+  variantsList,
+  variantsItem,
+  reduceMotion,
+}: {
+  variantsList: Variants | undefined
+  variantsItem: Variants | undefined
+  reduceMotion: boolean
+}) {
+  return (
+    <motion.div
+      variants={variantsList}
+      initial={reduceMotion ? false : 'hidden'}
+      whileInView="show"
+      viewport={{ once: true, margin: '-10%' }}
+      className="mt-24 md:mt-28"
+    >
+      {/* Manifest divider — same idiom as "Also shipped" / "Reach out" / "/now". */}
+      <motion.div
+        variants={variantsItem}
+        className="flex items-center gap-3"
+      >
+        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
+          /uses
+        </span>
+        <span aria-hidden="true" className="h-px flex-1 bg-border/40" />
+        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/55">
+          daily drivers
+        </span>
+      </motion.div>
+
+      {/* Categories — single-column rows. Each row: mono caps category label
+          (fixed-width column on sm+) + chip cluster. Hairline between rows. */}
+      <ul className="mt-6 divide-y divide-border/30">
+        {uses.map((cat) => (
+          <UsesCategory key={cat.category} cat={cat} variants={variantsItem} />
+        ))}
+      </ul>
+    </motion.div>
+  )
+}
+
+function UsesCategory({
+  cat,
+  variants,
+}: {
+  cat: Uses
+  variants: Variants | undefined
+}) {
+  return (
+    <motion.li
+      variants={variants}
+      className="grid grid-cols-1 gap-y-3 py-5 sm:grid-cols-[10rem_1fr] sm:items-baseline sm:gap-x-6 sm:gap-y-0 md:grid-cols-[12rem_1fr]"
+    >
+      <span className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-muted-foreground/65">
+        {cat.category}
+      </span>
+      <ul className="flex flex-wrap gap-x-1.5 gap-y-1.5">
+        {cat.items.map((item) => (
+          <li key={item}>
+            <span className="inline-flex items-center border border-border/55 px-2 py-[3px] font-mono text-[10.5px] tracking-tight text-foreground/65">
               {item}
             </span>
           </li>
@@ -401,7 +499,7 @@ function Footer({ reduceMotion }: { reduceMotion: boolean }) {
 
       {/* Location echo — mirrors the hero's "SEONGNAM · KR". */}
       <span className="hidden sm:inline">
-        <span className="text-muted-foreground/50">Seongnam</span>
+        <span className="text-muted-foreground/50">Seoul</span>
         <span aria-hidden="true" className="mx-2 text-border">·</span>
         <span className="text-muted-foreground/50">KR</span>
       </span>

@@ -28,7 +28,7 @@ const itemVariants: Variants = {
 }
 
 // Derive a short location string (city · country code) for the eyebrow.
-// `profile.location` is "Seongnam, South Korea" — convert to "SEONGNAM · KR".
+// `profile.location` is "Seoul, South Korea" — convert to "SEOUL · KR".
 function shortLocation(loc: string): string {
   const [city] = loc.split(',').map((s) => s.trim())
   return `${city.toUpperCase()} · KR`
@@ -107,6 +107,20 @@ export function Hero() {
             className="mt-7 max-w-[32rem] text-pretty text-base leading-relaxed text-foreground/75"
           >
             {profile.brief}
+          </motion.p>
+
+          {/* Beliefs — a personal aside, not a marketing claim. Mono italic, sub-brief
+              size, with a small leading arrow + hairline divider so it reads as an
+              annotation rather than a continuation of the role description. No cyan. */}
+          <motion.p
+            variants={variantsItem}
+            className="mt-5 flex max-w-[32rem] items-start gap-3 font-mono text-[12.5px] italic leading-relaxed text-foreground/65"
+          >
+            <span
+              aria-hidden="true"
+              className="mt-2 inline-block h-px w-5 shrink-0 bg-border"
+            />
+            <span>{profile.beliefs}</span>
           </motion.p>
 
           {/* Contact row. */}

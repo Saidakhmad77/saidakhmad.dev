@@ -4,6 +4,8 @@ export type Profile = {
   name: string
   title: string
   brief: string
+  beliefs: string
+  hobbies: string[]
   location: string
   contact: {
     email: string
@@ -14,6 +16,26 @@ export type Profile = {
     phone: string
   }
   visa: string
+}
+
+export type Now = {
+  focus: string
+  learning: string[]
+  reading: { title: string; author: string }[]
+  tinkering: string[]
+}
+
+export type Uses = {
+  category: string
+  items: string[]
+}
+
+export type WritingTopic = {
+  slug: string
+  title: string
+  summary: string
+  status: "planned" | "draft" | "shipped"
+  date?: string
 }
 
 export type Experience = {
@@ -71,8 +93,10 @@ export const profile: Profile = {
   name: "Saidakhmad Nuriddinov",
   title: "Autonomous Driving Simulation Engineer",
   brief:
-    "Building autonomous yard-tractor simulation at Maum.ai — Isaac Sim, Omniverse, USD, PhysX, ROS 2. Backend & full-stack engineer at heart.",
-  location: "Seongnam, South Korea",
+    "Building autonomous yard-tractor simulation at Maum.ai — Isaac Sim, Omniverse, USD, PhysX, ROS 2. Backend & full-stack engineer at heart. F1 watcher.",
+  beliefs: "Simulators should fail honestly.",
+  hobbies: ["Football", "F1"],
+  location: "Seoul, South Korea",
   contact: {
     email: "lionuz669@gmail.com",
     github: "Saidakhmad77",
@@ -84,13 +108,82 @@ export const profile: Profile = {
   visa: "D-10 · Uzbekistan",
 }
 
+// ─── /now ────────────────────────────────────────────────────────────────────
+// What's true *this month*. Updated periodically — distinct from the timeline
+// of where I've worked. Pattern: Derek Sivers /now convention.
+
+export const now: Now = {
+  focus:
+    "ability_port autonomous yard-tractor simulation at Maum.ai. ability_port map, XCMG 15-DOF rig, weather + lighting controllers, ROS 2 teleop refactors.",
+  learning: ["Business Korean writing", "ROS 2 internals (DDS, executors, lifecycle)"],
+  reading: [
+    { title: "The Thinking Machine", author: "Stephen Witt" },
+    { title: "The 48 Laws of Power", author: "Robert Greene" },
+  ],
+  tinkering: [],
+}
+
+// ─── /uses ───────────────────────────────────────────────────────────────────
+// Daily-driver stack. Wes Bos /uses convention.
+
+export const uses: Uses[] = [
+  {
+    category: "Sim Platform",
+    items: ["NVIDIA Isaac Sim", "Omniverse", "USD", "PhysX", "OmniGraph", "Nucleus"],
+  },
+  {
+    category: "Languages",
+    items: ["Python", "C++ (UE5)", "TypeScript"],
+  },
+  {
+    category: "Editor & Shell",
+    items: ["VS Code", "iTerm2", "Git"],
+  },
+  {
+    category: "Daily Tools",
+    items: ["Docker", "Postman", "Notion", "Logitech G29 (teleop testing)"],
+  },
+  {
+    category: "Site",
+    items: ["Next.js 16", "React 19", "Tailwind v4", "Geist + Geist Mono"],
+  },
+]
+
+// ─── Writing ─────────────────────────────────────────────────────────────────
+// Planned topics. Stubs become posts when the time comes — the structure is
+// here so the section is real, not a "Coming soon" placeholder.
+
+export const writingTopics: WritingTopic[] = [
+  {
+    slug: "ros2-teleop-hardware-agnostic",
+    title: "Why ROS 2 teleop should be hardware-agnostic from day one",
+    summary:
+      "How a JoyMapping dataclass replaced 200 lines of Xbox-specific enum and made the same controller work for G29, PS5, and headless rigs.",
+    status: "planned",
+  },
+  {
+    slug: "ue5-opacity-gotcha",
+    title: "The UE5 Omniverse Connector bakes 1×1 opacity textures and nobody documented it",
+    summary:
+      "A 3-commit patch that took two days to find, plus the Docker Nucleus worker that surfaced the bug in the first place.",
+    status: "planned",
+  },
+  {
+    slug: "fourier-solar-stdlib",
+    title: "A stdlib-only Fourier solar model in 200 lines of Python",
+    summary:
+      "Spencer 1971 + Tanner Helland Kelvin→RGB. Why the team's previous solar lighting was wrong by 30 minutes at sunset, and how to fix it without external deps.",
+    status: "planned",
+  },
+]
+
 export const experience: Experience[] = [
   {
     company: "Maum.ai",
     companyKo: "마음에이아이",
     role: "Autonomous Driving Simulation Engineer",
     team: "WoRV",
-    location: "Seongnam",
+    location: "Seoul",
     period: "Feb 2026 — Present",
     current: true,
     summary:
@@ -135,7 +228,7 @@ export const experience: Experience[] = [
     company: "STEMON",
     companyKo: "스템온",
     role: "Software Developer",
-    location: "Seongnam",
+    location: "Seoul",
     period: "Dec 2024 — Jul 2025",
     summary: "Web services and embedded medical-device management systems.",
     bullets: [
@@ -243,14 +336,13 @@ export const skills: SkillCategory[] = [
 export const languages: Language[] = [
   { name: "Korean", level: "Advanced", cert: "TOPIK 4" },
   { name: "English", level: "Advanced", cert: "IELTS 7" },
-  { name: "Russian", level: "Intermediate" },
   { name: "Uzbek", level: "Native" },
 ]
 
 export const education: Education = {
   school: "Gachon University",
   degree: "B.S. in Computer Engineering",
-  location: "Seongnam, South Korea",
+  location: "Seoul, South Korea",
   period: "Aug 2018 — Feb 2023",
   gpa: "3.54 / 4.5",
 }

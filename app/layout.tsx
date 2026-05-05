@@ -83,7 +83,7 @@ const personJsonLd = {
   telephone: profile.contact.phone,
   address: {
     "@type": "PostalAddress",
-    addressLocality: "Seongnam",
+    addressLocality: "Seoul",
     addressCountry: "KR",
   },
   worksFor: {
@@ -108,7 +108,7 @@ const personJsonLd = {
     "Python",
     "C++",
   ],
-  knowsLanguage: ["en", "ko", "ru", "uz"],
+  knowsLanguage: ["en", "ko", "uz"],
 }
 
 export default function RootLayout({

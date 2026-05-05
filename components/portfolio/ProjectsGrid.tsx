@@ -80,7 +80,7 @@ export function ProjectsGrid() {
             <span>02</span>
             <span aria-hidden="true" className="h-3 w-px bg-border" />
             <h2 id="projects-heading" className="text-foreground/80">
-              Selected
+              Field Notes
             </h2>
           </div>
 
@@ -198,9 +198,16 @@ function FeaturedEntry({
       />
 
       <article className="relative pl-6 sm:pl-8">
+        {/* Clip frame — reserved 16:9 slot for an upcoming muted webm of the
+            extension running. Hairline border, neutral-only (no cyan), with a
+            quiet centered indicator that reads as "video player not yet loaded"
+            rather than a placeholder image. Aspect-locked so layout doesn't
+            shift when the asset lands. */}
+        <ClipFrame name={project.name} />
+
         {/* Coordinate row — index + org + period.
             Right-side is hairline-aligned top register. */}
-        <div className="flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-[11px]">
+        <div className="mt-6 flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-[11px]">
           <span className="flex items-center gap-3">
             <span className="text-muted-foreground/60">{idx}</span>
             <span aria-hidden="true" className="h-2.5 w-px bg-border" />
@@ -321,5 +328,43 @@ function SupportingEntry({
         </ul>
       </article>
     </motion.li>
+  )
+}
+
+// ─── Clip frame ─────────────────────────────────────────────────────────────
+// 16:9 reserved slot for an upcoming muted webm of the extension running.
+// Hairline border, neutral content only — reads as a video element that
+// hasn't loaded yet, not as a "PLACEHOLDER" pill. The play glyph + caption
+// are mono and muted; no cyan. Aspect-locked via aspect-video so dropping in
+// an actual <video> later is a swap, not a layout shift.
+
+function ClipFrame({ name }: { name: string }) {
+  return (
+    <div
+      role="img"
+      aria-label={`${name} — clip pending`}
+      className="relative aspect-video w-full overflow-hidden border border-border/70 bg-foreground/[0.015]"
+    >
+      {/* Faint inner registration ticks at the corners — same precision idiom
+          as the hero's CornerMarks, scaled small. Anchors the frame as
+          intentional, not empty. */}
+      <span aria-hidden="true" className="absolute left-2 top-2 h-2 w-2 border-l border-t border-muted-foreground/25" />
+      <span aria-hidden="true" className="absolute right-2 top-2 h-2 w-2 border-r border-t border-muted-foreground/25" />
+      <span aria-hidden="true" className="absolute left-2 bottom-2 h-2 w-2 border-l border-b border-muted-foreground/25" />
+      <span aria-hidden="true" className="absolute right-2 bottom-2 h-2 w-2 border-r border-b border-muted-foreground/25" />
+
+      {/* Centered indicator — quiet play glyph + mono caption. */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+        <span
+          aria-hidden="true"
+          className="font-mono text-base text-muted-foreground/40"
+        >
+          {'>'}
+        </span>
+        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/45">
+          clip · pending
+        </span>
+      </div>
+    </div>
   )
 }
