@@ -2,7 +2,6 @@
 
 import { motion, useReducedMotion, type Variants } from 'framer-motion'
 import { writingTopics, type WritingTopic } from '@/lib/portfolio-data'
-import { SimConsole } from '@/components/portfolio/SimConsole'
 import { cn } from '@/lib/utils'
 
 // ─── Motion grammar — matches rest of the site. ──────────────────────────────
@@ -84,56 +83,10 @@ export function Lab() {
           className="mt-4 h-px w-full bg-border/60"
         />
 
-        {/* (a) Isaac Sim viewport demo — side-view pick-and-place arm on
-            autoplay loop. Replaces the old SpinDeck. */}
-        <ViewportBlock variantsItem={variantsItem} reduceMotion={!!reduceMotion} />
-
-        {/* (b) Planned writing. */}
+        {/* Planned writing. */}
         <PlannedWriting variantsItem={variantsItem} variantsList={variantsList} reduceMotion={!!reduceMotion} />
       </div>
     </section>
-  )
-}
-
-// ─── Viewport block ──────────────────────────────────────────────────────────
-// Mounts SimConsole — an interactive two-pane "mission console" where the
-// visitor types commands and a tiny stage responds in real time.
-
-function ViewportBlock({
-  variantsItem,
-  reduceMotion,
-}: {
-  variantsItem: Variants | undefined
-  reduceMotion: boolean
-}) {
-  return (
-    <>
-      <motion.div
-        initial={reduceMotion ? false : { opacity: 0, y: 6 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-10%' }}
-        transition={{ duration: 0.4, ease: EASE, delay: 0.05 }}
-        className="mt-10 flex items-center gap-3 md:mt-12"
-      >
-        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
-          /console
-        </span>
-        <span aria-hidden="true" className="h-px flex-1 bg-border/40" />
-        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/55">
-          type to operate
-        </span>
-      </motion.div>
-
-      <motion.div
-        variants={variantsItem}
-        initial={reduceMotion ? false : 'hidden'}
-        whileInView="show"
-        viewport={{ once: true, margin: '-10%' }}
-        className="mt-6"
-      >
-        <SimConsole />
-      </motion.div>
-    </>
   )
 }
 
