@@ -2,8 +2,8 @@ import { Nav } from '@/components/portfolio/Nav'
 import { Hero } from '@/components/portfolio/Hero'
 import { NowBlock } from '@/components/portfolio/NowBlock'
 import { ProjectsGrid } from '@/components/portfolio/ProjectsGrid'
-import { ExperienceTimeline } from '@/components/portfolio/ExperienceTimeline'
-import { WritingSection } from '@/components/portfolio/WritingSection'
+import { HowIThink } from '@/components/portfolio/HowIThink'
+import { Lab } from '@/components/portfolio/Lab'
 import { ClosingSection } from '@/components/portfolio/ClosingSection'
 
 export default function Home() {
@@ -14,8 +14,8 @@ export default function Home() {
         <Hero />
         <NowBlock />
         <ProjectsGrid />
-        <ExperienceTimeline />
-        <WritingSection />
+        <HowIThink />
+        <Lab />
         <ClosingSection />
       </main>
     </>

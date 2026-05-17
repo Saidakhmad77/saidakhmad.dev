@@ -15,13 +15,16 @@ const geistMono = Geist_Mono({
 
 const SITE_URL = "https://saidakhmad.dev"
 
+const META_DESCRIPTION =
+  "Autonomous-driving simulation engineer building production extensions on NVIDIA Isaac Sim at Maum.ai — USD, PhysX, OmniGraph, ROS 2. Full-stack background, F1 watcher. Based in Seoul."
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     default: `${profile.name} · ${profile.title}`,
     template: `%s · ${profile.name}`,
   },
-  description: profile.brief,
+  description: META_DESCRIPTION,
   keywords: [
     "Saidakhmad Nuriddinov",
     "Autonomous Driving Simulation",
@@ -42,14 +45,14 @@ export const metadata: Metadata = {
     type: "website",
     url: SITE_URL,
     title: `${profile.name} · ${profile.title}`,
-    description: profile.brief,
+    description: META_DESCRIPTION,
     siteName: "saidakhmad.dev",
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
     title: `${profile.name} · ${profile.title}`,
-    description: profile.brief,
+    description: META_DESCRIPTION,
   },
   robots: {
     index: true,
@@ -67,11 +70,19 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#0a0b0d",
-  colorScheme: "dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#0a0b0d" },
+    { media: "(prefers-color-scheme: light)", color: "#f4f1ea" },
+  ],
+  colorScheme: "dark light",
   width: "device-width",
   initialScale: 1,
 }
+
+// Tiny synchronous script — runs before React hydrates so the html.theme-light
+// class is applied before paint. Prevents a "dark flash" for users whose last
+// choice was light mode.
+const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('theme');if(t==='light')document.documentElement.classList.add('theme-light');}catch(e){}})();`
 
 const personJsonLd = {
   "@context": "https://schema.org",
@@ -122,7 +133,14 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
+      <head>
+        {/* Synchronous theme init — applies html.theme-light before paint so
+            users who chose light mode don't see a flash of dark. Has to be
+            inline + before React hydrates. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary/30 selection:text-foreground">
         {children}
         <script

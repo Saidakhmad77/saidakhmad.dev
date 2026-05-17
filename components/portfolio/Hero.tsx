@@ -3,7 +3,8 @@
 import { motion, useReducedMotion, type Variants } from 'framer-motion'
 import { SplineScene } from '@/components/ui/splite'
 import { ContactRow } from '@/components/portfolio/ContactRow'
-import { profile, experience } from '@/lib/portfolio-data'
+import { SolarReadout } from '@/components/portfolio/SolarReadout'
+import { profile, experience, aboutCover } from '@/lib/portfolio-data'
 
 const SPLINE_SCENE = 'https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode'
 
@@ -117,20 +118,20 @@ export function Hero() {
             {profile.title}
           </motion.p>
 
-          {/* Brief — body copy. */}
+          {/* Hook — short, pull-quote scale. The expanded narrative lives
+              in §05 About; here it has to land in one breath. */}
           <motion.p
             variants={variantsItem}
-            className="mt-7 max-w-[32rem] text-pretty text-base leading-relaxed text-foreground/75"
+            className="mt-8 max-w-[34rem] text-balance text-[22px] font-medium leading-[1.25] tracking-[-0.015em] text-foreground/95 md:text-[26px]"
           >
-            {profile.brief}
+            {aboutCover.hook}
           </motion.p>
 
-          {/* Beliefs — a personal aside, not a marketing claim. Mono italic, sub-brief
-              size, with a small leading arrow + hairline divider so it reads as an
-              annotation rather than a continuation of the role description. No cyan. */}
+          {/* Beliefs — kept, but moved below the stats so it reads as a
+              footer to the hero block, not a continuation of the role line. */}
           <motion.p
             variants={variantsItem}
-            className="mt-5 flex max-w-[32rem] items-start gap-3 font-mono text-[12.5px] italic leading-relaxed text-foreground/65"
+            className="mt-4 flex max-w-[32rem] items-start gap-3 font-mono text-[12px] italic leading-relaxed text-foreground/55"
           >
             <span
               aria-hidden="true"
@@ -139,8 +140,13 @@ export function Hero() {
             <span>{profile.beliefs}</span>
           </motion.p>
 
+          {/* Live Seoul solar readout. */}
+          <motion.div variants={variantsItem}>
+            <SolarReadout />
+          </motion.div>
+
           {/* Contact row. */}
-          <motion.div variants={variantsItem} className="mt-9">
+          <motion.div variants={variantsItem} className="mt-7">
             <ContactRow />
           </motion.div>
         </motion.div>
@@ -205,3 +211,4 @@ function CornerMarks() {
     </>
   )
 }
+

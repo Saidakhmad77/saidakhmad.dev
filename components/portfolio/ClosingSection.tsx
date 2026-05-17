@@ -5,8 +5,15 @@ import {
   profile,
   skills,
   uses,
+  aboutCover,
+  education,
+  languages,
+  certificates,
   type SkillCategory,
   type Uses,
+  type Education,
+  type Language,
+  type Certificate,
 } from '@/lib/portfolio-data'
 import { cn } from '@/lib/utils'
 
@@ -100,15 +107,11 @@ export function ClosingSection() {
             inventory, and reads better against the engineered-dark backdrop. */}
         <AboutBlock variants={variantsItem} reduceMotion={!!reduceMotion} />
 
-        {/* (b + c) Stack + /uses — wrapped in light-section. This is the second
-            inverted-spotlight zone on the page: "what I know" (Stack as
-            professional capability) and "what I actually use" (/uses as daily
-            drivers) live together on the warm off-white surface. The negative
-            inset (-mx-6 md:-mx-10) breaks the wrapper out of the section's
-            horizontal padding so the light bleeds full-width to the viewport
-            edges; inner padding restores the gutter. The 1px hairlines above
-            and below are the seams between dark and light — no gradients. */}
-        <div className="light-section mt-16 -mx-6 border-y border-border/60 px-6 pt-16 pb-20 md:-mx-10 md:mt-20 md:px-10 md:pt-20 md:pb-24">
+        {/* Stack + /uses — single dark surface like the rest of the site.
+            Hairline borders top and bottom carry the separation; no surface
+            flip. The negative inset breaks out of the section padding so the
+            hairlines run edge-to-edge of the viewport. */}
+        <div className="mt-16 -mx-6 border-y border-border/60 px-6 pt-16 pb-20 md:-mx-10 md:mt-20 md:px-10 md:pt-20 md:pb-24">
           <StackBlock
             variantsList={variantsList}
             variantsItem={variantsItem}
@@ -153,44 +156,170 @@ function AboutBlock({
       initial={reduceMotion ? false : 'hidden'}
       whileInView="show"
       viewport={{ once: true, margin: '-15%' }}
-      // Standalone block now (no longer in a 12-col grid with Stack). Constrained
-      // to a single readable prose column; sits on dark, above the light Stack/Uses zone.
-      className="mt-12 md:mt-16"
+      className="mt-12 grid grid-cols-1 gap-x-12 gap-y-12 md:mt-16 lg:grid-cols-12"
     >
-      <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
-        About
-      </p>
+      {/* Left column — the prose. Cover-letter voice. */}
+      <div className="lg:col-span-7">
+        {/* Bilingual "self-introduction" header — small but unmistakable
+            personality signal that wasn't on the old site at all. */}
+        <div className="flex items-baseline gap-3">
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
+            About
+          </p>
+          <span aria-hidden="true" className="h-px w-6 bg-border/50" />
+          <p
+            className="font-hangul text-[14.5px] text-muted-foreground/85"
+            lang="ko"
+          >
+            {aboutCover.greeting}
+          </p>
+        </div>
 
-      <div className="mt-6 max-w-[36rem] space-y-5 text-pretty text-[15px] leading-relaxed text-foreground/85 sm:text-base">
-        <p>
-          I build robotics simulation infrastructure. Currently at Maum.ai,
-          shipping production extensions on NVIDIA Isaac Sim — a stdlib-only
-          Fourier solar lighting model, GPU-accelerated weather via USD
-          PointInstancer and Warp, a configurable-Hz simulation logger, and a
-          UE5 C++ patch for the Omniverse Connector. Before that, two years of
-          backend and full-stack work: NestJS APIs and PostgreSQL schemas for
-          L&rsquo;Or&eacute;al and Dior, embedded device-management tooling at
-          STEMON.
-        </p>
-        <p>
-          B.S. Computer Engineering, Gachon University. Based in Seoul on a
-          D-10 visa. Hireable in Korean{' '}
-          <span className="font-mono text-[12.5px] text-foreground/70">
-            (TOPIK 4)
-          </span>
-          {' '}and English{' '}
-          <span className="font-mono text-[12.5px] text-foreground/70">
-            (IELTS 7)
-          </span>
-          . Open to roles in robotics simulation, autonomous systems, or
-          senior backend.
-        </p>
-        <p className="text-foreground/70">
-          Football and Formula 1 outside work — Sunday races are the
-          best free lecture on control problems and team strategy I&rsquo;ve found.
-        </p>
+        <div className="mt-6 max-w-[38rem] space-y-4 text-pretty text-[15px] leading-relaxed text-foreground/85 sm:text-base">
+          <p>{aboutCover.arc}</p>
+          <p className="border-l border-[color:var(--primary)]/65 pl-4 text-foreground/80">
+            {aboutCover.philosophy}
+          </p>
+          <p className="font-mono text-[12.5px] text-foreground/60">
+            Seoul · D-10 · TOPIK 4 · IELTS 7
+          </p>
+        </div>
       </div>
+
+      {/* Right column — Credentials right-rail. Education, languages,
+          certificates. The old ExperienceTimeline section's tail-end content
+          relocated here so it earns its keep without dominating its own
+          section. */}
+      <aside className="lg:col-span-5">
+        <CredentialsRail />
+      </aside>
     </motion.div>
+  )
+}
+
+// ─── Credentials right-rail ──────────────────────────────────────────────────
+// Education + Languages + Certificates — used to be the bottom of the dropped
+// ExperienceTimeline section. Compact, mono, hairline rows. No card frames.
+
+function CredentialsRail() {
+  return (
+    <div className="space-y-10">
+      <CredentialsBlock label="Education">
+        <EducationStrip ed={education} />
+      </CredentialsBlock>
+
+      <CredentialsBlock label="Languages">
+        <ul className="space-y-px">
+          {languages.map((lang, i) => (
+            <LanguageRow key={lang.name} lang={lang} isLast={i === languages.length - 1} />
+          ))}
+        </ul>
+      </CredentialsBlock>
+
+      <CredentialsBlock label="Certificates & awards">
+        <ul className="space-y-px">
+          {certificates.map((c, i) => (
+            <CertificateRow
+              key={`${c.name}-${c.date}`}
+              cert={c}
+              isLast={i === certificates.length - 1}
+            />
+          ))}
+        </ul>
+      </CredentialsBlock>
+    </div>
+  )
+}
+
+function CredentialsBlock({
+  label,
+  children,
+}: {
+  label: string
+  children: React.ReactNode
+}) {
+  return (
+    <div>
+      <div className="flex items-center gap-3">
+        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
+          {label}
+        </span>
+        <span aria-hidden="true" className="h-px flex-1 bg-border/40" />
+      </div>
+      <div className="mt-4">{children}</div>
+    </div>
+  )
+}
+
+function EducationStrip({ ed }: { ed: Education }) {
+  return (
+    <article className="space-y-1.5">
+      <h3 className="text-base font-medium tracking-[-0.01em] text-foreground sm:text-[17px]">
+        {ed.school}
+      </h3>
+      <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground sm:text-[11.5px]">
+        <span className="text-foreground/80">{ed.degree}</span>
+        <span aria-hidden="true" className="mx-2 text-border">·</span>
+        <span className="num">GPA {ed.gpa}</span>
+        <span aria-hidden="true" className="mx-2 text-border">·</span>
+        <span>{ed.period}</span>
+      </p>
+    </article>
+  )
+}
+
+function LanguageRow({ lang, isLast }: { lang: Language; isLast: boolean }) {
+  return (
+    <li
+      className={cn(
+        'flex items-baseline justify-between gap-4 py-2',
+        !isLast && 'border-b border-border/30',
+      )}
+    >
+      <span className="font-mono text-[12px] tracking-tight text-foreground/85">
+        {lang.name}
+      </span>
+      <span className="flex items-baseline gap-2 font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground">
+        <span>{lang.level}</span>
+        {lang.cert ? (
+          <>
+            <span aria-hidden="true" className="text-border">·</span>
+            <span className="text-foreground/65">{lang.cert}</span>
+          </>
+        ) : null}
+      </span>
+    </li>
+  )
+}
+
+function CertificateRow({
+  cert,
+  isLast,
+}: {
+  cert: Certificate
+  isLast: boolean
+}) {
+  return (
+    <li
+      className={cn(
+        'flex items-baseline justify-between gap-4 py-2',
+        !isLast && 'border-b border-border/30',
+      )}
+    >
+      <div className="min-w-0 flex-1">
+        <span className="font-mono text-[12px] tracking-tight text-foreground/85">
+          {cert.name}
+        </span>
+        {cert.issuer ? (
+          <span className="ml-2 font-mono text-[10.5px] tracking-tight text-muted-foreground/75">
+            {cert.issuer}
+          </span>
+        ) : null}
+      </div>
+      <span className="shrink-0 font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground">
+        {cert.date}
+      </span>
+    </li>
   )
 }
 

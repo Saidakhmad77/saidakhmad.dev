@@ -89,6 +89,73 @@ export type Certificate = {
   date: string
 }
 
+export type Principle = {
+  slug: 'debug-with-data' | 'surface-not-silence' | 'constraints-as-inputs'
+  ordinal: string
+  claim: string
+  blurb: string
+  example: string
+  exampleTitle: string
+  proof: 'silent' | 'solar' | 'joystick' | 'none'
+  accent: 'cyan' | 'warm' | 'fail'
+}
+
+export type Currently = {
+  watching: { title: string; subtitle: string; status: string }
+  reading: { title: string; author: string }
+  listening: { title: string; subtitle: string }
+  bugOfWeek: { headline: string; lesson: string }
+}
+
+export type AboutCover = {
+  hook: string
+  motivation: string
+  arc: string
+  philosophy: string
+  greeting: string
+}
+
+export type HeroStat = {
+  big: string
+  label: string
+  detail: string
+}
+
+export type ProjectCategory = 'extension' | 'patch' | 'tool' | 'pipeline'
+
+export type ProjectMeta = {
+  slug: string
+  category: ProjectCategory
+  metric: string
+}
+
+export type FactCategory =
+  | 'korea'
+  | 'f1'
+  | 'football'
+  | 'why'
+  | 'languages'
+  | 'debug'
+  | 'source'
+  | 'arc'
+  | 'learning'
+  | 'origin'
+  | 'reading'
+  | 'constraint'
+
+export type Fact = {
+  id: string
+  category: FactCategory
+  label: string
+  body: string
+}
+
+export type ProjectConstraint = {
+  slug: string
+  label: string
+  body: string
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const profile: Profile = {
@@ -96,7 +163,7 @@ export const profile: Profile = {
   nickname: "Sam",
   title: "Autonomous Driving Simulation Engineer",
   brief:
-    "Building autonomous yard-tractor simulation at Maum.ai — Isaac Sim, Omniverse, USD, PhysX, ROS 2. Backend & full-stack engineer at heart. F1 watcher.",
+    "Building autonomous-vehicle simulation at Maum.ai — Isaac Sim, Omniverse, USD, PhysX, ROS 2. Backend & full-stack engineer at heart. F1 watcher.",
   beliefs: "Simulators should fail honestly.",
   hobbies: ["Football", "F1"],
   location: "Seoul, South Korea",
@@ -118,7 +185,7 @@ export const profile: Profile = {
 
 export const now: Now = {
   focus:
-    "ability_port autonomous yard-tractor simulation at Maum.ai. ability_port map, XCMG 15-DOF rig, weather + lighting controllers, ROS 2 teleop refactors.",
+    "Production extensions on the WoRV simulation pipeline at Maum.ai — 15-DOF articulated rig, weather + lighting controllers, ROS 2 teleop refactors.",
   learning: ["Business Korean writing", "ROS 2 internals (DDS, executors, lifecycle)"],
   reading: [
     { title: "The Thinking Machine", author: "Stephen Witt" },
@@ -191,13 +258,13 @@ export const experience: Experience[] = [
     period: "Feb 2026 — Present",
     current: true,
     summary:
-      "Autonomous yard-tractor simulation (ability_port, XCMG 15-DOF) on NVIDIA Isaac Sim / Omniverse.",
+      "Production simulation infrastructure for autonomous vehicles on NVIDIA Isaac Sim / Omniverse — physics, sensors, controllers, and tooling.",
     bullets: [
       "Built worv.env.lights, a solar lighting Isaac Sim extension using a stdlib-only Fourier model; established the MVC pattern (extension → window → controller) adopted as the team-wide template for all worv.* extensions.",
       "Shipped worv.env.climate (rain/snow/fog via USD PointInstancer + Warp + RTX) and led a 5-bug fix branch introducing a 3-source PositionTracker for robot-following rain and controller-level error surfacing.",
       "Designed worv.core.logging, a configurable-Hz simulation logger combining OmniGraph with direct PhysX USD reads via a pluggable BaseExporter — enabled the team's first benchmark scenario comparison.",
       "Built a Docker Nucleus worker plus a 3-commit UE5 C++ plugin patch fixing UE Connector's baked 1×1 opacity textures so designers can edit opacity directly in Isaac Sim.",
-      "Applied physics, colliders, and NavMesh across the ability_port map; added an Ackermann controller and refactored the ROS 2 teleop_node from Xbox-only to hardware-agnostic via a JoyMapping dataclass.",
+      "Applied physics, colliders, and NavMesh across the simulated environment; added an Ackermann controller and refactored the ROS 2 teleop_node from Xbox-only to hardware-agnostic via a JoyMapping dataclass.",
     ],
     stack: [
       "NVIDIA Isaac Sim",
@@ -293,7 +360,7 @@ export const projects: Project[] = [
     name: "G29 Teleop Port",
     org: "Maum.ai",
     period: "2026.03 — 2026.04",
-    tagline: "Hardware-agnostic ROS 2 teleop for the XCMG tractor.",
+    tagline: "Hardware-agnostic ROS 2 teleop for a 15-DOF articulated tractor rig.",
     detail:
       "Refactored hardcoded Xbox enum into a configurable JoyMapping dataclass with per-axis inversion, deadzone gating, accel/brake pedal merging.",
     stack: ["ROS 2", "Python", "Logitech G29"],
@@ -313,7 +380,7 @@ export const projects: Project[] = [
 export const skills: SkillCategory[] = [
   {
     category: "Robotics & Simulation",
-    items: ["NVIDIA Isaac Sim", "Omniverse", "USD", "PhysX", "OmniGraph", "ROS 2", "Nucleus"],
+    items: ["NVIDIA Isaac Sim", "Omniverse", "USD", "PhysX", "OmniGraph", "Warp", "ROS 2", "Nucleus"],
   },
   {
     category: "Languages",
@@ -359,4 +426,254 @@ export const certificates: Certificate[] = [
   { name: "Minister's Prize", issuer: "Education Ministry of Uganda", date: "Jun 2023" },
   { name: "President's Award", issuer: "KIU Uganda", date: "Jun 2023" },
   { name: "Dean's Award", issuer: "Computer Engineering, Gachon", date: "Dec 2021" },
+]
+
+// ─── Cover-letter prose ──────────────────────────────────────────────────────
+// Single-source-of-truth strings sliced from Saidakhmad_Cover_Letter.pdf so the
+// hero, about block, and metadata description all stay aligned without
+// drifting into "marketing-ese." The voice is the cover letter's voice — first
+// person, technically specific, philosophy-forward.
+
+export const aboutCover: AboutCover = {
+  greeting: "자기소개",
+  // Single punchy line for the hero. Detail moves to /about.
+  hook:
+    "Where physics, sensors, control, and software have to mesh as one system.",
+  motivation:
+    "Full-stack background. Embedded along the way. Now simulation — USD, PhysX, OmniGraph, ROS 2, the UE5 Connector. The throughline is wanting to understand systems end-to-end.",
+  arc:
+    "STEMON → ChoiceTech → Maum.ai. Three roles, three modes: embedded medical devices at STEMON, then NestJS commercial-service backends at ChoiceTech (with global collaborations on L'Oréal and Dior hair/skin-analysis platforms), then production Isaac Sim extensions on the WoRV team at Maum.ai.",
+  philosophy:
+    "In a physics engine, wrong code succeeds. A bad prim path returns zero. A wrong carb key silently creates a new one. So every controller I write surfaces failures into logs — and constraints (no pip, read-only USD inputs) end up being the most interesting design inputs I get.",
+}
+
+export const principles: Principle[] = [
+  {
+    slug: "debug-with-data",
+    ordinal: "01",
+    claim: "Debug with data, not assumptions.",
+    blurb: "Every value is a sensor. If the pose is zero, the answer is in the USD tree.",
+    exampleTitle: "worv.env.lights",
+    example:
+      "Pose came back as zero. Traced which prim had RigidBodyAPI, what the USD attribute returned, the prim path. The trace fixed it.",
+    proof: "solar",
+    accent: "cyan",
+  },
+  {
+    slug: "surface-not-silence",
+    ordinal: "02",
+    claim: "Surface failures, don't silence them.",
+    blurb: "Code that succeeds-but-wrong is worse than code that crashes.",
+    exampleTitle: "WeatherController.step()",
+    example:
+      "Each effect wrapped in try/except at the controller. One effect failing can't abort the others — and the failure lands in a log line, not a black box.",
+    proof: "silent",
+    accent: "cyan",
+  },
+  {
+    slug: "constraints-as-inputs",
+    ordinal: "03",
+    claim: "Constraints are inputs to design.",
+    blurb: "No pip. Read-only USD. The constraints became the design.",
+    exampleTitle: "Spencer 1971 + UE5 patch",
+    example:
+      "No pip → 200 lines of stdlib Fourier. Read-only USD inputs → Docker Nucleus worker → 3-commit UE5 C++ plugin patch upstream.",
+    proof: "joystick",
+    accent: "warm",
+  },
+]
+
+// ─── /currently — Lab section ───────────────────────────────────────────────
+// What I'm watching / reading / listening / debugging this month. Distinct
+// from /now (which is the role's mandate) — this is the personal feed.
+
+export const currently: Currently = {
+  watching: {
+    title: "F1 — Miami weekend",
+    subtitle: "Sundays · the best free lecture on control + strategy.",
+    status: "RACE WEEKEND",
+  },
+  reading: {
+    title: "The Thinking Machine",
+    author: "Stephen Witt",
+  },
+  listening: {
+    title: "Lex × Karpathy",
+    subtitle: "Software 1.0 → 2.0 → 3.0.",
+  },
+  bugOfWeek: {
+    headline: "RTX fog keys silently created new ones instead of updating.",
+    lesson: "carb.settings looked like it worked. Spelled the key wrong.",
+  },
+}
+
+// ─── Per-project "constraint" rows ──────────────────────────────────────────
+// One per project in projects[]. Surfaces the cover-letter thesis ("constraints
+// are inputs to design") right onto the project cards.
+
+// ─── Hero stats ──────────────────────────────────────────────────────────────
+// Four big numbers under the hero text. Pull-quotes for the eye, not
+// CV-grade flexing. Each is a fact, derived from the cover letter + roles.
+
+export const heroStats: HeroStat[] = [
+  {
+    big: "15",
+    label: "DOF",
+    detail: "articulated rig",
+  },
+  {
+    big: "3",
+    label: "WoRV exts",
+    detail: "lights · climate · logging",
+  },
+  {
+    big: "3",
+    label: "Companies",
+    detail: "STEMON · ChoiceTech · Maum.ai",
+  },
+  {
+    big: "3",
+    label: "Langs",
+    detail: "ko · en · uz",
+  },
+]
+
+// ─── Fact deck ──────────────────────────────────────────────────────────────
+// SpinDeck cards. One fact at a time, clickable through. Twelve curated
+// items — all anchored in cover-letter content + the existing `now` /
+// `currently` data, nothing invented. Edit freely; the component reads from
+// here.
+
+export const facts: Fact[] = [
+  {
+    id: 'why-sim',
+    category: 'why',
+    label: 'Why simulation',
+    body:
+      "Autonomous driving is a domain where physics, sensors, control, and software must mesh as a single integrated system. Simulation is the most practical way to validate that.",
+  },
+  {
+    id: 'arc',
+    category: 'arc',
+    label: 'The throughline',
+    body:
+      "Full-stack → backend → frontend → embedded (ESP32-S3) → simulation. A habit of understanding systems end-to-end.",
+  },
+  {
+    id: 'lesson',
+    category: 'debug',
+    label: 'The biggest lesson',
+    body:
+      "Engineering for the surfacing of silent failures. In a physics engine, the everyday failure mode is code that 'succeeds' but produces wrong results.",
+  },
+  {
+    id: 'debug',
+    category: 'debug',
+    label: 'A debug trace',
+    body:
+      "Pose values came back as zero. Traced step by step — which prim had RigidBodyAPI, what the USD attribute returned, the prim path. The trace fixed it.",
+  },
+  {
+    id: 'source-over-docs',
+    category: 'source',
+    label: 'Source over docs',
+    body:
+      "The RTX fog key correction in worv.env.climate was discovered by reading the Isaac Sim source directly.",
+  },
+  {
+    id: 'constraints',
+    category: 'constraint',
+    label: 'A working belief',
+    body:
+      "Constraints are inputs to design, not obstacles to avoid.",
+  },
+  {
+    id: 'pip-spencer',
+    category: 'constraint',
+    label: 'A favorite constraint',
+    body:
+      "Isaac Sim doesn't allow pip. The solar position calculation in worv.env.lights had to be implemented from scratch in pure standard library — the Spencer 1971 Fourier series.",
+  },
+  {
+    id: 'korea',
+    category: 'korea',
+    label: 'Years in Korea',
+    body:
+      "International student in Korea. Major coursework completed in Korean. Development, meetings, and documentation in both Korean and English.",
+  },
+  {
+    id: 'choicetech',
+    category: 'languages',
+    label: 'At ChoiceTech',
+    body:
+      "Customized hair/skin-analysis platform backends through global collaborations with L'Oréal and Dior. Optimizing SQL-based keyword mapping improved real-time analysis throughput by over 20%.",
+  },
+  {
+    id: 'maum',
+    category: 'arc',
+    label: 'At Maum.ai',
+    body:
+      "Collaborated with designers, UE5 build owners, and research teams to ship three worv.* extensions, a UE5 → Isaac opacity pipeline, and the map physics and vehicle-control foundation.",
+  },
+  {
+    id: 'aspiration',
+    category: 'why',
+    label: 'Looking ahead',
+    body:
+      "Want to grow into an engineer who can co-design the entire simulation evaluation pipeline — from scenario automation to data logging to evaluation metrics.",
+  },
+  {
+    id: 'hobbies',
+    category: 'football',
+    label: 'Outside work',
+    body:
+      "Football. Formula 1.",
+  },
+]
+
+// ─── Per-project category + metric badges ───────────────────────────────────
+// One badge per project — turns the wall-of-text grid into something the eye
+// can navigate at a glance. Categories use the warm / cyan / fail accents
+// already established.
+
+export const projectMeta: ProjectMeta[] = [
+  { slug: "worv-env-lights",  category: "extension", metric: "Spencer 1971" },
+  { slug: "worv-env-climate", category: "extension", metric: "+405 / −358" },
+  { slug: "worv-core-logging", category: "extension", metric: "OmniGraph + PhysX" },
+  { slug: "usd-opacity-tools", category: "patch",    metric: "UE5 · 3 commits" },
+  { slug: "g29-teleop-port",   category: "tool",     metric: "Xbox → G29" },
+  { slug: "ddds-admin-app",    category: "tool",     metric: "ESP32-S3 · DGUS" },
+]
+
+export const projectConstraints: ProjectConstraint[] = [
+  {
+    slug: "worv-env-lights",
+    label: "No pip dependencies inside Isaac Sim.",
+    body: "Wrote the Spencer 1971 Fourier solar model from scratch in 200 lines of standard library Python.",
+  },
+  {
+    slug: "worv-env-climate",
+    label: "Silent failures across rain/snow/fog effects.",
+    body: "Controller-level try/except surfacing pattern and a three-source PositionTracker for robot-following rain.",
+  },
+  {
+    slug: "worv-core-logging",
+    label: "No way to compare scenarios run-to-run.",
+    body: "Combined OmniGraph Action Graph with direct PhysX USD reads via a pluggable BaseExporter — first time the team could line up benchmark data per scenario.",
+  },
+  {
+    slug: "usd-opacity-tools",
+    label: "USD's connected inputs are read-only — opacity gets baked into 1×1 textures.",
+    body: "Docker Nucleus post-processor + a 3-commit UE5 C++ plugin patch upstream. Designers now edit opacity directly in Isaac Sim.",
+  },
+  {
+    slug: "g29-teleop-port",
+    label: "ROS 2 teleop_node was hardcoded for Xbox only.",
+    body: "Refactored into a hardware-agnostic structure supporting Logitech G29 via a JoyMapping dataclass.",
+  },
+  {
+    slug: "ddds-admin-app",
+    label: "Embedded device data had no consistent export path.",
+    body: "Auto-detection of faulty parts plus CSV export, with DWIN DGUS UI redesigned for production deployments.",
+  },
 ]

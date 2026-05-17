@@ -2,15 +2,16 @@
 
 import { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
+import { ThemeToggle } from '@/components/portfolio/ThemeToggle'
 import { cn } from '@/lib/utils'
 
-type SectionId = 'work' | 'projects' | 'experience' | 'writing' | 'contact'
+type SectionId = 'work' | 'projects' | 'how-i-think' | 'lab' | 'contact'
 
 const SECTIONS: { id: SectionId; label: string }[] = [
   { id: 'work', label: 'Work' },
   { id: 'projects', label: 'Projects' },
-  { id: 'experience', label: 'Experience' },
-  { id: 'writing', label: 'Writing' },
+  { id: 'how-i-think', label: 'How I think' },
+  { id: 'lab', label: 'Lab' },
   { id: 'contact', label: 'Contact' },
 ]
 
@@ -82,48 +83,53 @@ export function Nav() {
           <span className="ml-2 hidden text-muted-foreground/60 sm:inline">saidakhmad.dev</span>
         </a>
 
-        {/* Section anchors — desktop. */}
-        <ul className="hidden items-center gap-1 md:flex">
-          {SECTIONS.map((s) => {
-            const isActive = active === s.id
-            return (
-              <li key={s.id}>
-                <a
-                  href={`#${s.id}`}
-                  className={cn(
-                    'relative inline-block px-3 py-2 font-mono text-xs uppercase tracking-widest transition-colors',
-                    'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background',
-                    isActive
-                      ? 'text-foreground'
-                      : 'text-muted-foreground hover:text-foreground',
-                  )}
-                  aria-current={isActive ? 'true' : undefined}
-                >
-                  {s.label}
-                  {isActive ? (
-                    <motion.span
-                      layoutId="nav-underline"
-                      className="absolute inset-x-3 -bottom-px h-px bg-primary"
-                      transition={{
-                        type: 'spring',
-                        stiffness: 360,
-                        damping: 32,
-                      }}
-                    />
-                  ) : null}
-                </a>
-              </li>
-            )
-          })}
-        </ul>
+        {/* Right side: section anchors + theme toggle. Anchors collapse on
+            mobile; the theme toggle stays visible at every breakpoint. */}
+        <div className="flex items-center gap-3">
+          <ul className="hidden items-center gap-1 md:flex">
+            {SECTIONS.map((s) => {
+              const isActive = active === s.id
+              return (
+                <li key={s.id}>
+                  <a
+                    href={`#${s.id}`}
+                    className={cn(
+                      'relative inline-block px-3 py-2 font-mono text-xs uppercase tracking-widest transition-colors',
+                      'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background',
+                      isActive
+                        ? 'text-foreground'
+                        : 'text-muted-foreground hover:text-foreground',
+                    )}
+                    aria-current={isActive ? 'true' : undefined}
+                  >
+                    {s.label}
+                    {isActive ? (
+                      <motion.span
+                        layoutId="nav-underline"
+                        className="absolute inset-x-3 -bottom-px h-px bg-primary"
+                        transition={{
+                          type: 'spring',
+                          stiffness: 360,
+                          damping: 32,
+                        }}
+                      />
+                    ) : null}
+                  </a>
+                </li>
+              )
+            })}
+          </ul>
 
-        {/* Mobile — single jump-to-contact. Keeps it honest, no hamburger sheet. */}
-        <a
-          href="#contact"
-          className="font-mono text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground md:hidden"
-        >
-          Contact
-        </a>
+          {/* Mobile — single jump-to-contact in front of the toggle. */}
+          <a
+            href="#contact"
+            className="font-mono text-xs uppercase tracking-widest text-muted-foreground hover:text-foreground md:hidden"
+          >
+            Contact
+          </a>
+
+          <ThemeToggle />
+        </div>
       </nav>
     </motion.header>
   )
