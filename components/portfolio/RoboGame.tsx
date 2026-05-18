@@ -80,6 +80,21 @@ interface GameState {
   wptGx: number | null
   wptGy: number | null
   score: number
+  targets: [number, number][]  // grid coords of collectible targets
+}
+
+const TARGET_COUNT  = 4
+const COLLECT_DIST  = CELL * 0.65   // pixels — how close to collect
+
+function randomOpenCell(exclude?: [number, number][]): [number, number] {
+  for (let i = 0; i < 200; i++) {
+    const gx = 1 + Math.floor(Math.random() * (COLS - 2))
+    const gy = 1 + Math.floor(Math.random() * (ROWS - 2))
+    if (isWall(gx, gy)) continue
+    if (exclude?.some(([ex, ey]) => ex === gx && ey === gy)) continue
+    return [gx, gy]
+  }
+  return [5, 5]
 }
 
 const INITIAL_STATE: GameState = {
@@ -89,6 +104,8 @@ const INITIAL_STATE: GameState = {
   path: [], pathIdx: 0,
   wptGx: null, wptGy: null,
   score: 0,
+  // Seeded after mount so reset can reuse the same baseline state.
+  targets: [],
 }
 
 const SPEED = 2.8
@@ -109,6 +126,9 @@ const C = {
   wpt:        'rgba(0,206,192,0.55)',
   coord:      'rgba(0,206,192,0.55)',
   scanline:   'rgba(0,0,0,0.07)',
+  target:     '#c97d20',
+  targetGlow: 'rgba(201,125,32,0.5)',
+  targetFill: 'rgba(201,125,32,0.12)',
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -201,6 +221,27 @@ export function RoboGame({ className }: { className?: string }) {
       ctx.setLineDash([])
     }
 
+    // Collectible targets — amber diamonds
+    for (const [tgx, tgy] of s.targets) {
+      const tx = tgx * CELL + CELL / 2, ty = tgy * CELL + CELL / 2
+      const d = CELL * 0.28
+      ctx.save()
+      ctx.translate(tx, ty)
+      ctx.rotate(Math.PI / 4)
+      ctx.shadowBlur = 10
+      ctx.shadowColor = C.targetGlow
+      ctx.fillStyle = C.targetFill
+      ctx.fillRect(-d, -d, d * 2, d * 2)
+      ctx.strokeStyle = C.target
+      ctx.lineWidth = 1.2
+      ctx.strokeRect(-d, -d, d * 2, d * 2)
+      ctx.shadowBlur = 0
+      ctx.restore()
+      // small centre dot
+      ctx.fillStyle = C.target
+      ctx.beginPath(); ctx.arc(tx, ty, 2, 0, Math.PI * 2); ctx.fill()
+    }
+
     // LIDAR fan
     const lidarR   = CELL * 4.5
     const halfArc  = Math.PI * 0.6
@@ -208,7 +249,7 @@ export function RoboGame({ className }: { className?: string }) {
     ctx.translate(s.x, s.y)
     ctx.rotate(s.angle)
     const grad = ctx.createRadialGradient(0, 0, 2, 0, 0, lidarR)
-    grad.addColorStop(0, 'rgba(0,206,192,0.18)')
+    grad.addColorStop(0, C.lidarFill)
     grad.addColorStop(1, 'rgba(0,206,192,0)')
     ctx.fillStyle = grad
     ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, lidarR, -halfArc, halfArc); ctx.closePath(); ctx.fill()
@@ -253,7 +294,7 @@ export function RoboGame({ className }: { className?: string }) {
   }, [])
 
   // ── Game tick ──────────────────────────────────────────────────────────────
-  const tick = useCallback(() => {
+  const tick = useCallback(function tickFrame() {
     const s = gsRef.current
     const k = keysRef.current
 
@@ -297,9 +338,31 @@ export function RoboGame({ className }: { className?: string }) {
       }
     }
 
+    // Target collection — works in any active mode
+    if (s.mode !== 'IDLE') {
+      for (let i = s.targets.length - 1; i >= 0; i--) {
+        const [tgx, tgy] = s.targets[i]
+        const tx = tgx * CELL + CELL / 2, ty = tgy * CELL + CELL / 2
+        if (Math.hypot(s.x - tx, s.y - ty) < COLLECT_DIST) {
+          s.targets.splice(i, 1)
+          s.score++
+          const fresh = randomOpenCell(s.targets)
+          s.targets.push(fresh)
+          pushLog(`collected · score ${s.score}`)
+        }
+      }
+    }
+
     draw(s)
-    rafRef.current = requestAnimationFrame(tick)
+    rafRef.current = requestAnimationFrame(tickFrame)
   }, [draw, pushLog])
+
+  // Seed initial targets once on mount
+  useEffect(() => {
+    const targets: [number, number][] = []
+    for (let i = 0; i < TARGET_COUNT; i++) targets.push(randomOpenCell(targets))
+    gsRef.current.targets = targets
+  }, [])
 
   useEffect(() => {
     if (reduceMotion) { draw(gsRef.current); return }
@@ -373,9 +436,10 @@ export function RoboGame({ className }: { className?: string }) {
   }, [pushLog])
 
   const reset = useCallback(() => {
-    const prev = gsRef.current.score
-    Object.assign(gsRef.current, { ...INITIAL_STATE, score: prev })
-    pushLog('robot reset to origin')
+    const targets: [number, number][] = []
+    for (let i = 0; i < TARGET_COUNT; i++) targets.push(randomOpenCell(targets))
+    Object.assign(gsRef.current, { ...INITIAL_STATE, targets })
+    pushLog('robot reset · targets respawned')
   }, [pushLog])
 
   const modeColor =
