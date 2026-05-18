@@ -1,6 +1,7 @@
 'use client'
 
 import { motion, useReducedMotion, type Variants } from 'framer-motion'
+import { SectionHeader } from '@/components/ui/section-header'
 import {
   projects,
   projectConstraints,
@@ -8,6 +9,7 @@ import {
   type Project,
   type ProjectCategory,
 } from '@/lib/portfolio-data'
+import { EASE, sectionItemVariants, sectionListVariants } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 
 // Slug → constraint lookup. Memoized once at module load.
@@ -29,28 +31,6 @@ const CATEGORY_DISPLAY: Record<ProjectCategory, { label: string; color: string }
   tool:      { label: 'TOOL',      color: 'text-foreground/70 border-border/70' },
 }
 
-// Same motion grammar as Hero / NowBlock.
-const EASE = [0.16, 1, 0.3, 1] as const
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 12 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.4, ease: EASE },
-  },
-}
-
-const gridVariants: Variants = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.07,
-      delayChildren: 0.05,
-    },
-  },
-}
-
 // Compact period range. Mirrors NowBlock's coordinate-style metadata.
 // Inputs:
 //   "2026.04"             → "2026.04"
@@ -64,8 +44,8 @@ function formatPeriod(period: string): string {
 
 export function ProjectsGrid() {
   const reduceMotion = useReducedMotion()
-  const variantsItem = reduceMotion ? undefined : itemVariants
-  const variantsGrid = reduceMotion ? undefined : gridVariants
+  const variantsItem = reduceMotion ? undefined : sectionItemVariants
+  const variantsGrid = reduceMotion ? undefined : sectionListVariants
 
   // Split into highlights vs the rest. Order in source preserved.
   const highlights = projects.filter((p) => p.highlight)
@@ -94,23 +74,12 @@ export function ProjectsGrid() {
       className="relative w-full scroll-mt-16 border-t border-border/60"
     >
       <div className="relative mx-auto w-full max-w-(--breakpoint-2xl) px-6 pt-24 pb-24 md:px-10 md:pt-32 md:pb-32">
-        {/* Header row — § 02 / SELECTED  +  span summary on the right. */}
-        <motion.div
-          initial={reduceMotion ? false : { opacity: 0, y: 8 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-15%' }}
-          transition={{ duration: 0.4, ease: EASE }}
-          className="flex items-center justify-between gap-4"
+        <SectionHeader
+          headingId="projects-heading"
+          index="02"
+          title="Field Notes"
+          reduceMotion={!!reduceMotion}
         >
-          <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            <span aria-hidden="true" className="text-muted-foreground/50">§</span>
-            <span>02</span>
-            <span aria-hidden="true" className="h-3 w-px bg-border" />
-            <h2 id="projects-heading" className="text-foreground/80">
-              Field Notes
-            </h2>
-          </div>
-
           <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-xs">
             <span>{projects.length.toString().padStart(2, '0')} entries</span>
             {span ? (
@@ -120,18 +89,7 @@ export function ProjectsGrid() {
               </>
             ) : null}
           </div>
-        </motion.div>
-
-        {/* Hairline rule under header. */}
-        <motion.div
-          aria-hidden="true"
-          initial={reduceMotion ? false : { scaleX: 0, opacity: 0 }}
-          whileInView={{ scaleX: 1, opacity: 1 }}
-          viewport={{ once: true, margin: '-15%' }}
-          transition={{ duration: 0.5, ease: EASE, delay: 0.05 }}
-          style={{ transformOrigin: 'left center' }}
-          className="mt-4 h-px w-full bg-border/60"
-        />
+        </SectionHeader>
 
         {/* Featured row — broadsheet. Two highlighted projects, side-by-side at lg+,
             stacked below lg. Wider/taller than the supporting cast. */}
@@ -143,13 +101,12 @@ export function ProjectsGrid() {
             viewport={{ once: true, margin: '-10%' }}
             className="mt-12 grid grid-cols-1 gap-x-10 gap-y-12 md:mt-16 lg:grid-cols-2 lg:gap-x-12"
           >
-            {highlights.map((p, i) => (
+            {highlights.map((p) => (
               <FeaturedEntry
                 key={p.slug}
                 project={p}
                 index={projects.indexOf(p) + 1}
                 variants={variantsItem}
-                isLast={i === highlights.length - 1}
               />
             ))}
           </motion.ol>
@@ -209,7 +166,6 @@ function FeaturedEntry({
   project: Project
   index: number
   variants: Variants | undefined
-  isLast: boolean
 }) {
   const idx = index.toString().padStart(2, '0')
   const period = formatPeriod(project.period)
@@ -597,4 +553,3 @@ function SupportingEntry({
     </motion.li>
   )
 }
-

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ThemeToggle } from '@/components/portfolio/ThemeToggle'
+import { EASE } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 
 type SectionId = 'work' | 'projects' | 'how-i-think' | 'lab' | 'contact'
@@ -59,7 +60,7 @@ export function Nav() {
     <motion.header
       initial={reduceMotion ? false : { opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+      transition={{ duration: 0.4, ease: EASE, delay: 0.1 }}
       className={cn(
         'fixed inset-x-0 top-0 z-50 transition-[background,border,backdrop-filter] duration-300',
         scrolled

@@ -1,32 +1,13 @@
 'use client'
 
-import { motion, useReducedMotion, type Variants } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { SplineScene } from '@/components/ui/splite'
 import { ContactRow } from '@/components/portfolio/ContactRow'
 import { SolarReadout } from '@/components/portfolio/SolarReadout'
 import { profile, experience, aboutCover } from '@/lib/portfolio-data'
+import { heroContainerVariants, sectionItemVariants } from '@/lib/motion'
 
 const SPLINE_SCENE = 'https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode'
-
-// Stagger the hero text. Spline does not animate (it has its own).
-const containerVariants: Variants = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.18,
-      delayChildren: 0.1,
-    },
-  },
-}
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 12 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
-  },
-}
 
 // Derive a short location string (city · country code) for the eyebrow.
 // `profile.location` is "Seoul, South Korea" — convert to "SEOUL · KR".
@@ -43,8 +24,8 @@ const currentEmployerLabel = currentRole
 
 export function Hero() {
   const reduceMotion = useReducedMotion()
-  const variantsContainer = reduceMotion ? undefined : containerVariants
-  const variantsItem = reduceMotion ? undefined : itemVariants
+  const variantsContainer = reduceMotion ? undefined : heroContainerVariants
+  const variantsItem = reduceMotion ? undefined : sectionItemVariants
 
   return (
     <section
@@ -211,4 +192,3 @@ function CornerMarks() {
     </>
   )
 }
-

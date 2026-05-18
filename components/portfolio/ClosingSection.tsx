@@ -1,6 +1,8 @@
 'use client'
 
 import { motion, useReducedMotion, type Variants } from 'framer-motion'
+import type { ReactNode } from 'react'
+import { SectionHeader } from '@/components/ui/section-header'
 import {
   profile,
   skills,
@@ -15,29 +17,8 @@ import {
   type Language,
   type Certificate,
 } from '@/lib/portfolio-data'
+import { EASE, sectionItemVariants, sectionListVariants } from '@/lib/motion'
 import { cn } from '@/lib/utils'
-
-// ─── Motion grammar — matches Hero / NowBlock / ProjectsGrid / Trajectory. ───
-const EASE = [0.16, 1, 0.3, 1] as const
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 12 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.4, ease: EASE },
-  },
-}
-
-const listVariants: Variants = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.07,
-      delayChildren: 0.05,
-    },
-  },
-}
 
 // Year for the footer copyright. Rendered server-side from `new Date()` would
 // hydration-mismatch on the boundary; computing once at module load is fine —
@@ -56,8 +37,8 @@ const BUILD_VERSION = 'v0.1.0'
 
 export function ClosingSection() {
   const reduceMotion = useReducedMotion()
-  const variantsItem = reduceMotion ? undefined : itemVariants
-  const variantsList = reduceMotion ? undefined : listVariants
+  const variantsItem = reduceMotion ? undefined : sectionItemVariants
+  const variantsList = reduceMotion ? undefined : sectionListVariants
 
   return (
     <section
@@ -66,39 +47,17 @@ export function ClosingSection() {
       className="relative w-full scroll-mt-16"
     >
       <div className="relative mx-auto w-full max-w-(--breakpoint-2xl) px-6 pt-24 pb-16 md:px-10 md:pt-32 md:pb-20">
-        {/* Header row — § 05 / CONTACT.  Right side carries an open-to status. */}
-        <motion.div
-          initial={reduceMotion ? false : { opacity: 0, y: 8 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-15%' }}
-          transition={{ duration: 0.4, ease: EASE }}
-          className="flex items-center justify-between gap-4"
+        <SectionHeader
+          headingId="contact-heading"
+          index="05"
+          title="Contact"
+          reduceMotion={!!reduceMotion}
         >
-          <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            <span aria-hidden="true" className="text-muted-foreground/50">§</span>
-            <span>05</span>
-            <span aria-hidden="true" className="h-3 w-px bg-border" />
-            <h2 id="contact-heading" className="text-foreground/80">
-              Contact
-            </h2>
-          </div>
-
           <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-xs">
             <LiveDot reduceMotion={!!reduceMotion} />
             <span>Open to work</span>
           </div>
-        </motion.div>
-
-        {/* Hairline rule under header. */}
-        <motion.div
-          aria-hidden="true"
-          initial={reduceMotion ? false : { scaleX: 0, opacity: 0 }}
-          whileInView={{ scaleX: 1, opacity: 1 }}
-          viewport={{ once: true, margin: '-15%' }}
-          transition={{ duration: 0.5, ease: EASE, delay: 0.05 }}
-          style={{ transformOrigin: 'left center' }}
-          className="mt-4 h-px w-full bg-border/60"
-        />
+        </SectionHeader>
 
         {/* (a) About — single column, full prose width. Pulled out of the
             previous side-by-side grid with Stack so the light zone below can
@@ -236,7 +195,7 @@ function CredentialsBlock({
   children,
 }: {
   label: string
-  children: React.ReactNode
+  children: ReactNode
 }) {
   return (
     <div>
@@ -344,10 +303,6 @@ function StackBlock({
       initial={reduceMotion ? false : 'hidden'}
       whileInView="show"
       viewport={{ once: true, margin: '-15%' }}
-      // Stands alone inside the light-section wrapper now (no longer paired
-      // with About in a 12-col grid). Full width within the wrapper; the inner
-      // 2-col chip grid still gives it lateral rhythm.
-      className=""
     >
       <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
         Stack
@@ -423,9 +378,6 @@ function UsesBlock({
       initial={reduceMotion ? false : 'hidden'}
       whileInView="show"
       viewport={{ once: true, margin: '-10%' }}
-      // Spacing reduced: Uses now lives inside the same light-section wrapper
-      // as Stack, so it doesn't need to re-establish a fresh visual zone — the
-      // shared warm surface already groups them as siblings.
       className="mt-16 md:mt-20"
     >
       {/* Manifest divider — same idiom as "Also shipped" / "Reach out" / "/now". */}

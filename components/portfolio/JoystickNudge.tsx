@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
 import { useReducedMotion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
@@ -62,7 +62,7 @@ export function JoystickNudge({ className }: { className?: string }) {
     }
   }, [active])
 
-  const onDown = (e: React.PointerEvent<HTMLDivElement>) => {
+  const onDown = (e: ReactPointerEvent<HTMLDivElement>) => {
     if (reduceMotion) return
     e.preventDefault()
     setActive(true)

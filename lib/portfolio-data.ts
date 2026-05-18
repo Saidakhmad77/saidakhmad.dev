@@ -100,13 +100,6 @@ export type Principle = {
   accent: 'cyan' | 'warm' | 'fail'
 }
 
-export type Currently = {
-  watching: { title: string; subtitle: string; status: string }
-  reading: { title: string; author: string }
-  listening: { title: string; subtitle: string }
-  bugOfWeek: { headline: string; lesson: string }
-}
-
 export type AboutCover = {
   hook: string
   motivation: string
@@ -115,39 +108,12 @@ export type AboutCover = {
   greeting: string
 }
 
-export type HeroStat = {
-  big: string
-  label: string
-  detail: string
-}
-
 export type ProjectCategory = 'extension' | 'patch' | 'tool' | 'pipeline'
 
 export type ProjectMeta = {
   slug: string
   category: ProjectCategory
   metric: string
-}
-
-export type FactCategory =
-  | 'korea'
-  | 'f1'
-  | 'football'
-  | 'why'
-  | 'languages'
-  | 'debug'
-  | 'source'
-  | 'arc'
-  | 'learning'
-  | 'origin'
-  | 'reading'
-  | 'constraint'
-
-export type Fact = {
-  id: string
-  category: FactCategory
-  label: string
-  body: string
 }
 
 export type ProjectConstraint = {
@@ -483,154 +449,6 @@ export const principles: Principle[] = [
   },
 ]
 
-// ─── /currently — Lab section ───────────────────────────────────────────────
-// What I'm watching / reading / listening / debugging this month. Distinct
-// from /now (which is the role's mandate) — this is the personal feed.
-
-export const currently: Currently = {
-  watching: {
-    title: "F1 — Miami weekend",
-    subtitle: "Sundays · the best free lecture on control + strategy.",
-    status: "RACE WEEKEND",
-  },
-  reading: {
-    title: "The Thinking Machine",
-    author: "Stephen Witt",
-  },
-  listening: {
-    title: "Lex × Karpathy",
-    subtitle: "Software 1.0 → 2.0 → 3.0.",
-  },
-  bugOfWeek: {
-    headline: "RTX fog keys silently created new ones instead of updating.",
-    lesson: "carb.settings looked like it worked. Spelled the key wrong.",
-  },
-}
-
-// ─── Per-project "constraint" rows ──────────────────────────────────────────
-// One per project in projects[]. Surfaces the cover-letter thesis ("constraints
-// are inputs to design") right onto the project cards.
-
-// ─── Hero stats ──────────────────────────────────────────────────────────────
-// Four big numbers under the hero text. Pull-quotes for the eye, not
-// CV-grade flexing. Each is a fact, derived from the cover letter + roles.
-
-export const heroStats: HeroStat[] = [
-  {
-    big: "15",
-    label: "DOF",
-    detail: "articulated rig",
-  },
-  {
-    big: "3",
-    label: "WoRV exts",
-    detail: "lights · climate · logging",
-  },
-  {
-    big: "3",
-    label: "Companies",
-    detail: "STEMON · ChoiceTech · Maum.ai",
-  },
-  {
-    big: "3",
-    label: "Langs",
-    detail: "ko · en · uz",
-  },
-]
-
-// ─── Fact deck ──────────────────────────────────────────────────────────────
-// SpinDeck cards. One fact at a time, clickable through. Twelve curated
-// items — all anchored in cover-letter content + the existing `now` /
-// `currently` data, nothing invented. Edit freely; the component reads from
-// here.
-
-export const facts: Fact[] = [
-  {
-    id: 'why-sim',
-    category: 'why',
-    label: 'Why simulation',
-    body:
-      "Autonomous driving is a domain where physics, sensors, control, and software must mesh as a single integrated system. Simulation is the most practical way to validate that.",
-  },
-  {
-    id: 'arc',
-    category: 'arc',
-    label: 'The throughline',
-    body:
-      "Full-stack → backend → frontend → embedded (ESP32-S3) → simulation. A habit of understanding systems end-to-end.",
-  },
-  {
-    id: 'lesson',
-    category: 'debug',
-    label: 'The biggest lesson',
-    body:
-      "Engineering for the surfacing of silent failures. In a physics engine, the everyday failure mode is code that 'succeeds' but produces wrong results.",
-  },
-  {
-    id: 'debug',
-    category: 'debug',
-    label: 'A debug trace',
-    body:
-      "Pose values came back as zero. Traced step by step — which prim had RigidBodyAPI, what the USD attribute returned, the prim path. The trace fixed it.",
-  },
-  {
-    id: 'source-over-docs',
-    category: 'source',
-    label: 'Source over docs',
-    body:
-      "The RTX fog key correction in worv.env.climate was discovered by reading the Isaac Sim source directly.",
-  },
-  {
-    id: 'constraints',
-    category: 'constraint',
-    label: 'A working belief',
-    body:
-      "Constraints are inputs to design, not obstacles to avoid.",
-  },
-  {
-    id: 'pip-spencer',
-    category: 'constraint',
-    label: 'A favorite constraint',
-    body:
-      "Isaac Sim doesn't allow pip. The solar position calculation in worv.env.lights had to be implemented from scratch in pure standard library — the Spencer 1971 Fourier series.",
-  },
-  {
-    id: 'korea',
-    category: 'korea',
-    label: 'Years in Korea',
-    body:
-      "International student in Korea. Major coursework completed in Korean. Development, meetings, and documentation in both Korean and English.",
-  },
-  {
-    id: 'choicetech',
-    category: 'languages',
-    label: 'At ChoiceTech',
-    body:
-      "Customized hair/skin-analysis platform backends through global collaborations with L'Oréal and Dior. Optimizing SQL-based keyword mapping improved real-time analysis throughput by over 20%.",
-  },
-  {
-    id: 'maum',
-    category: 'arc',
-    label: 'At Maum.ai',
-    body:
-      "Collaborated with designers, UE5 build owners, and research teams to ship three worv.* extensions, a UE5 → Isaac opacity pipeline, and the map physics and vehicle-control foundation.",
-  },
-  {
-    id: 'aspiration',
-    category: 'why',
-    label: 'Looking ahead',
-    body:
-      "Want to grow into an engineer who can co-design the entire simulation evaluation pipeline — from scenario automation to data logging to evaluation metrics.",
-  },
-  {
-    id: 'hobbies',
-    category: 'football',
-    label: 'Outside work',
-    body:
-      "Football. Formula 1.",
-  },
-]
-
 // ─── Per-project category + metric badges ───────────────────────────────────
 // One badge per project — turns the wall-of-text grid into something the eye
 // can navigate at a glance. Categories use the warm / cyan / fail accents
@@ -644,6 +462,10 @@ export const projectMeta: ProjectMeta[] = [
   { slug: "g29-teleop-port",   category: "tool",     metric: "Xbox → G29" },
   { slug: "ddds-admin-app",    category: "tool",     metric: "ESP32-S3 · DGUS" },
 ]
+
+// ─── Per-project "constraint" rows ──────────────────────────────────────────
+// One per project in projects[]. Surfaces the cover-letter thesis ("constraints
+// are inputs to design") right onto the project cards.
 
 export const projectConstraints: ProjectConstraint[] = [
   {

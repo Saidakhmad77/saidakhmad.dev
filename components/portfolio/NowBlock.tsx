@@ -1,19 +1,10 @@
 'use client'
 
 import { motion, useReducedMotion, type Variants } from 'framer-motion'
+import type { ReactNode } from 'react'
+import { SectionHeader } from '@/components/ui/section-header'
 import { experience, now } from '@/lib/portfolio-data'
-
-// Match the hero's motion grammar exactly: opacity + small y, ease-out cubic-bezier, ~400ms.
-const EASE = [0.16, 1, 0.3, 1] as const
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 12 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.4, ease: EASE },
-  },
-}
+import { EASE, sectionItemVariants } from '@/lib/motion'
 
 // Compress "Feb 2026 — Present" into a coordinate-style range.
 // Mirror the hero's monospace metadata convention. Tilde / arrow style.
@@ -35,7 +26,7 @@ function formatPeriod(period: string): string {
 export function NowBlock() {
   const reduceMotion = useReducedMotion()
   const role = experience.find((e) => e.current) ?? experience[0]
-  const variantsItem = reduceMotion ? undefined : itemVariants
+  const variantsItem = reduceMotion ? undefined : sectionItemVariants
 
   const period = formatPeriod(role.period)
   const stack = role.stack
@@ -47,39 +38,17 @@ export function NowBlock() {
       className="relative w-full scroll-mt-16"
     >
       <div className="relative mx-auto w-full max-w-(--breakpoint-2xl) px-6 pt-24 pb-24 md:px-10 md:pt-32 md:pb-32">
-        {/* Header row — § 01 / NOW + status pill on the right. */}
-        <motion.div
-          initial={reduceMotion ? false : { opacity: 0, y: 8 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-15%' }}
-          transition={{ duration: 0.4, ease: EASE }}
-          className="flex items-center justify-between gap-4"
+        <SectionHeader
+          headingId="work-heading"
+          index="01"
+          title="Now"
+          reduceMotion={!!reduceMotion}
         >
-          <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            <span aria-hidden="true" className="text-muted-foreground/50">§</span>
-            <span>01</span>
-            <span aria-hidden="true" className="h-3 w-px bg-border" />
-            <h2 id="work-heading" className="text-foreground/80">
-              Now
-            </h2>
-          </div>
-
           <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-xs">
             <LiveDot reduceMotion={!!reduceMotion} />
             <span>{period}</span>
           </div>
-        </motion.div>
-
-        {/* Hairline rule under header. */}
-        <motion.div
-          aria-hidden="true"
-          initial={reduceMotion ? false : { scaleX: 0, opacity: 0 }}
-          whileInView={{ scaleX: 1, opacity: 1 }}
-          viewport={{ once: true, margin: '-15%' }}
-          transition={{ duration: 0.5, ease: EASE, delay: 0.05 }}
-          style={{ transformOrigin: 'left center' }}
-          className="mt-4 h-px w-full bg-border/60"
-        />
+        </SectionHeader>
 
         {/* Title block: company (sans, large) + companyKo (muted) + role line (mono). */}
         <motion.div
@@ -185,7 +154,7 @@ function NowSubBlock({
 }) {
   // Filter out empty rows (`tinkering` is currently []). The data layer is the
   // truth; render decides whether a row earns its keep this month.
-  const rows: { label: string; render: () => React.ReactNode }[] = []
+  const rows: { label: string; render: () => ReactNode }[] = []
 
   if (now.learning.length > 0) {
     rows.push({

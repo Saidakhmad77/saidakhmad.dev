@@ -1,30 +1,10 @@
 'use client'
 
 import { motion, useReducedMotion, type Variants } from 'framer-motion'
+import { SectionHeader } from '@/components/ui/section-header'
 import { writingTopics, type WritingTopic } from '@/lib/portfolio-data'
+import { EASE, sectionItemVariants, sectionListVariants } from '@/lib/motion'
 import { cn } from '@/lib/utils'
-
-// ─── Motion grammar — matches rest of the site. ──────────────────────────────
-const EASE = [0.16, 1, 0.3, 1] as const
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 12 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.4, ease: EASE },
-  },
-}
-
-const listVariants: Variants = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.07,
-      delayChildren: 0.05,
-    },
-  },
-}
 
 const STATUS_LABEL: Record<WritingTopic['status'], string> = {
   planned: 'PLANNED',
@@ -33,17 +13,13 @@ const STATUS_LABEL: Record<WritingTopic['status'], string> = {
 }
 
 // ─── Top-level section ──────────────────────────────────────────────────────
-// Replaces the old WritingSection. Two sub-blocks:
-//   (a) /currently — a personal feed: watching, reading, listening, bug of the
-//       week. Lab-notebook tone.
-//   (b) Planned writing — the original writing list, kept honest.
-// The order matters: the personal feed reads first so the reader gets
-// personality before the editorial schedule.
+// Replaces the old WritingSection with the planned writing list, kept compact
+// and honest.
 
 export function Lab() {
   const reduceMotion = useReducedMotion()
-  const variantsItem = reduceMotion ? undefined : itemVariants
-  const variantsList = reduceMotion ? undefined : listVariants
+  const variantsItem = reduceMotion ? undefined : sectionItemVariants
+  const variantsList = reduceMotion ? undefined : sectionListVariants
 
   return (
     <section
@@ -52,36 +28,16 @@ export function Lab() {
       className="relative w-full scroll-mt-16"
     >
       <div className="relative mx-auto w-full max-w-(--breakpoint-2xl) px-6 pt-24 pb-24 md:px-10 md:pt-32 md:pb-32">
-        {/* Header. */}
-        <motion.div
-          initial={reduceMotion ? false : { opacity: 0, y: 8 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-15%' }}
-          transition={{ duration: 0.4, ease: EASE }}
-          className="flex items-center justify-between gap-4"
+        <SectionHeader
+          headingId="lab-heading"
+          index="04"
+          title="Lab"
+          reduceMotion={!!reduceMotion}
         >
-          <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            <span aria-hidden="true" className="text-muted-foreground/50">§</span>
-            <span>04</span>
-            <span aria-hidden="true" className="h-3 w-px bg-border" />
-            <h2 id="lab-heading" className="text-foreground/80">
-              Lab
-            </h2>
-          </div>
           <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/75 sm:text-xs">
             notebook · not archive
           </div>
-        </motion.div>
-
-        <motion.div
-          aria-hidden="true"
-          initial={reduceMotion ? false : { scaleX: 0, opacity: 0 }}
-          whileInView={{ scaleX: 1, opacity: 1 }}
-          viewport={{ once: true, margin: '-15%' }}
-          transition={{ duration: 0.5, ease: EASE, delay: 0.05 }}
-          style={{ transformOrigin: 'left center' }}
-          className="mt-4 h-px w-full bg-border/60"
-        />
+        </SectionHeader>
 
         {/* Planned writing. */}
         <PlannedWriting variantsItem={variantsItem} variantsList={variantsList} reduceMotion={!!reduceMotion} />
@@ -91,8 +47,7 @@ export function Lab() {
 }
 
 // ─── Planned writing ────────────────────────────────────────────────────────
-// Inherits the old WritingSection's row layout, but more compact and below the
-// /currently feed so the section leads with personality.
+// Inherits the old WritingSection's row layout, but more compact.
 
 function PlannedWriting({
   variantsItem,

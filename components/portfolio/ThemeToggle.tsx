@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
+import { EASE } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 
 // ─── ThemeToggle ────────────────────────────────────────────────────────────
@@ -78,7 +79,7 @@ export function ThemeToggle({ className }: { className?: string }) {
                 scale: light ? 1 : 0.6,
               }
         }
-        transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.25, ease: EASE }}
         className="absolute"
       >
         <SunGlyph />
@@ -95,7 +96,7 @@ export function ThemeToggle({ className }: { className?: string }) {
                 scale: light ? 0.6 : 1,
               }
         }
-        transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.25, ease: EASE }}
         className="absolute"
       >
         <MoonGlyph />

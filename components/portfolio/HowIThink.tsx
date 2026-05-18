@@ -1,33 +1,13 @@
 'use client'
 
 import { motion, useReducedMotion, type Variants } from 'framer-motion'
+import { SectionHeader } from '@/components/ui/section-header'
 import { principles, experience, type Principle } from '@/lib/portfolio-data'
 import { SolarReadout } from '@/components/portfolio/SolarReadout'
 import { SilentFailureToggle } from '@/components/portfolio/SilentFailureToggle'
 import { JoystickNudge } from '@/components/portfolio/JoystickNudge'
+import { EASE, thinkingItemVariants, thinkingListVariants } from '@/lib/motion'
 import { cn } from '@/lib/utils'
-
-// ─── Motion grammar — matches Hero / NowBlock / ProjectsGrid. ────────────────
-const EASE = [0.16, 1, 0.3, 1] as const
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 14 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.45, ease: EASE },
-  },
-}
-
-const listVariants: Variants = {
-  hidden: {},
-  show: {
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.05,
-    },
-  },
-}
 
 // ─── Top-level ───────────────────────────────────────────────────────────────
 // Three philosophy cards from the cover letter. This section replaces the old
@@ -37,8 +17,8 @@ const listVariants: Variants = {
 
 export function HowIThink() {
   const reduceMotion = useReducedMotion()
-  const variantsItem = reduceMotion ? undefined : itemVariants
-  const variantsList = reduceMotion ? undefined : listVariants
+  const variantsItem = reduceMotion ? undefined : thinkingItemVariants
+  const variantsList = reduceMotion ? undefined : thinkingListVariants
 
   // Build the trajectory strip — earliest job → most recent → now. The
   // experience[] array is reverse-chronological (current role first, CV
@@ -55,36 +35,16 @@ export function HowIThink() {
       className="relative w-full scroll-mt-16"
     >
       <div className="relative mx-auto w-full max-w-(--breakpoint-2xl) px-6 pt-24 pb-24 md:px-10 md:pt-32 md:pb-32">
-        {/* Header row — § 03 / HOW I THINK. */}
-        <motion.div
-          initial={reduceMotion ? false : { opacity: 0, y: 8 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-15%' }}
-          transition={{ duration: 0.4, ease: EASE }}
-          className="flex items-center justify-between gap-4"
+        <SectionHeader
+          headingId="how-i-think-heading"
+          index="03"
+          title="How I Think"
+          reduceMotion={!!reduceMotion}
         >
-          <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            <span aria-hidden="true" className="text-muted-foreground/50">§</span>
-            <span>03</span>
-            <span aria-hidden="true" className="h-3 w-px bg-border" />
-            <h2 id="how-i-think-heading" className="text-foreground/80">
-              How I Think
-            </h2>
-          </div>
           <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/75 sm:text-xs">
             three lessons · one cover letter
           </div>
-        </motion.div>
-
-        <motion.div
-          aria-hidden="true"
-          initial={reduceMotion ? false : { scaleX: 0, opacity: 0 }}
-          whileInView={{ scaleX: 1, opacity: 1 }}
-          viewport={{ once: true, margin: '-15%' }}
-          transition={{ duration: 0.5, ease: EASE, delay: 0.05 }}
-          style={{ transformOrigin: 'left center' }}
-          className="mt-4 h-px w-full bg-border/60"
-        />
+        </SectionHeader>
 
         {/* One-line lead. Reads as the section's argument, not a paragraph. */}
         <motion.p
@@ -165,9 +125,7 @@ function PrincipleCard({
   return (
     <motion.li
       variants={variants}
-      className={cn(
-        'group relative flex h-full flex-col border border-border/60 p-6 md:p-7',
-      )}
+      className="group relative flex h-full flex-col border border-border/60 p-6 md:p-7"
     >
       {/* Giant ordinal — visual anchor for the card. Outlined (text-stroke
           alternative: foreground/15 sits on a 1px border-style block) so it

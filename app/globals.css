@@ -153,9 +153,8 @@
    the ThemeToggle in the nav, an `html.theme-light` class is added — these
    values then cascade everywhere. One toggle, one site-wide flip.
 
-   The light palette here is the same warm off-white that previously lived in
-   the per-zone `.light-section` rules, now hoisted to the global. Accents
-   are darkened so they still meet contrast against the lighter surface. */
+   The light palette here is a warm off-white applied globally. Accents are
+   darkened so they still meet contrast against the lighter surface. */
 html.theme-light {
   --background: oklch(0.96 0.006 85);
   --foreground: oklch(0.20 0.008 80);
@@ -324,27 +323,4 @@ body::before {
   font-family: 'Nanum Myeongjo', 'AppleMyungjo', 'Apple SD Gothic Neo',
     'Noto Serif KR', serif;
   letter-spacing: -0.01em;
-}
-
-/* ─── SimConsole weather particles ───────────────────────────────────────────
-   Rain falls vertically with a slight horizontal lean. Snow drifts with a
-   tiny side-to-side wobble using a per-particle --drift custom property.
-   Both are stage-coordinate-space (200×200 viewBox) so the numbers are
-   small. */
-@keyframes sim-rain {
-  0%   { transform: translate(0, 0); opacity: 0; }
-  10%  { opacity: 0.65; }
-  90%  { opacity: 0.65; }
-  100% { transform: translate(-8px, 230px); opacity: 0; }
-}
-@keyframes sim-snow {
-  0%   { transform: translate(0, 0); opacity: 0; }
-  10%  { opacity: 0.85; }
-  50%  { transform: translate(var(--drift, 6px), 110px); opacity: 0.85; }
-  90%  { opacity: 0.85; }
-  100% { transform: translate(calc(var(--drift, 6px) * -0.6), 230px); opacity: 0; }
-}
-@media (prefers-reduced-motion: reduce) {
-  @keyframes sim-rain { from, to { transform: none; opacity: 0; } }
-  @keyframes sim-snow { from, to { transform: none; opacity: 0; } }
 }
