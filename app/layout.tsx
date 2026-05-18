@@ -85,6 +85,11 @@ export const viewport: Viewport = {
 // choice was light mode.
 const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('theme');if(t==='light')document.documentElement.classList.add('theme-light');}catch(e){}})();`
 
+// Force a clean top-of-page scroll on F5/refresh — disables the browser's
+// default scrollRestoration so the user always lands at the hero on reload.
+// Also handles the Safari BFCache restore via pageshow.
+const SCROLL_TOP_SCRIPT = `(function(){try{if('scrollRestoration' in history){history.scrollRestoration='manual';}window.addEventListener('pageshow',function(e){if(e.persisted)window.scrollTo(0,0);});}catch(e){}})();`
+
 const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
@@ -141,6 +146,7 @@ export default function RootLayout({
             users who chose light mode don't see a flash of dark. Has to be
             inline + before React hydrates. */}
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: SCROLL_TOP_SCRIPT }} />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary/30 selection:text-foreground">
         {children}

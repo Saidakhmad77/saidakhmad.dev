@@ -5,13 +5,11 @@ import type { ReactNode } from 'react'
 import { SectionHeader } from '@/components/ui/section-header'
 import {
   profile,
-  skills,
   uses,
   aboutCover,
   education,
   languages,
   certificates,
-  type SkillCategory,
   type Uses,
   type Education,
   type Language,
@@ -66,16 +64,9 @@ export function ClosingSection() {
             inventory, and reads better against the engineered-dark backdrop. */}
         <AboutBlock variants={variantsItem} reduceMotion={!!reduceMotion} />
 
-        {/* Stack + /uses — single dark surface like the rest of the site.
-            Hairline borders top and bottom carry the separation; no surface
-            flip. The negative inset breaks out of the section padding so the
-            hairlines run edge-to-edge of the viewport. */}
+        {/* /uses — daily tools. Stack moved to its own SkillsStrip section
+            higher on the page. */}
         <div className="mt-16 -mx-6 border-y border-border/60 px-6 pt-16 pb-20 md:-mx-10 md:mt-20 md:px-10 md:pt-20 md:pb-24">
-          <StackBlock
-            variantsList={variantsList}
-            variantsItem={variantsItem}
-            reduceMotion={!!reduceMotion}
-          />
           <UsesBlock
             variantsList={variantsList}
             variantsItem={variantsItem}
@@ -279,75 +270,6 @@ function CertificateRow({
         {cert.date}
       </span>
     </li>
-  )
-}
-
-// ─── Stack block ─────────────────────────────────────────────────────────────
-// 6 categories rendered in a 2-column grid at md+, single column on mobile.
-// Each category: small mono label, hairline, chip cluster. No card frames, no
-// shadows — hairlines and inherent layout do the structuring. Chip pattern
-// matches NowBlock + ProjectsGrid + Trajectory exactly: border-only mono.
-
-function StackBlock({
-  variantsList,
-  variantsItem,
-  reduceMotion,
-}: {
-  variantsList: Variants | undefined
-  variantsItem: Variants | undefined
-  reduceMotion: boolean
-}) {
-  return (
-    <motion.div
-      variants={variantsList}
-      initial={reduceMotion ? false : 'hidden'}
-      whileInView="show"
-      viewport={{ once: true, margin: '-15%' }}
-    >
-      <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
-        Stack
-      </p>
-
-      <ul className="mt-6 grid grid-cols-1 gap-y-8 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-10 lg:grid-cols-3 lg:gap-x-12">
-        {skills.map((cat) => (
-          <StackCategory key={cat.category} cat={cat} variants={variantsItem} />
-        ))}
-      </ul>
-    </motion.div>
-  )
-}
-
-function StackCategory({
-  cat,
-  variants,
-}: {
-  cat: SkillCategory
-  variants: Variants | undefined
-}) {
-  return (
-    <motion.li variants={variants} className="group relative">
-      {/* Category label row — mono caps, hairline extending right. */}
-      <div className="flex items-center gap-3">
-        <span className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-foreground/70">
-          {cat.category}
-        </span>
-        <span aria-hidden="true" className="h-px flex-1 bg-border/40" />
-        <span className="font-mono text-[10px] tracking-[0.05em] text-muted-foreground/55">
-          {cat.items.length.toString().padStart(2, '0')}
-        </span>
-      </div>
-
-      {/* Chips — same border-only mono pattern used everywhere else. */}
-      <ul className="mt-4 flex flex-wrap gap-x-2 gap-y-2">
-        {cat.items.map((item) => (
-          <li key={item}>
-            <span className="inline-flex items-center border border-border/70 px-2.5 py-1 font-mono text-[11px] tracking-tight text-foreground/75">
-              {item}
-            </span>
-          </li>
-        ))}
-      </ul>
-    </motion.li>
   )
 }
 
