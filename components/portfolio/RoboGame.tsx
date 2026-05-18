@@ -109,7 +109,7 @@ const INITIAL_STATE: GameState = {
 }
 
 const SPEED = 2.8
-const TURN  = 0.075
+const TURN  = 0.09
 
 // Canvas draw colors — hex for max browser compat with canvas 2d
 const C = {
@@ -319,7 +319,7 @@ export function RoboGame({ className }: { className?: string }) {
       const [tgx, tgy] = s.path[s.pathIdx]
       const tx = tgx * CELL + CELL / 2, ty = tgy * CELL + CELL / 2
       const dx = tx - s.x, dy = ty - s.y
-      if (Math.hypot(dx, dy) < 4) {
+      if (Math.hypot(dx, dy) < CELL * 0.35) {
         s.pathIdx++
         if (s.pathIdx >= s.path.length) {
           s.speed = 0; s.path = []; s.pathIdx = 0
@@ -331,10 +331,16 @@ export function RoboGame({ className }: { className?: string }) {
         let da = Math.atan2(dy, dx) - s.angle
         while (da > Math.PI)  da -= Math.PI * 2
         while (da < -Math.PI) da += Math.PI * 2
-        s.angle += Math.sign(da) * Math.min(TURN * 2, Math.abs(da))
-        s.x += Math.cos(s.angle) * SPEED
-        s.y += Math.sin(s.angle) * SPEED
-        s.speed = SPEED
+        const absDA = Math.abs(da)
+        s.angle += Math.sign(da) * Math.min(TURN * 2, absDA)
+        if (absDA < Math.PI * 0.45) {
+          s.x += Math.cos(s.angle) * SPEED
+          s.y += Math.sin(s.angle) * SPEED
+          s.speed = SPEED
+        } else {
+          // rotate in place — don't move forward
+          s.speed = 0
+        }
       }
     }
 
