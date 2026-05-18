@@ -6,13 +6,13 @@ import { ThemeToggle } from '@/components/portfolio/ThemeToggle'
 import { EASE } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 
-type SectionId = 'work' | 'projects' | 'how-i-think' | 'lab' | 'contact'
+type SectionId = 'work' | 'projects' | 'stack' | 'nav-sim' | 'contact'
 
 const SECTIONS: { id: SectionId; label: string }[] = [
   { id: 'work', label: 'Work' },
   { id: 'projects', label: 'Projects' },
-  { id: 'how-i-think', label: 'How I think' },
-  { id: 'lab', label: 'Lab' },
+  { id: 'stack', label: 'Stack' },
+  { id: 'nav-sim', label: 'Sim' },
   { id: 'contact', label: 'Contact' },
 ]
 

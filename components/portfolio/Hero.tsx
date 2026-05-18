@@ -3,7 +3,6 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { SplineScene } from '@/components/ui/splite'
 import { ContactRow } from '@/components/portfolio/ContactRow'
-import { SolarReadout } from '@/components/portfolio/SolarReadout'
 import { profile, experience, aboutCover } from '@/lib/portfolio-data'
 import { heroContainerVariants, sectionItemVariants } from '@/lib/motion'
 
@@ -107,24 +106,6 @@ export function Hero() {
           >
             {aboutCover.hook}
           </motion.p>
-
-          {/* Beliefs — kept, but moved below the stats so it reads as a
-              footer to the hero block, not a continuation of the role line. */}
-          <motion.p
-            variants={variantsItem}
-            className="mt-4 flex max-w-[32rem] items-start gap-3 font-mono text-[12px] italic leading-relaxed text-foreground/55"
-          >
-            <span
-              aria-hidden="true"
-              className="mt-2 inline-block h-px w-5 shrink-0 bg-border"
-            />
-            <span>{profile.beliefs}</span>
-          </motion.p>
-
-          {/* Live Seoul solar readout. */}
-          <motion.div variants={variantsItem}>
-            <SolarReadout />
-          </motion.div>
 
           {/* Contact row. */}
           <motion.div variants={variantsItem} className="mt-7">
