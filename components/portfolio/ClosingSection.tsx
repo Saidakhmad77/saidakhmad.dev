@@ -521,7 +521,7 @@ function ClosingContact({
         viewport={{ once: true, margin: '-10%' }}
         className="mt-8 max-w-[42rem] text-balance text-2xl font-medium tracking-[-0.02em] text-foreground/90 sm:text-3xl md:text-[34px] md:leading-[1.2]"
       >
-        Looking for a robotics simulation, autonomous systems, or senior backend
+        Looking for a robotics simulation, autonomous systems, or backend
         seat. Quickest reply by email.
       </motion.p>
 
