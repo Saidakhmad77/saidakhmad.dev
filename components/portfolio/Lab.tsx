@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion, type Variants } from 'framer-motion'
 import { SectionHeader } from '@/components/ui/section-header'
+import { RoboGame } from '@/components/portfolio/RoboGame'
 import { writingTopics, type WritingTopic } from '@/lib/portfolio-data'
 import { EASE, sectionItemVariants, sectionListVariants } from '@/lib/motion'
 import { cn } from '@/lib/utils'
@@ -38,6 +39,33 @@ export function Lab() {
             notebook · not archive
           </div>
         </SectionHeader>
+
+        {/* /nav_sim — autonomous navigation game. */}
+        <motion.div
+          initial={reduceMotion ? false : { opacity: 0, y: 6 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-10%' }}
+          transition={{ duration: 0.4, ease: EASE, delay: 0.05 }}
+          className="mt-10 flex items-center gap-3 md:mt-12"
+        >
+          <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
+            /nav_sim
+          </span>
+          <span aria-hidden="true" className="h-px flex-1 bg-border/40" />
+          <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/55">
+            manual · auto · a*
+          </span>
+        </motion.div>
+
+        <motion.div
+          initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-10%' }}
+          transition={{ duration: 0.4, ease: EASE, delay: 0.1 }}
+          className="mt-6"
+        >
+          <RoboGame />
+        </motion.div>
 
         {/* Planned writing. */}
         <PlannedWriting variantsItem={variantsItem} variantsList={variantsList} reduceMotion={!!reduceMotion} />
