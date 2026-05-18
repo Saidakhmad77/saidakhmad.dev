@@ -127,7 +127,7 @@ export type ProjectConstraint = {
 export const profile: Profile = {
   name: "Saidakhmad Nuriddinov",
   nickname: "Sam",
-  title: "Autonomous Driving Simulation Engineer",
+  title: "Software Engineer",
   brief:
     "Building autonomous-vehicle simulation at Maum.ai — Isaac Sim, Omniverse, USD, PhysX, ROS 2. Backend & full-stack engineer at heart. F1 watcher.",
   beliefs: "Simulators should fail honestly.",

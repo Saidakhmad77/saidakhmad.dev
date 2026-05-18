@@ -14,8 +14,9 @@ export function SkillsStrip() {
     <section
       id="stack"
       aria-labelledby="stack-heading"
-      className="scroll-mt-16 pt-24 pb-16 md:pt-28 md:pb-20"
+      className="relative w-full scroll-mt-16"
     >
+      <div className="mx-auto w-full max-w-(--breakpoint-2xl) px-6 pt-24 pb-16 md:px-10 md:pt-28 md:pb-20">
       <SectionHeader
         headingId="stack-heading"
         index="stack"
@@ -48,6 +49,7 @@ export function SkillsStrip() {
           </motion.div>
         ))}
       </motion.div>
+      </div>
     </section>
   )
 }
