@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from 'framer-motion'
 import { SplineScene } from '@/components/ui/splite'
+import { HelloWave } from '@/components/portfolio/HelloWave'
 import { ContactRow } from '@/components/portfolio/ContactRow'
 import { profile, experience, aboutCover } from '@/lib/portfolio-data'
 import { heroContainerVariants, sectionItemVariants } from '@/lib/motion'
@@ -128,6 +129,10 @@ export function Hero() {
             </div>
             {/* Corner registration marks — engineering-precision detail. */}
             <CornerMarks />
+            {/* One-shot "hi" wave badge — appears on initial load, fades out
+                ~3.5s later so it doesn't compete with the Spline scene's own
+                mouse-tracking behaviour. */}
+            <HelloWave />
           </div>
         </div>
       </div>
