@@ -129,7 +129,7 @@ export const profile: Profile = {
   nickname: "Sam",
   title: "Software Engineer",
   brief:
-    "Building autonomous-vehicle simulation at Maum.ai — Isaac Sim, Omniverse, USD, PhysX, ROS 2. Backend & full-stack engineer at heart. F1 watcher.",
+    "Software engineer with hands-on autonomous-vehicle simulation experience — Isaac Sim, Omniverse, USD, PhysX, ROS 2. Backend & full-stack at heart. F1 watcher.",
   beliefs: "Simulators should fail honestly.",
   hobbies: ["Football", "F1"],
   location: "Seoul, South Korea",
@@ -151,7 +151,7 @@ export const profile: Profile = {
 
 export const now: Now = {
   focus:
-    "Production extensions on the WoRV simulation pipeline at Maum.ai — 15-DOF articulated rig, weather + lighting controllers, ROS 2 teleop refactors.",
+    "Job hunting in Seoul — full-stack and robotics-adjacent roles. Open to backend, simulation, and autonomy. TOPIK 4, D-10 visa, free to interview.",
   learning: ["Business Korean writing", "ROS 2 internals (DDS, executors, lifecycle)"],
   reading: [
     { title: "The Thinking Machine", author: "Stephen Witt" },
@@ -221,8 +221,8 @@ export const experience: Experience[] = [
     role: "Autonomous Driving Simulation Engineer",
     team: "WoRV",
     location: "Seoul",
-    period: "Feb 2026 — Present",
-    current: true,
+    period: "Feb 2026 — May 2026",
+    current: false,
     summary:
       "Production simulation infrastructure for autonomous vehicles on NVIDIA Isaac Sim / Omniverse — physics, sensors, controllers, and tooling.",
     bullets: [

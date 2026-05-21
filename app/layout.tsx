@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 const SITE_URL = "https://saidakhmad.dev"
 
 const META_DESCRIPTION =
-  "Autonomous-driving simulation engineer building production extensions on NVIDIA Isaac Sim at Maum.ai — USD, PhysX, OmniGraph, ROS 2. Full-stack background, F1 watcher. Based in Seoul."
+  "Software engineer with autonomous-driving simulation experience — NVIDIA Isaac Sim, USD, PhysX, OmniGraph, ROS 2. Full-stack background, F1 watcher. Based in Seoul."
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -104,10 +104,6 @@ const personJsonLd = {
     "@type": "PostalAddress",
     addressLocality: "Seoul",
     addressCountry: "KR",
-  },
-  worksFor: {
-    "@type": "Organization",
-    name: "Maum.ai",
   },
   alumniOf: {
     "@type": "CollegeOrUniversity",
