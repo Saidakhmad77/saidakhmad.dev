@@ -190,6 +190,14 @@ export const uses: Uses[] = [
 
 export const writingTopics: WritingTopic[] = [
   {
+    slug: "parkpilot-rl-on-m5",
+    title: "Training a CPU-only RL parking agent on an M5 Mac",
+    summary:
+      "An Ackermann robot learns to reverse into a tight parking slot using MuJoCo + SAC on Apple Silicon — no NVIDIA, no Isaac Sim. The kinematic bicycle model trick, the reward bug that never materialized, and results across ~2835 eval episodes.",
+    status: "shipped",
+    date: "2026-06-16",
+  },
+  {
     slug: "ros2-teleop-hardware-agnostic",
     title: "Why ROS 2 teleop should be hardware-agnostic from day one",
     summary:

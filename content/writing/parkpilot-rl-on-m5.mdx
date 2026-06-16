@@ -1,0 +1,130 @@
+---
+title: "Training a CPU-only RL parking agent on an M5 Mac"
+date: "2026-06-16"
+slug: "parkpilot-rl-on-m5"
+summary: "An Ackermann robot learns to reverse into a tight parking slot using MuJoCo + SAC on Apple Silicon — no NVIDIA, no Isaac Sim. The kinematic bicycle model trick, the reward bug that never materialized, and results across ~2835 eval episodes."
+tags: ["rl", "mujoco", "robotics", "apple-silicon"]
+---
+
+The premise was simple: train an Ackermann (car-like) robot to reverse or forward into a tight slot between two parked cars, in simulation, on a MacBook M5. No NVIDIA GPU. No Isaac Sim. No CUDA.
+
+This is the story of how that worked, what almost went wrong with the reward function, and what the numbers actually said.
+
+---
+
+## Why not Isaac Sim?
+
+Isaac Sim is where I spend most of my simulation work. It's the obvious choice — but it requires CUDA, and CUDA requires NVIDIA hardware. Apple Silicon has neither. Running Isaac Sim inside a VM or via cloud GPU was an option, but the goal here was a tight, local feedback loop: edit → train → evaluate in one terminal window.
+
+MuJoCo runs natively on Apple Silicon via Metal/CGL for headless rendering. No GPU required for physics or collision. It became the right tool precisely because of the constraint.
+
+---
+
+## Stack
+
+- `uv` + Python 3.12
+- MuJoCo 3.9 + Gymnasium 1.0
+- Stable-Baselines3 SAC
+- PyTorch (CPU)
+
+The entire training run happens on CPU. Phase 3 (fixed start, 100k steps) completes in ~292 seconds.
+
+---
+
+## The kinematic bicycle model trick
+
+MuJoCo gives you scene management, rendering, and collision. It does not give you an Ackermann drive model out of the box. The usual route is `mj_step` — MuJoCo's physics integrator — but Ackermann kinematics are not naturally expressed as MuJoCo forces or joints in a simple way.
+
+The solution: write the motion as a **pure-Python bicycle model** and apply it directly to `qpos`, then call `mj_forward` (not `mj_step`) to update the scene state.
+
+The equations:
+
+```
+x  += v · cos(θ) · dt
+y  += v · sin(θ) · dt
+θ  += (v / L) · tan(δ) · dt
+```
+
+Where `v` is drive velocity, `θ` is heading, `L` is wheelbase, and `δ` is steering angle. Each timestep, the Python env computes the new pose, writes it to `model.qpos`, and calls `mj_forward`. MuJoCo provides the physics world and collision checking; the bicycle model provides motion.
+
+This is a deliberate split of responsibilities — and it meant I could swap in domain-randomized wheelbases (Phase 4) without touching the MuJoCo XML at all.
+
+---
+
+## Environment design
+
+**Observation space (10-D):**
+
+| Dimension | Description |
+|-----------|-------------|
+| x, y | Robot position |
+| sin θ, cos θ | Heading (avoids angle wrap) |
+| v, δ | Current drive velocity and steer angle |
+| goal_dx, goal_dy | Displacement to goal slot |
+| sin(Δθ), cos(Δθ) | Heading error to goal |
+
+**Action space (2-D, continuous):**
+
+- Drive: `[-2, 2]` m/s
+- Steer: `[-0.6, 0.6]` rad
+
+**Reward:**
+
+Dense shaping reward combining distance-to-goal, heading alignment, and a small time penalty per step. Terminal rewards: +200 for success, −100 for collision or out-of-bounds exit.
+
+Success condition: within **0.15 m** of the slot center and within **±10°** of target heading.
+
+---
+
+## The reward bug that almost wasn't
+
+During design, I flagged what I called the **"suicide-exploit"**: an agent might learn that ending the episode early via collision (−100 once) is better than continuing to accumulate dense penalty from dawdling. A typical unsuccessful episode accumulates roughly −700 to −1100 in dense penalties over its lifetime. A single terminal −100 from immediately fleeing out-of-bounds is cheaper.
+
+This is a real failure mode in sparse/dense hybrid reward design, and I considered rebalancing the terminal penalties upward.
+
+I didn't — and it turned out not to matter. Across **2,835 evaluation episodes**:
+
+| Outcome | Count |
+|---------|-------|
+| Success | 2652 |
+| Collision | 57 |
+| Out-of-bounds | 20 |
+| Timeout | 106 |
+
+The reward was balanced as-is. The agent converged to parking, not fleeing — and the out-of-bounds "escapes" it was supposed to be tempted by stayed in the noise (20 of 2,835). No tuning needed.
+
+---
+
+## Training results
+
+**Phase 3 — fixed start position:**
+
+- Steps: 100k
+- Wall time: ~292s on CPU
+- Episode reward: −696 → +184
+- Success rate: **100%**, parks in ~17 steps
+
+![deterministic policy parks the car, fixed start](/parkpilot/parkpilot-demo.gif)
+
+**Phase 4 — domain randomization:**
+
+Randomized: start pose, wheelbase (0.18–0.28 m), observation noise. 300k steps (~15 min CPU). Evaluated across 4 seeds (400 episodes total).
+
+- Randomized-start success: **99.5%** (398/400)
+- Fixed-start success: still **100%**
+
+![episode reward + success rate over 300k steps](/parkpilot/parkpilot-curves.png)
+
+The success rate curve from Phase 3 to Phase 4 tells the real story: the domain randomization drop is small and recovers quickly, because the kinematic model is correct and the observation encoding is rotation-invariant.
+
+---
+
+## What I'd change
+
+The bicycle model's wheelbase randomization in Phase 4 is injected at the Python level. A cleaner approach would be a MuJoCo XML template with parameterized geometry, so the rendered scene actually reflects the sampled wheelbase. Currently, the scene always shows the default geometry while the kinematics use the sampled `L`. Functionally fine for training; problematic if you want the simulation to be a visual truth.
+
+---
+
+## Code
+
+[github.com/Saidakhmad77/parkpilot](https://github.com/Saidakhmad77/parkpilot)

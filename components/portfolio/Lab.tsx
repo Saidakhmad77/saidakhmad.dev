@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { motion, useReducedMotion, type Variants } from 'framer-motion'
 import { SectionHeader } from '@/components/ui/section-header'
 import { writingTopics, type WritingTopic } from '@/lib/portfolio-data'
@@ -120,19 +121,21 @@ function WritingRow({
   const idx = index.toString().padStart(2, '0')
   const status = STATUS_LABEL[topic.status]
 
-  return (
-    <motion.li
-      variants={variants}
-      className={cn(
-        'group relative grid grid-cols-1 gap-y-4 py-8 lg:grid-cols-12 lg:gap-x-10 lg:gap-y-0 lg:py-10',
-        !isLast && 'border-b border-border/40',
-      )}
-    >
+  const isShipped = topic.status === 'shipped'
+
+  const rowContent = (
+    <>
       <div className="lg:col-span-3 lg:pt-1">
         <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-[11px]">
           <span className="num text-muted-foreground/55">{idx}</span>
           <span aria-hidden="true" className="h-2.5 w-px bg-border" />
-          <span className="inline-flex items-baseline gap-1 text-foreground/70">
+          {/* Shipped reads in cyan (live, navigable); planned stays neutral. */}
+          <span
+            className={cn(
+              'inline-flex items-baseline gap-1',
+              isShipped ? 'text-[color:var(--primary)]' : 'text-foreground/70',
+            )}
+          >
             <span aria-hidden="true" className="text-muted-foreground/40">[</span>
             <span>{status}</span>
             <span aria-hidden="true" className="text-muted-foreground/40">]</span>
@@ -147,13 +150,48 @@ function WritingRow({
       </div>
 
       <div className="lg:col-span-9">
-        <h3 className="text-balance text-xl font-medium leading-snug tracking-[-0.015em] text-foreground/95 sm:text-[22px] md:text-2xl">
-          {topic.title}
+        <h3
+          className={cn(
+            'flex items-start gap-2 text-balance text-xl font-medium leading-snug tracking-[-0.015em] sm:text-[22px] md:text-2xl',
+            isShipped
+              ? 'text-foreground/95 transition-colors group-hover:text-foreground'
+              : 'text-foreground/95',
+          )}
+        >
+          <span>{topic.title}</span>
+          {isShipped ? (
+            <span
+              aria-hidden="true"
+              className="mt-1.5 shrink-0 text-muted-foreground/40 transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-[color:var(--primary)] group-focus-visible:text-[color:var(--primary)]"
+            >
+              →
+            </span>
+          ) : null}
         </h3>
         <p className="mt-3 max-w-[44rem] text-pretty text-[14.5px] leading-relaxed text-muted-foreground sm:text-[15px]">
           {topic.summary}
         </p>
       </div>
+    </>
+  )
+
+  return (
+    <motion.li
+      variants={variants}
+      className={cn(
+        'group relative grid grid-cols-1 gap-y-4 py-8 lg:grid-cols-12 lg:gap-x-10 lg:gap-y-0 lg:py-10',
+        'has-[a:focus-visible]:ring-1 has-[a:focus-visible]:ring-primary has-[a:focus-visible]:ring-offset-4 has-[a:focus-visible]:ring-offset-background',
+        !isLast && 'border-b border-border/40',
+      )}
+    >
+      {isShipped ? (
+        <Link
+          href={`/writing/${topic.slug}`}
+          className="group/link contents outline-none"
+        >
+          {rowContent}
+        </Link>
+      ) : rowContent}
     </motion.li>
   )
 }

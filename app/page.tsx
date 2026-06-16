@@ -4,6 +4,7 @@ import { NowBlock } from '@/components/portfolio/NowBlock'
 import { ParkPilotShowcase } from '@/components/portfolio/ParkPilotShowcase'
 import { ProjectsGrid } from '@/components/portfolio/ProjectsGrid'
 import { SkillsStrip } from '@/components/portfolio/SkillsStrip'
+import { Lab } from '@/components/portfolio/Lab'
 import { NavSimSection } from '@/components/portfolio/NavSimSection'
 import { ClosingSection } from '@/components/portfolio/ClosingSection'
 
@@ -17,6 +18,7 @@ export default function Home() {
         <ParkPilotShowcase />
         <ProjectsGrid />
         <SkillsStrip />
+        <Lab />
         <NavSimSection />
         <ClosingSection />
       </main>
