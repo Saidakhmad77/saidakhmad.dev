@@ -99,7 +99,6 @@ const personJsonLd = {
   jobTitle: profile.title,
   url: SITE_URL,
   email: `mailto:${profile.contact.email}`,
-  telephone: profile.contact.phone,
   address: {
     "@type": "PostalAddress",
     addressLocality: "Seoul",

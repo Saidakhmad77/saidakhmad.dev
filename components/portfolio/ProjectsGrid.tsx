@@ -76,7 +76,7 @@ export function ProjectsGrid() {
       <div className="relative mx-auto w-full max-w-(--breakpoint-2xl) px-6 pt-24 pb-24 md:px-10 md:pt-32 md:pb-32">
         <SectionHeader
           headingId="projects-heading"
-          index="02"
+          index="03"
           title="Field Notes"
           reduceMotion={!!reduceMotion}
         >

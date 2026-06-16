@@ -15,7 +15,6 @@ export type Profile = {
     githubUrl: string
     linkedin: string
     linkedinUrl: string
-    phone: string
   }
   visa: string
 }
@@ -80,7 +79,7 @@ export type Education = {
   degree: string
   location: string
   period: string
-  gpa: string
+  gpa?: string
 }
 
 export type Certificate = {
@@ -140,7 +139,6 @@ export const profile: Profile = {
     githubUrl: "https://github.com/Saidakhmad77",
     linkedin: "saidahmad77",
     linkedinUrl: "https://www.linkedin.com/in/saidahmad77",
-    phone: "+82 10-3173-4707",
   },
   visa: "D-10 · Uzbekistan",
 }
@@ -151,8 +149,8 @@ export const profile: Profile = {
 
 export const now: Now = {
   focus:
-    "Job hunting in Seoul — full-stack and robotics-adjacent roles. Open to backend, simulation, and autonomy. TOPIK 4, D-10 visa, free to interview.",
-  learning: ["Business Korean writing", "ROS 2 internals (DDS, executors, lifecycle)"],
+    "Applying to MS programs in Software Engineering — research interests in simulator fuzzing, automated debugging, and program repair. Open to research intern roles in the interim. TOPIK 4 · KIIP 5 · D-10 visa, based in Seoul.",
+  learning: ["Software repair & ML4SE literature (LeakPair, ASE/ICSE)", "ROS 2 internals (DDS, executors, lifecycle)"],
   reading: [
     { title: "The Thinking Machine", author: "Stephen Witt" },
     { title: "The 48 Laws of Power", author: "Robert Greene" },
@@ -381,7 +379,6 @@ export const education: Education = {
   degree: "B.S. in Computer Engineering",
   location: "Seoul, South Korea",
   period: "Aug 2018 — Feb 2023",
-  gpa: "3.54 / 4.5",
 }
 
 export const certificates: Certificate[] = [

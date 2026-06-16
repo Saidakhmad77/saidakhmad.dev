@@ -1,6 +1,7 @@
 import { Nav } from '@/components/portfolio/Nav'
 import { Hero } from '@/components/portfolio/Hero'
 import { NowBlock } from '@/components/portfolio/NowBlock'
+import { ParkPilotShowcase } from '@/components/portfolio/ParkPilotShowcase'
 import { ProjectsGrid } from '@/components/portfolio/ProjectsGrid'
 import { SkillsStrip } from '@/components/portfolio/SkillsStrip'
 import { NavSimSection } from '@/components/portfolio/NavSimSection'
@@ -13,6 +14,7 @@ export default function Home() {
       <main className="relative">
         <Hero />
         <NowBlock />
+        <ParkPilotShowcase />
         <ProjectsGrid />
         <SkillsStrip />
         <NavSimSection />
