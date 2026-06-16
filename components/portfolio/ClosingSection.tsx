@@ -210,8 +210,6 @@ function EducationStrip({ ed }: { ed: Education }) {
       <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground sm:text-[11.5px]">
         <span className="text-foreground/80">{ed.degree}</span>
         <span aria-hidden="true" className="mx-2 text-border">·</span>
-        <span className="num">GPA {ed.gpa}</span>
-        <span aria-hidden="true" className="mx-2 text-border">·</span>
         <span>{ed.period}</span>
       </p>
     </article>
