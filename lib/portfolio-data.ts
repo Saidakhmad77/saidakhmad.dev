@@ -144,7 +144,7 @@ export const profile: Profile = {
 
 export const now: Now = {
   focus:
-    "Between roles — building ParkPilot and this site while applying to MS programs in Software Engineering (research interests: simulator fuzzing, automated debugging, program repair). Open to robotics/simulation and backend roles in the interim. TOPIK 4 · KIIP 5 · D-10 visa, based in Seoul.",
+    "Between roles — building ParkPilot and this site while applying to MS programs in Software Engineering (research interests: simulator fuzzing, automated debugging, program repair). Open to robotics/simulation and backend roles in the interim.",
   learning: ["Software repair & ML4SE literature (LeakPair, ASE/ICSE)", "ROS 2 internals (DDS, executors, lifecycle)"],
   reading: [
     { title: "The Thinking Machine", author: "Stephen Witt" },
