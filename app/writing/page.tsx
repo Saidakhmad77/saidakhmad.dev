@@ -1,16 +1,16 @@
-import type { Metadata } from "next";
-import { getAllPosts } from "@/lib/writing";
-import { Nav } from "@/components/portfolio/Nav";
-import { WritingIndex } from "@/components/portfolio/WritingIndex";
+import type { Metadata } from 'next'
+import { getAllPosts } from '@/lib/writing'
+import { Nav } from '@/components/portfolio/Nav'
+import { WritingIndex } from '@/components/portfolio/WritingIndex'
 
 export const metadata: Metadata = {
-  title: "Writing",
+  title: 'Writing',
   description:
-    "Engineering notes on autonomous-driving simulation, robotics, and systems software.",
-};
+    'Engineering notes on autonomous-driving simulation, robotics, and systems software.',
+}
 
 export default function WritingIndexPage() {
-  const posts = getAllPosts();
+  const posts = getAllPosts()
 
   return (
     <>
@@ -21,5 +21,5 @@ export default function WritingIndexPage() {
         </div>
       </main>
     </>
-  );
+  )
 }

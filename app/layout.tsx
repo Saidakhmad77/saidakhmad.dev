@@ -1,23 +1,22 @@
-import type { Metadata, Viewport } from "next"
-import type { ReactNode } from "react"
-import { Geist, Geist_Mono } from "next/font/google"
-import "./globals.css"
-import { profile } from "@/lib/portfolio-data"
+import type { Metadata, Viewport } from 'next'
+import type { ReactNode } from 'react'
+import { Geist, Geist_Mono } from 'next/font/google'
+import './globals.css'
+import { profile } from '@/lib/portfolio-data'
+import { SITE_URL } from '@/lib/site'
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 })
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 })
 
-const SITE_URL = "https://saidakhmad.dev"
-
 const META_DESCRIPTION =
-  "Software engineer with autonomous-driving simulation experience — NVIDIA Isaac Sim, USD, PhysX, OmniGraph, ROS 2. Full-stack background, F1 watcher. Based in Seoul."
+  'Software engineer with autonomous-driving simulation experience — NVIDIA Isaac Sim, USD, PhysX, OmniGraph, ROS 2. Full-stack background, F1 watcher. Based in Seoul.'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -27,31 +26,31 @@ export const metadata: Metadata = {
   },
   description: META_DESCRIPTION,
   keywords: [
-    "Saidakhmad Nuriddinov",
-    "Autonomous Driving Simulation",
-    "NVIDIA Isaac Sim",
-    "Omniverse",
-    "USD",
-    "PhysX",
-    "ROS 2",
-    "Robotics Engineer",
-    "Maum.ai",
-    "WoRV",
-    "Korea",
-    "Full-Stack Developer",
+    'Saidakhmad Nuriddinov',
+    'Autonomous Driving Simulation',
+    'NVIDIA Isaac Sim',
+    'Omniverse',
+    'USD',
+    'PhysX',
+    'ROS 2',
+    'Robotics Engineer',
+    'Maum.ai',
+    'WoRV',
+    'Korea',
+    'Full-Stack Developer',
   ],
   authors: [{ name: profile.name, url: SITE_URL }],
   creator: profile.name,
   openGraph: {
-    type: "website",
+    type: 'website',
     url: SITE_URL,
     title: `${profile.name} · ${profile.title}`,
     description: META_DESCRIPTION,
-    siteName: "saidakhmad.dev",
-    locale: "en_US",
+    siteName: 'saidakhmad.dev',
+    locale: 'en_US',
   },
   twitter: {
-    card: "summary_large_image",
+    card: 'summary_large_image',
     title: `${profile.name} · ${profile.title}`,
     description: META_DESCRIPTION,
   },
@@ -61,8 +60,8 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      "max-snippet": -1,
-      "max-image-preview": "large",
+      'max-snippet': -1,
+      'max-image-preview': 'large',
     },
   },
   alternates: {
@@ -72,11 +71,11 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0a0b0d" },
-    { media: "(prefers-color-scheme: light)", color: "#f4f1ea" },
+    { media: '(prefers-color-scheme: dark)', color: '#0a0b0d' },
+    { media: '(prefers-color-scheme: light)', color: '#f4f1ea' },
   ],
-  colorScheme: "dark light",
-  width: "device-width",
+  colorScheme: 'dark light',
+  width: 'device-width',
   initialScale: 1,
 }
 
@@ -91,38 +90,38 @@ const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('theme');i
 const SCROLL_TOP_SCRIPT = `(function(){try{if('scrollRestoration' in history){history.scrollRestoration='manual';}window.addEventListener('pageshow',function(e){if(e.persisted)window.scrollTo(0,0);});}catch(e){}})();`
 
 const personJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Person",
+  '@context': 'https://schema.org',
+  '@type': 'Person',
   name: profile.name,
-  givenName: profile.nickname,
+  givenName: profile.name.split(' ')[0],
   additionalName: profile.nickname,
   jobTitle: profile.title,
   url: SITE_URL,
   email: `mailto:${profile.contact.email}`,
   address: {
-    "@type": "PostalAddress",
-    addressLocality: "Seoul",
-    addressCountry: "KR",
+    '@type': 'PostalAddress',
+    addressLocality: 'Seoul',
+    addressCountry: 'KR',
   },
   alumniOf: {
-    "@type": "CollegeOrUniversity",
-    name: "Gachon University",
+    '@type': 'CollegeOrUniversity',
+    name: 'Gachon University',
   },
   sameAs: [profile.contact.githubUrl, profile.contact.linkedinUrl],
   knowsAbout: [
-    "NVIDIA Isaac Sim",
-    "Omniverse",
-    "USD",
-    "PhysX",
-    "OmniGraph",
-    "ROS 2",
-    "Autonomous Driving Simulation",
-    "Backend Development",
-    "TypeScript",
-    "Python",
-    "C++",
+    'NVIDIA Isaac Sim',
+    'Omniverse',
+    'USD',
+    'PhysX',
+    'OmniGraph',
+    'ROS 2',
+    'Autonomous Driving Simulation',
+    'Backend Development',
+    'TypeScript',
+    'Python',
+    'C++',
   ],
-  knowsLanguage: ["en", "ko", "uz"],
+  knowsLanguage: ['en', 'ko', 'uz'],
 }
 
 export default function RootLayout({

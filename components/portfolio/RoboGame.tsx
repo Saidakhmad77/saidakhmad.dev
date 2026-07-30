@@ -25,6 +25,7 @@ export function RoboGame({ className }: { className?: string }) {
   const canvasRef    = useRef<HTMLCanvasElement>(null)
   const gsRef        = useRef<GameState>({ ...INITIAL_STATE })
   const keysRef      = useRef(new Set<string>())
+  const focusedRef   = useRef(false)
   const rafRef       = useRef(0)
   const reduceMotion = useReducedMotion()
 
@@ -141,6 +142,7 @@ export function RoboGame({ className }: { className?: string }) {
 
   useEffect(() => {
     const dn = (e: KeyboardEvent) => {
+      if (!focusedRef.current) return
       keysRef.current.add(e.key)
       if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault()
     }
@@ -149,6 +151,9 @@ export function RoboGame({ className }: { className?: string }) {
     window.addEventListener('keyup', up)
     return () => { window.removeEventListener('keydown', dn); window.removeEventListener('keyup', up) }
   }, [])
+
+  const onCanvasFocus = useCallback(() => { focusedRef.current = true }, [])
+  const onCanvasBlur  = useCallback(() => { focusedRef.current = false; keysRef.current.clear() }, [])
 
   const setMode = useCallback((m: Mode) => {
     const s = gsRef.current
@@ -209,7 +214,7 @@ export function RoboGame({ className }: { className?: string }) {
       </div>
       <div className="flex flex-col xl:flex-row">
         <div className="overflow-auto">
-          <canvas ref={canvasRef} width={COLS * CELL} height={ROWS * CELL} onClick={handleClick} className={cn('block', tele.mode === 'AUTO' ? 'cursor-crosshair' : 'cursor-default')} />
+          <canvas ref={canvasRef} tabIndex={0} onFocus={onCanvasFocus} onBlur={onCanvasBlur} width={COLS * CELL} height={ROWS * CELL} onClick={handleClick} className={cn('block outline-none focus-visible:ring-1 focus-visible:ring-primary/50', tele.mode === 'AUTO' ? 'cursor-crosshair' : 'cursor-default')} />
         </div>
         <div className="flex flex-col border-t border-border/40 xl:min-w-[200px] xl:max-w-[220px] xl:border-t-0 xl:border-l">
           <div className="border-b border-border/40 p-4 font-mono text-[10px] uppercase tracking-[0.15em]">
@@ -230,7 +235,7 @@ export function RoboGame({ className }: { className?: string }) {
               {tele.mode === 'AUTO' && <button onClick={randomWaypoint} className="border border-border/40 px-3 py-1.5 text-left font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground/55 transition-all hover:border-primary/40 hover:text-primary">random</button>}
             </div>
             <p className="mt-3 font-mono text-[9px] normal-case leading-relaxed tracking-normal text-muted-foreground/35">
-              {tele.mode === 'MANUAL' ? 'WASD / arrows to drive' : tele.mode === 'AUTO' ? 'click grid to set waypoint' : 'select a mode above'}
+              {tele.mode === 'MANUAL' ? 'click canvas, then WASD / arrows to drive' : tele.mode === 'AUTO' ? 'click grid to set waypoint' : 'select a mode above'}
             </p>
           </div>
           <div className="flex-1 overflow-hidden p-4">

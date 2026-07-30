@@ -3,16 +3,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 
-// ─── Silent-failure toggle ──────────────────────────────────────────────────
-// Toggles `data-silent="true"` on <body>. The CSS in globals.css does the rest:
-// every element flagged with the `.num` class renders as a struck-through ghost
-// of itself + a "0" in fail-red. A short-lived banner appears at the top to
-// explain what just happened. The toggle is also the same payload Cmd-K's
-// `silent on/off` command runs, and what the konami code triggers.
-//
-// Design intent: this is the cover-letter's headline thesis (engineering for
-// the surfacing of silent failures) translated into an interactive moment.
-// One click reveals what "succeeded-but-wrong" actually looks like.
+// Toggles data-silent="true" on <body>; globals.css does the rest — every
+// .num element renders as a struck-through ghost + a "0" in fail-red.
 
 const BANNER_DURATION_MS = 8_000
 const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']
@@ -21,36 +13,27 @@ export function SilentFailureToggle({ className }: { className?: string }) {
   const [silent, setSilent] = useState(false)
   const [bannerVisible, setBannerVisible] = useState(false)
 
-  // Single helper used by every entry point (click, konami, Cmd-K). All
-  // setState calls happen in event handlers, never synchronously in an effect.
-  // useCallback with empty deps → stable identity, so global listener effects
-  // don't resubscribe when this component re-renders.
+  // stable identity so the konami listener effect below only subscribes once
   const toggle = useCallback((forced?: boolean) => {
     setSilent((prev) => {
       const next = typeof forced === 'boolean' ? forced : !prev
-      setBannerVisible(next) // banner shows on each true-flip, replays on retoggle
+      setBannerVisible(next)
       return next
     })
   }, [])
 
-  // Sync the silent state onto <body data-silent="..."> so CSS attribute
-  // selectors flip every .num in the page. Effect only writes to the DOM.
   useEffect(() => {
     if (typeof document === 'undefined') return
     if (silent) document.body.setAttribute('data-silent', 'true')
     else document.body.removeAttribute('data-silent')
   }, [silent])
 
-  // Auto-clear the banner after the duration. setState happens inside an
-  // async setTimeout callback — the legitimate "external timer" pattern.
   useEffect(() => {
     if (!bannerVisible) return
     const t = window.setTimeout(() => setBannerVisible(false), BANNER_DURATION_MS)
     return () => window.clearTimeout(t)
   }, [bannerVisible])
 
-  // Konami listener + Cmd-K custom event channel. `toggle` is stable from
-  // useCallback, so this effect subscribes once and never resubscribes.
   useEffect(() => {
     let i = 0
     const onKey = (e: KeyboardEvent) => {
@@ -65,16 +48,8 @@ export function SilentFailureToggle({ className }: { className?: string }) {
         i = key === KONAMI[0] ? 1 : 0
       }
     }
-    const onEvent = (e: Event) => {
-      const ce = e as CustomEvent<{ value?: boolean }>
-      toggle(typeof ce.detail?.value === 'boolean' ? ce.detail.value : undefined)
-    }
     window.addEventListener('keydown', onKey)
-    window.addEventListener('silent-failure:toggle', onEvent)
-    return () => {
-      window.removeEventListener('keydown', onKey)
-      window.removeEventListener('silent-failure:toggle', onEvent)
-    }
+    return () => window.removeEventListener('keydown', onKey)
   }, [toggle])
 
   return (

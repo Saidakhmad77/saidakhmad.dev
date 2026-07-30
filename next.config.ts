@@ -1,9 +1,14 @@
-import type { NextConfig } from "next";
-import createMDX from "@next/mdx";
+import type { NextConfig } from 'next'
+import createMDX from '@next/mdx'
 
 const nextConfig: NextConfig = {
-  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
-};
+  pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+  // Pin explicitly — a stray package.json/lockfile in the parent home
+  // directory otherwise makes Turbopack misdetect the workspace root.
+  turbopack: {
+    root: __dirname,
+  },
+}
 
 const withMDX = createMDX({
   options: {
@@ -14,9 +19,9 @@ const withMDX = createMDX({
     //     node so it is NOT rendered as body content (frontmatter values are
     //     read separately via gray-matter in lib/writing.ts). Must run first.
     //   remark-gfm: GitHub-flavored markdown — pipe tables, strikethrough.
-    remarkPlugins: ["remark-frontmatter", "remark-gfm"],
+    remarkPlugins: ['remark-frontmatter', 'remark-gfm'],
     rehypePlugins: [],
   },
-});
+})
 
-export default withMDX(nextConfig);
+export default withMDX(nextConfig)

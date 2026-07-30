@@ -2,24 +2,9 @@
 
 import { motion, useReducedMotion, type Variants } from 'framer-motion'
 import { SectionHeader } from '@/components/ui/section-header'
-import {
-  projects,
-  projectConstraints,
-  projectMeta,
-  type Project,
-  type ProjectCategory,
-} from '@/lib/portfolio-data'
+import { projects, type Project, type ProjectCategory } from '@/lib/portfolio-data'
 import { EASE, sectionItemVariants, sectionListVariants } from '@/lib/motion'
 import { cn } from '@/lib/utils'
-
-// Slug → constraint lookup. Memoized once at module load.
-const CONSTRAINT_BY_SLUG: Record<string, { label: string; body: string }> = Object.fromEntries(
-  projectConstraints.map((c) => [c.slug, { label: c.label, body: c.body }]),
-)
-
-const META_BY_SLUG: Record<string, { category: ProjectCategory; metric: string }> = Object.fromEntries(
-  projectMeta.map((m) => [m.slug, { category: m.category, metric: m.metric }]),
-)
 
 // Category → display label + accent color class. Three categories use the
 // three established accents (cyan / warm / fail). "Tool" reuses cyan since
@@ -187,7 +172,7 @@ function FeaturedEntry({
             <span className="num text-muted-foreground/60">{idx}</span>
             <span aria-hidden="true" className="h-2.5 w-px bg-border" />
             <span className="text-foreground/70">{project.org}</span>
-            <CategoryBadge slug={project.slug} />
+            <CategoryBadge category={project.category} />
           </span>
           <span className="text-muted-foreground/80">{period}</span>
         </div>
@@ -209,7 +194,7 @@ function FeaturedEntry({
           {project.tagline}
         </p>
 
-        <ConstraintRow slug={project.slug} compact={false} />
+        <ConstraintRow project={project} compact={false} />
 
         {/* Stack chips — mono, border-only, sharp corners. */}
         <ul className="mt-5 flex flex-wrap gap-x-2 gap-y-2">
@@ -232,16 +217,14 @@ function FeaturedEntry({
 // the full variant shows the solution prose. Featured cards get full; the
 // supporting 2×2 grid stays compact so the cells don't bloat.
 
-function ConstraintRow({ slug, compact }: { slug: string; compact: boolean }) {
-  const entry = CONSTRAINT_BY_SLUG[slug]
-  if (!entry) return null
+function ConstraintRow({ project, compact }: { project: Project; compact: boolean }) {
   if (compact) {
     return (
       <p className="mt-4 border-l border-[color:var(--accent-warm)]/70 pl-3 font-mono text-[11px] leading-relaxed text-muted-foreground sm:text-[11.5px]">
         <span className="uppercase tracking-[0.18em] text-muted-foreground/65">
           constraint ·
         </span>{' '}
-        <span className="text-foreground/85">{entry.label}</span>
+        <span className="text-foreground/85">{project.constraintLabel}</span>
       </p>
     )
   }
@@ -251,8 +234,8 @@ function ConstraintRow({ slug, compact }: { slug: string; compact: boolean }) {
         constraint
       </p>
       <p className="mt-2 text-pretty text-[13.5px] leading-relaxed text-foreground/80 sm:text-[14px]">
-        <span className="text-foreground/95">{entry.label}</span>{' '}
-        <span className="text-muted-foreground">{entry.body}</span>
+        <span className="text-foreground/95">{project.constraintLabel}</span>{' '}
+        <span className="text-muted-foreground">{project.constraintBody}</span>
       </p>
     </div>
   )
@@ -263,10 +246,8 @@ function ConstraintRow({ slug, compact }: { slug: string; compact: boolean }) {
 // vs patch vs pipeline vs tool. Three colors map to the three accents; the
 // fourth (tool) intentionally uses the neutral palette to avoid crowding.
 
-function CategoryBadge({ slug }: { slug: string }) {
-  const meta = META_BY_SLUG[slug]
-  if (!meta) return null
-  const cat = CATEGORY_DISPLAY[meta.category]
+function CategoryBadge({ category }: { category: ProjectCategory }) {
+  const cat = CATEGORY_DISPLAY[category]
   return (
     <span
       className={cn(
@@ -284,13 +265,11 @@ function CategoryBadge({ slug }: { slug: string }) {
 // each project into a single signature metric: "Spencer 1971" / "+405 / −358"
 // / "UE5 · 3 commits" / etc. Cheap signal, replaces a paragraph.
 
-function MetricLine({ slug }: { slug: string }) {
-  const meta = META_BY_SLUG[slug]
-  if (!meta) return null
+function MetricLine({ metric }: { metric: string }) {
   return (
     <p className="mt-2 font-mono text-[10.5px] uppercase tracking-[0.22em] text-muted-foreground/70">
       <span aria-hidden="true" className="text-muted-foreground/45">{'> '}</span>
-      <span className="num text-foreground/75">{meta.metric}</span>
+      <span className="num text-foreground/75">{metric}</span>
     </p>
   )
 }
@@ -300,6 +279,10 @@ function MetricLine({ slug }: { slug: string }) {
 // it visualises the project's signature in pure SVG so the page doesn't go
 // flat between rows of text. Each slug gets a small, distinctive form.
 
+// Deliberately falls back to ChipBlock() + 'signature' rather than a type
+// error: unlike category/metric/constraint (required Project fields), a
+// bespoke SVG figure is hand-illustrated per project and shouldn't block
+// adding a new project entry.
 function ProjectViz({ slug }: { slug: string }) {
   return (
     <div className="mt-5 border border-border/55 bg-foreground/[0.02] p-4 sm:p-5">
@@ -518,7 +501,7 @@ function SupportingEntry({
             <span className="num text-muted-foreground/60">{idx}</span>
             <span aria-hidden="true" className="h-2.5 w-px bg-border" />
             <span className="text-foreground/70">{project.org}</span>
-            <CategoryBadge slug={project.slug} />
+            <CategoryBadge category={project.category} />
           </span>
           <span className="text-muted-foreground/80">{period}</span>
         </div>
@@ -530,14 +513,14 @@ function SupportingEntry({
 
         {/* Metric pill below the name — tiny visual signal that survives even
             after the tagline if it gets long. */}
-        <MetricLine slug={project.slug} />
+        <MetricLine metric={project.metric} />
 
         {/* Tagline — the second-line "detail" copy lives in the PDF resume. */}
         <p className="mt-2 max-w-[34rem] text-pretty text-[14.5px] leading-relaxed text-foreground/80 sm:text-[15px]">
           {project.tagline}
         </p>
 
-        <ConstraintRow slug={project.slug} compact />
+        <ConstraintRow project={project} compact />
 
         {/* Stack chips. */}
         <ul className="mt-4 flex flex-wrap gap-x-2 gap-y-2">

@@ -52,6 +52,8 @@ export type Experience = {
   stack: string[]
 }
 
+export type ProjectCategory = "extension" | "patch" | "tool" | "pipeline"
+
 export type Project = {
   slug: string
   name: string
@@ -61,6 +63,13 @@ export type Project = {
   detail: string
   stack: string[]
   highlight?: boolean
+  // Required, not optional: every project must carry its own badge/metric/
+  // constraint data so a missing entry is a type error, not a silent null
+  // render in ProjectsGrid.
+  category: ProjectCategory
+  metric: string
+  constraintLabel: string
+  constraintBody: string
 }
 
 export type SkillCategory = {
@@ -105,20 +114,6 @@ export type AboutCover = {
   arc: string
   philosophy: string
   greeting: string
-}
-
-export type ProjectCategory = 'extension' | 'patch' | 'tool' | 'pipeline'
-
-export type ProjectMeta = {
-  slug: string
-  category: ProjectCategory
-  metric: string
-}
-
-export type ProjectConstraint = {
-  slug: string
-  label: string
-  body: string
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -215,7 +210,7 @@ export const writingTopics: WritingTopic[] = [
     slug: "fourier-solar-stdlib",
     title: "A stdlib-only Fourier solar model in 200 lines of Python",
     summary:
-      "Spencer 1971 + Tanner Helland Kelvin→RGB. Why the team's previous solar lighting was wrong by 30 minutes at sunset, and how to fix it without external deps.",
+      "Spencer 1971 + Tanner Helland Kelvin→RGB, and the sign error that put the sun below the horizon — zero external dependencies.",
     status: "planned",
   },
 ]
@@ -295,6 +290,10 @@ export const projects: Project[] = [
       "Spencer 1971 Fourier solar model (stdlib only), Tanner Helland Kelvin→RGB, timeline 1×–500×, adopt-vs-create lights, stage lifecycle subscription. MVC architecture became the team-wide template.",
     stack: ["Isaac Sim", "USD", "Python", "MVC"],
     highlight: true,
+    category: "extension",
+    metric: "Spencer 1971",
+    constraintLabel: "No pip dependencies inside Isaac Sim.",
+    constraintBody: "Wrote the Spencer 1971 Fourier solar model from scratch in 200 lines of standard library Python.",
   },
   {
     slug: "worv-env-climate",
@@ -306,6 +305,10 @@ export const projects: Project[] = [
       "5-bug fix branch (+405/−358) including PositionTracker, RTX key discovery, silent-failure surfacing pattern.",
     stack: ["Isaac Sim", "USD", "Warp", "RTX", "Python"],
     highlight: true,
+    category: "extension",
+    metric: "+405 / −358",
+    constraintLabel: "Silent failures across rain/snow/fog effects.",
+    constraintBody: "Controller-level try/except surfacing pattern and a three-source PositionTracker for robot-following rain.",
   },
   {
     slug: "worv-core-logging",
@@ -316,6 +319,10 @@ export const projects: Project[] = [
     detail:
       "Pluggable BaseExporter (CSV/JSON/Console), smart root-link resolution, frame dedup via absoluteSimTime.",
     stack: ["Isaac Sim", "OmniGraph", "PhysX", "Python"],
+    category: "extension",
+    metric: "OmniGraph + PhysX",
+    constraintLabel: "No way to compare scenarios run-to-run.",
+    constraintBody: "Combined OmniGraph Action Graph with direct PhysX USD reads via a pluggable BaseExporter — first time the team could line up benchmark data per scenario.",
   },
   {
     slug: "usd-opacity-tools",
@@ -326,6 +333,10 @@ export const projects: Project[] = [
     detail:
       "Fixes UE Connector's baked 1×1 opacity textures so designers can edit opacity in Isaac Sim. Includes DeviceFlow auth workaround for headless containers.",
     stack: ["Docker", "Nucleus", "UE5", "C++"],
+    category: "patch",
+    metric: "UE5 · 3 commits",
+    constraintLabel: "USD's connected inputs are read-only — opacity gets baked into 1×1 textures.",
+    constraintBody: "Docker Nucleus post-processor + a 3-commit UE5 C++ plugin patch upstream. Designers now edit opacity directly in Isaac Sim.",
   },
   {
     slug: "g29-teleop-port",
@@ -336,6 +347,10 @@ export const projects: Project[] = [
     detail:
       "Refactored hardcoded Xbox enum into a configurable JoyMapping dataclass with per-axis inversion, deadzone gating, accel/brake pedal merging.",
     stack: ["ROS 2", "Python", "Logitech G29"],
+    category: "tool",
+    metric: "Xbox → G29",
+    constraintLabel: "ROS 2 teleop_node was hardcoded for Xbox only.",
+    constraintBody: "Refactored into a hardware-agnostic structure supporting Logitech G29 via a JoyMapping dataclass.",
   },
   {
     slug: "ddds-admin-app",
@@ -346,6 +361,10 @@ export const projects: Project[] = [
     detail:
       "DWIN DGUS embedded UI; auto-detection of faulty parts and CSV data export.",
     stack: ["C++", "ESP32-S3", "DWIN DGUS"],
+    category: "tool",
+    metric: "ESP32-S3 · DGUS",
+    constraintLabel: "Embedded device data had no consistent export path.",
+    constraintBody: "Auto-detection of faulty parts plus CSV export, with DWIN DGUS UI redesigned for production deployments.",
   },
 ]
 
@@ -454,53 +473,3 @@ export const principles: Principle[] = [
   },
 ]
 
-// ─── Per-project category + metric badges ───────────────────────────────────
-// One badge per project — turns the wall-of-text grid into something the eye
-// can navigate at a glance. Categories use the warm / cyan / fail accents
-// already established.
-
-export const projectMeta: ProjectMeta[] = [
-  { slug: "worv-env-lights",  category: "extension", metric: "Spencer 1971" },
-  { slug: "worv-env-climate", category: "extension", metric: "+405 / −358" },
-  { slug: "worv-core-logging", category: "extension", metric: "OmniGraph + PhysX" },
-  { slug: "usd-opacity-tools", category: "patch",    metric: "UE5 · 3 commits" },
-  { slug: "g29-teleop-port",   category: "tool",     metric: "Xbox → G29" },
-  { slug: "ddds-admin-app",    category: "tool",     metric: "ESP32-S3 · DGUS" },
-]
-
-// ─── Per-project "constraint" rows ──────────────────────────────────────────
-// One per project in projects[]. Surfaces the cover-letter thesis ("constraints
-// are inputs to design") right onto the project cards.
-
-export const projectConstraints: ProjectConstraint[] = [
-  {
-    slug: "worv-env-lights",
-    label: "No pip dependencies inside Isaac Sim.",
-    body: "Wrote the Spencer 1971 Fourier solar model from scratch in 200 lines of standard library Python.",
-  },
-  {
-    slug: "worv-env-climate",
-    label: "Silent failures across rain/snow/fog effects.",
-    body: "Controller-level try/except surfacing pattern and a three-source PositionTracker for robot-following rain.",
-  },
-  {
-    slug: "worv-core-logging",
-    label: "No way to compare scenarios run-to-run.",
-    body: "Combined OmniGraph Action Graph with direct PhysX USD reads via a pluggable BaseExporter — first time the team could line up benchmark data per scenario.",
-  },
-  {
-    slug: "usd-opacity-tools",
-    label: "USD's connected inputs are read-only — opacity gets baked into 1×1 textures.",
-    body: "Docker Nucleus post-processor + a 3-commit UE5 C++ plugin patch upstream. Designers now edit opacity directly in Isaac Sim.",
-  },
-  {
-    slug: "g29-teleop-port",
-    label: "ROS 2 teleop_node was hardcoded for Xbox only.",
-    body: "Refactored into a hardware-agnostic structure supporting Logitech G29 via a JoyMapping dataclass.",
-  },
-  {
-    slug: "ddds-admin-app",
-    label: "Embedded device data had no consistent export path.",
-    body: "Auto-detection of faulty parts plus CSV export, with DWIN DGUS UI redesigned for production deployments.",
-  },
-]
