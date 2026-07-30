@@ -24,13 +24,20 @@ function formatPeriod(period: string): string {
   return `${fmtStart} → ${fmtEnd}`
 }
 
+// Copy shown in place of a company card when nobody's marked `current: true`.
+// Kept here (not silently falling back to the most recent past job) so an
+// empty employment state reads as "between roles," not as a stale employer.
+// The mandate paragraph itself isn't duplicated here — it reuses `now.focus`
+// below so there's one place to update, not two copies to keep in sync.
+const BETWEEN_ROLES = {
+  headline: 'Between Roles',
+  line: 'Open to Robotics / Simulation & Backend roles',
+}
+
 export function NowBlock() {
   const reduceMotion = useReducedMotion()
-  const role = experience.find((e) => e.current) ?? experience[0]
+  const role = experience.find((e) => e.current)
   const variantsItem = reduceMotion ? undefined : sectionItemVariants
-
-  const period = formatPeriod(role.period)
-  const stack = role.stack
 
   return (
     <section
@@ -47,7 +54,7 @@ export function NowBlock() {
         >
           <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-xs">
             <LiveDot reduceMotion={!!reduceMotion} />
-            <span>{period}</span>
+            <span>{role ? formatPeriod(role.period) : 'Open to work'}</span>
           </div>
         </SectionHeader>
 
@@ -61,9 +68,9 @@ export function NowBlock() {
         >
           <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
             <h3 className="text-balance text-3xl font-medium tracking-[-0.025em] text-foreground sm:text-4xl md:text-5xl">
-              {role.company}
+              {role ? role.company : BETWEEN_ROLES.headline}
             </h3>
-            {role.companyKo ? (
+            {role?.companyKo ? (
               <span className="text-base text-muted-foreground/70 sm:text-lg">
                 <span aria-hidden="true" className="text-muted-foreground/40">/</span>{' '}
                 <span lang="ko">{role.companyKo}</span>
@@ -72,18 +79,24 @@ export function NowBlock() {
           </div>
 
           <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground sm:text-xs">
-            <span className="text-foreground/85">{role.role}</span>
-            {role.team ? (
+            {role ? (
               <>
+                <span className="text-foreground/85">{role.role}</span>
+                {role.team ? (
+                  <>
+                    <span aria-hidden="true" className="text-border">·</span>
+                    <span>
+                      <span className="text-muted-foreground/50">Team</span>{' '}
+                      <span className="text-foreground/75">{role.team}</span>
+                    </span>
+                  </>
+                ) : null}
                 <span aria-hidden="true" className="text-border">·</span>
-                <span>
-                  <span className="text-muted-foreground/50">Team</span>{' '}
-                  <span className="text-foreground/75">{role.team}</span>
-                </span>
+                <span>{role.location}</span>
               </>
-            ) : null}
-            <span aria-hidden="true" className="text-border">·</span>
-            <span>{role.location}</span>
+            ) : (
+              <span className="text-foreground/85">{BETWEEN_ROLES.line}</span>
+            )}
           </div>
         </motion.div>
 
@@ -102,7 +115,7 @@ export function NowBlock() {
             Mandate
           </p>
           <p className="mt-3 max-w-[42rem] text-pretty text-base leading-relaxed text-foreground/85 lg:text-[17px]">
-            {role.summary}
+            {role ? role.summary : now.focus}
           </p>
         </motion.div>
 
@@ -111,30 +124,33 @@ export function NowBlock() {
             where my head is right now." */}
         <NowSubBlock reduceMotion={!!reduceMotion} variantsItem={variantsItem} />
 
-        {/* Stack chips — bottom row, full-width, mono caps. */}
-        <motion.div
-          initial={reduceMotion ? false : { opacity: 0, y: 8 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-10%' }}
-          transition={{ duration: 0.4, ease: EASE, delay: 0.1 }}
-          className="mt-16 md:mt-20"
-        >
-          <div className="flex items-center gap-3">
-            <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
-              Stack
-            </span>
-            <span aria-hidden="true" className="h-px flex-1 bg-border/40" />
-          </div>
-          <ul className="mt-4 flex flex-wrap gap-x-2 gap-y-2">
-            {stack.map((s) => (
-              <li key={s}>
-                <span className="inline-flex items-center border border-border/70 px-2.5 py-1 font-mono text-[11px] tracking-tight text-foreground/75">
-                  {s}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </motion.div>
+        {/* Stack chips — bottom row, full-width, mono caps. Only makes sense
+            when there's an actual job stack to show. */}
+        {role ? (
+          <motion.div
+            initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-10%' }}
+            transition={{ duration: 0.4, ease: EASE, delay: 0.1 }}
+            className="mt-16 md:mt-20"
+          >
+            <div className="flex items-center gap-3">
+              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
+                Stack
+              </span>
+              <span aria-hidden="true" className="h-px flex-1 bg-border/40" />
+            </div>
+            <ul className="mt-4 flex flex-wrap gap-x-2 gap-y-2">
+              {role.stack.map((s) => (
+                <li key={s}>
+                  <span className="inline-flex items-center border border-border/70 px-2.5 py-1 font-mono text-[11px] tracking-tight text-foreground/75">
+                    {s}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        ) : null}
       </div>
     </section>
   )
@@ -153,8 +169,8 @@ function NowSubBlock({
   reduceMotion: boolean
   variantsItem: Variants | undefined
 }) {
-  // Filter out empty rows (`tinkering` is currently []). The data layer is the
-  // truth; render decides whether a row earns its keep this month.
+  // Filter out empty rows. The data layer is the truth; render decides
+  // whether a row earns its keep this month.
   const rows: { label: string; render: () => ReactNode }[] = []
 
   if (now.learning.length > 0) {

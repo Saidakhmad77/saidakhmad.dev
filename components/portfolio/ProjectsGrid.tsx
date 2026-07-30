@@ -279,22 +279,44 @@ function MetricLine({ metric }: { metric: string }) {
 // it visualises the project's signature in pure SVG so the page doesn't go
 // flat between rows of text. Each slug gets a small, distinctive form.
 
+// A couple of slugs have a real screenshot/render instead of a hand-drawn
+// SVG signature — checked first, below. Keys are project slugs, not asset
+// paths, so an unmatched key here is just unused, not a broken reference;
+// see the ProjectViz fallback comment below for the reverse case.
+const VIZ_PHOTO: Record<string, { src: string; width: number; height: number }> = {
+  'worv-env-lights': { src: '/worv-env-lights/port-scene.jpg', width: 1295, height: 753 },
+  'worv-core-logging': { src: '/worv-env-lights/core-logging-ui.png', width: 581, height: 527 },
+}
+
 // Deliberately falls back to ChipBlock() + 'signature' rather than a type
 // error: unlike category/metric/constraint (required Project fields), a
 // bespoke SVG figure is hand-illustrated per project and shouldn't block
 // adding a new project entry.
 function ProjectViz({ slug }: { slug: string }) {
+  const photo = VIZ_PHOTO[slug]
   return (
     <div className="mt-5 border border-border/55 bg-foreground/[0.02] p-4 sm:p-5">
       <div className="aspect-[16/7] w-full">
-        <svg viewBox="0 0 320 140" className="h-full w-full" aria-hidden="true">
-          {slug === 'worv-env-lights' ? <SolarArc /> :
-           slug === 'worv-env-climate' ? <ClimateBars /> :
-           slug === 'worv-core-logging' ? <LoggerWave /> :
-           slug === 'usd-opacity-tools' ? <OpacityStack /> :
-           slug === 'g29-teleop-port' ? <ControllerPad /> :
-           <ChipBlock />}
-        </svg>
+        {photo ? (
+          // Plain <img>: the site uses no next/image (see ParkPilotShowcase).
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={photo.src}
+            alt=""
+            width={photo.width}
+            height={photo.height}
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-contain"
+          />
+        ) : (
+          <svg viewBox="0 0 320 140" className="h-full w-full" aria-hidden="true">
+            {slug === 'worv-env-climate' ? <ClimateBars /> :
+             slug === 'usd-opacity-tools' ? <OpacityStack /> :
+             slug === 'g29-teleop-port' ? <ControllerPad /> :
+             <ChipBlock />}
+          </svg>
+        )}
       </div>
       <p className="mt-3 font-mono text-[9.5px] uppercase tracking-[0.22em] text-muted-foreground/55">
         {VIZ_CAPTION[slug] ?? 'signature'}
@@ -304,34 +326,15 @@ function ProjectViz({ slug }: { slug: string }) {
 }
 
 const VIZ_CAPTION: Record<string, string> = {
-  'worv-env-lights':  'fig · solar elevation across a day',
+  'worv-env-lights':  'fig · ability_port scene, lit by worv.env.lights',
   'worv-env-climate': 'fig · per-effect bug fixes (+/−)',
-  'worv-core-logging': 'fig · configurable-hz sampling',
+  'worv-core-logging': 'fig · data logger, live session',
   'usd-opacity-tools': 'fig · ue → nucleus → isaac',
   'g29-teleop-port':  'fig · joymapping abstraction',
   'ddds-admin-app':   'fig · esp32-s3 ↔ dwin dgus',
 }
 
 // ── per-project SVG signatures ──────────────────────────────────────────────
-
-function SolarArc() {
-  const tickX = (i: number) => 20 + i * (280 / 24)
-  return (
-    <g>
-      <line x1="20" y1="118" x2="300" y2="118" stroke="oklch(var(--border))" strokeWidth="0.8" opacity="0.55" />
-      {Array.from({ length: 25 }).map((_, i) => (
-        <line key={i} x1={tickX(i)} y1="118" x2={tickX(i)} y2={i % 6 === 0 ? 110 : 114} stroke="oklch(var(--muted-foreground))" strokeWidth="0.6" opacity="0.45" />
-      ))}
-      <path d="M 22 118 Q 160 -28 298 118" stroke="oklch(var(--muted-foreground))" strokeWidth="0.9" strokeDasharray="2 3" opacity="0.55" fill="none" />
-      <path d="M 22 118 Q 160 -28 298 118" stroke="var(--accent-warm)" strokeWidth="1.6" pathLength="100" strokeDasharray="60 100" fill="none" />
-      <circle cx="178" cy="34" r="5" fill="var(--accent-warm)" />
-      <circle cx="178" cy="34" r="11" fill="var(--accent-warm)" opacity="0.12" />
-      <text x="20" y="134" fontFamily="var(--font-mono)" fontSize="8" fill="oklch(var(--muted-foreground))" opacity="0.7">06:00</text>
-      <text x="148" y="134" fontFamily="var(--font-mono)" fontSize="8" fill="oklch(var(--muted-foreground))" opacity="0.7">12:00</text>
-      <text x="280" y="134" fontFamily="var(--font-mono)" fontSize="8" fill="oklch(var(--muted-foreground))" opacity="0.7">18:00</text>
-    </g>
-  )
-}
 
 function ClimateBars() {
   // 5 bug fixes as paired +/- bars.
@@ -358,30 +361,6 @@ function ClimateBars() {
           </g>
         )
       })}
-    </g>
-  )
-}
-
-function LoggerWave() {
-  // 10 Hz sampling lattice. Pulses sit on the bottom register.
-  const pts: string[] = []
-  for (let i = 0; i < 24; i++) {
-    const x = 16 + i * 12
-    const y = 70 + Math.sin(i * 0.9) * 10
-    pts.push(`${x},${y}`)
-  }
-  return (
-    <g>
-      {Array.from({ length: 11 }).map((_, i) => (
-        <line key={i} x1={16 + i * 28} y1="20" x2={16 + i * 28} y2="120" stroke="oklch(var(--muted-foreground))" strokeWidth="0.45" opacity="0.18" />
-      ))}
-      <polyline points={pts.join(' ')} stroke="oklch(var(--primary))" strokeWidth="1.4" fill="none" />
-      {pts.filter((_, i) => i % 3 === 0).map((p, i) => {
-        const [x, y] = p.split(',').map(Number)
-        return <circle key={i} cx={x} cy={y} r="1.6" fill="oklch(var(--primary))" />
-      })}
-      <text x="20" y="34" fontFamily="var(--font-mono)" fontSize="9" fill="oklch(var(--muted-foreground))" opacity="0.7">configurable Hz</text>
-      <text x="240" y="34" fontFamily="var(--font-mono)" fontSize="9" fill="oklch(var(--muted-foreground))" opacity="0.7">csv · json</text>
     </g>
   )
 }
