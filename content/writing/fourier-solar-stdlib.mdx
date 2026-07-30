@@ -1,0 +1,135 @@
+---
+title: "A stdlib-only Fourier solar model in 200 lines of Python"
+date: "2026-07-30"
+slug: "fourier-solar-stdlib"
+summary: "Spencer 1971 + Tanner Helland Kelvin→RGB, and the sign error that put the sun below the horizon — a solar lighting extension for Isaac Sim with zero external dependencies."
+tags: ["isaac-sim", "usd", "python", "solar"]
+---
+
+`worv.env.lights` is the Isaac Sim extension that drives the sun in our simulated environments — position, elevation, and color, driven by a date and a timeline scrubber instead of an artist dragging a directional light around. The bug that shaped most of the build wasn't in the astronomy — it was one flipped sign in how the light's rotation got applied. Get the math right and still point the sun at the wrong angle, and you get a DistantLight shining up from underground.
+
+![RTX render of the ability_port autonomous yard-tractor scene, lit by worv.env.lights](/worv-env-lights/port-scene.jpg)
+
+---
+
+## The constraint that shaped the fix
+
+The obvious move is `pip install pvlib` or `astropy` and let a maintained solar-position library handle it. Isaac Sim's bundled Python environment doesn't give you that option cleanly — no pip inside the extension's runtime, no vendoring a C-extension-heavy astronomy package into a USD stage plugin that has to load fast on every artist's machine.
+
+So the fix had to be stdlib-only. That constraint is what made this interesting: instead of reaching for a library, I went back to the actual published algorithm and implemented it directly.
+
+---
+
+## Spencer's 1971 Fourier approximation
+
+J. W. Spencer's 1971 paper gives a low-order Fourier series for the two quantities you need to place the sun: the **equation of time** (the gap between apparent solar time and clock time, which varies through the year because Earth's orbit is elliptical and its axis is tilted) and **solar declination** (how far the sun sits north or south of the celestial equator on a given day).
+
+```python
+import math
+
+def day_angle(day_of_year: int, hour: float) -> float:
+    # Fractional-year angle in radians, per Spencer 1971.
+    return (2 * math.pi / 365) * (day_of_year - 1 + (hour - 12) / 24)
+
+def equation_of_time(gamma: float) -> float:
+    # Minutes of offset between apparent and mean solar time.
+    return 229.18 * (
+        0.000075
+        + 0.001868 * math.cos(gamma)
+        - 0.032077 * math.sin(gamma)
+        - 0.014615 * math.cos(2 * gamma)
+        - 0.040849 * math.sin(2 * gamma)
+    )
+
+def solar_declination(gamma: float) -> float:
+    # Radians, north-positive.
+    return (
+        0.006918
+        - 0.399912 * math.cos(gamma)
+        + 0.070257 * math.sin(gamma)
+        - 0.006758 * math.cos(2 * gamma)
+        + 0.000907 * math.sin(2 * gamma)
+        - 0.002697 * math.cos(3 * gamma)
+        + 0.00148 * math.sin(3 * gamma)
+    )
+```
+
+From declination, latitude, and true solar time you get the hour angle, and from the hour angle you get solar zenith — which converts directly to elevation:
+
+```python
+def solar_elevation_deg(lat_deg: float, decl: float, hour_angle_deg: float) -> float:
+    lat = math.radians(lat_deg)
+    ha = math.radians(hour_angle_deg)
+    cos_zenith = math.sin(lat) * math.sin(decl) + math.cos(lat) * math.cos(decl) * math.cos(ha)
+    zenith = math.acos(max(-1.0, min(1.0, cos_zenith)))
+    return 90.0 - math.degrees(zenith)
+```
+
+This is the same underlying formula behind NOAA's solar calculator. It's accurate to roughly ±35 seconds on the equation of time and a fraction of a degree on declination — more than enough for a lighting extension, and it's a dozen lines of stdlib `math`. The default location is Busan, South Korea, to match the port terminal scene the extension was actually built for.
+
+---
+
+## Kelvin → RGB, without a lookup table
+
+The second half of the problem: color. Sun color shifts warm at the horizon and cools toward white-blue at midday — physically, that's blackbody radiation at a shifting color temperature. The standard way to turn a Kelvin value into an RGB triple is a lookup table sampled from the CIE blackbody locus. Tanner Helland's widely-used approximation replaces the table with a piecewise polynomial fit per channel, which is what actually goes in a `no pip` extension:
+
+```python
+def kelvin_to_rgb(kelvin: float) -> tuple[float, float, float]:
+    temp = kelvin / 100
+
+    if temp <= 66:
+        red = 255.0
+    else:
+        red = 329.698727446 * (temp - 60) ** -0.1332047592
+
+    if temp <= 66:
+        green = 99.4708025861 * math.log(temp) - 161.1195681661
+    else:
+        green = 288.1221695283 * (temp - 60) ** -0.0755148492
+
+    if temp >= 66:
+        blue = 255.0
+    elif temp <= 19:
+        blue = 0.0
+    else:
+        blue = 138.5177312231 * math.log(temp - 10) - 305.0447927307
+
+    clamp = lambda v: max(0.0, min(255.0, v))
+    return clamp(red), clamp(green), clamp(blue)
+```
+
+Feed it the sun's elevation-derived color temperature — low temperature (warm, red-orange) near the horizon, rising toward daylight white as the sun climbs — and the extension gets a physically-motivated color curve for free, no texture asset involved.
+
+---
+
+## The bug: correct math, wrong rotation
+
+The Spencer model above was right from the start. The bug was one step downstream, in how elevation and azimuth get turned into a USD rotation.
+
+A `DistantLight` in USD emits along its local **-Z axis**. Isaac Sim is Z-up. So to make the light shine *from* the sun's position in the sky *toward* the ground, you rotate that default straight-down direction by the sun's elevation and azimuth:
+
+```python
+# rotateXYZ order:
+#   X rotation = -(90 - elevation)
+#     elevation=90 (sun overhead) -> X=0   -> still straight down   ✓
+#     elevation=0  (sun on horizon) -> X=-90 -> tipped to horizontal ✓
+#   Z rotation = -azimuth   (compass bearing)
+rot_x = -(90.0 - elev_deg)
+rot_z = -azim_deg
+```
+
+The earlier version of this had that elevation sign flipped. The math still ran, the extension still updated a `rotateXYZ` attribute every frame, nothing threw — it just pointed the DistantLight the wrong way, so the sun rendered as though it were shining up from underground. Isaac Sim doesn't warn you when a light points into the floor; it just looks wrong, and "looks wrong" is a much slower bug to track down than a stack trace.
+
+The fix was two characters. Working out *why* those two characters mattered — walking through what `-Z` means for an unrotated `DistantLight`, and what "elevation 90 should still point straight down" actually implies for the rotation formula — took longer than writing the Fourier series did.
+
+---
+
+## Where it landed
+
+`worv.env.lights` shipped as the first of the `worv.*` Isaac Sim extensions, and its structure — extension entry point → window → controller — became the MVC pattern the rest of the team's extensions were built on. On top of the Spencer + Helland math, it grew a timeline scrubber (1×–500× real time, so you can watch a full day cycle in seconds), an adopt-vs-create mode for existing stage lights, and a lifecycle subscription so the sun updates as the stage streams in rather than only at extension load.
+
+`worv.core.logging`, built next on the same extension → window → controller shape, is the clearest proof the pattern was worth establishing:
+
+![worv.core.logging's Data Logger panel, mid-session, streaming telemetry from a tracked prim](/worv-env-lights/core-logging-ui.png)
+
+No pip. No lookup tables. Two published, forty-year-old formulas and a stage that finally told the truth about where the light actually was.

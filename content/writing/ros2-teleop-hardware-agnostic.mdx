@@ -1,0 +1,67 @@
+---
+title: "Why ROS 2 teleop should be hardware-agnostic from day one"
+date: "2026-07-30"
+slug: "ros2-teleop-hardware-agnostic"
+summary: "How a JoyMapping dataclass replaced 200 lines of Xbox-specific enum and made the same controller work for G29, PS5, and headless rigs."
+tags: ["ros2", "robotics", "controller-input", "python"]
+---
+
+The teleop node for our simulated articulated tractor — a 15-DOF rig modeled after a real XCMG yard tractor, suspension through steering through wheels — started life hardcoded for one controller: an Xbox pad. That was fine right up until testing needed a Logitech G29 racing wheel instead, for the pedal feel and steering resolution an Xbox stick can't give you.
+
+---
+
+## Why "just add another branch" doesn't scale
+
+The Xbox-only version worked by mapping named buttons and axes straight through an enum — `Axis.LEFT_STICK_X`, `Button.A`, that kind of thing — directly into drive commands. Reasonable for one controller. The moment a second controller enters the picture, that enum stops being a mapping and starts being a decision tree: "if Xbox, read axis 0; if G29, read axis 2 and invert it; if headless test rig, there is no axis, synthesize one."
+
+Every new input device means touching the same function again, and the hardware-specific logic and the control logic live in the same place — so a bug in "how the G29's brake pedal is scaled" and a bug in "how brake maps to deceleration" look identical from the outside.
+
+---
+
+## Separating "what the hardware sends" from "what the controller means"
+
+The fix was to stop special-casing devices inside the teleop logic and instead describe each controller's *shape* as data. Roughly:
+
+```python
+from dataclasses import dataclass, field
+
+@dataclass
+class JoyMapping:
+    """One of these per physical controller. teleop_node never branches
+    on device type — it just reads through whichever mapping is active."""
+    name: str
+    steer_axis: int
+    throttle_axis: int
+    brake_axis: int | None = None          # None if throttle/brake share an axis
+    invert_axes: set[int] = field(default_factory=set)
+    deadzone: float = 0.05
+    merge_pedals: bool = False              # G29: accel/brake are separate pedals,
+                                             # Xbox: one stick axis covers both
+
+    def read(self, raw_axes: list[float]) -> tuple[float, float]:
+        steer = raw_axes[self.steer_axis]
+        if self.steer_axis in self.invert_axes:
+            steer = -steer
+        steer = 0.0 if abs(steer) < self.deadzone else steer
+
+        if self.merge_pedals and self.brake_axis is not None:
+            throttle = (raw_axes[self.throttle_axis] - raw_axes[self.brake_axis]) / 2
+        else:
+            throttle = raw_axes[self.throttle_axis]
+
+        return steer, throttle
+```
+
+`teleop_node` doesn't know or care whether it's reading an Xbox pad, a G29, or a scripted headless input feeding synthetic axis values for CI. It just calls `mapping.read(axes)`. Adding a new controller means writing one new `JoyMapping` instance — not touching the node's control logic at all.
+
+---
+
+## Where the driving actually happens
+
+Reading a clean `(steer, throttle)` pair is only half of it — turning that into 15-DOF articulated motion runs through an `AckermannControllerActionGraph`, an OmniGraph-based action graph rather than hand-rolled Python, wired to the tractor's suspension, steering, and wheel joints at 60 Hz. Keeping the input layer hardware-agnostic meant the ActionGraph side never needed to know how the numbers it received were produced — Xbox, G29, or a keyboard keymap for headless scenario runs, all three feed it identically.
+
+---
+
+## What it bought
+
+One `JoyMapping` per device, zero branching in the control path, and every future controller — PS5 pad, a second wheel brand, a fully synthetic input source for automated scenario testing — is a new dataclass instance, not a new code path. The 200 lines of Xbox-specific enum became a handful of declarative mappings, and the hardware flexibility that unlocked ended up being one of the more reusable patterns to come out of this project — the same shape works for any ROS 2 node that has to sit between "physical device" and "meaning," not just teleop.

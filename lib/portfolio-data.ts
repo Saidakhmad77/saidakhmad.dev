@@ -197,7 +197,8 @@ export const writingTopics: WritingTopic[] = [
     title: "Why ROS 2 teleop should be hardware-agnostic from day one",
     summary:
       "How a JoyMapping dataclass replaced 200 lines of Xbox-specific enum and made the same controller work for G29, PS5, and headless rigs.",
-    status: "planned",
+    status: "shipped",
+    date: "2026-07-30",
   },
   {
     slug: "ue5-opacity-gotcha",
@@ -211,7 +212,8 @@ export const writingTopics: WritingTopic[] = [
     title: "A stdlib-only Fourier solar model in 200 lines of Python",
     summary:
       "Spencer 1971 + Tanner Helland Kelvin→RGB, and the sign error that put the sun below the horizon — zero external dependencies.",
-    status: "planned",
+    status: "shipped",
+    date: "2026-07-30",
   },
 ]
 
