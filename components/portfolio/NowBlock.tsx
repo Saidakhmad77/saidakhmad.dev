@@ -182,7 +182,7 @@ function NowSubBlock({
             <span key={item}>
               {item}
               {i < now.learning.length - 1 ? (
-                <span aria-hidden="true" className="text-border/80">{', '}</span>
+                <span aria-hidden="true" className="text-muted-foreground/70">{', '}</span>
               ) : null}
             </span>
           ))}
@@ -204,7 +204,7 @@ function NowSubBlock({
               <span className="text-muted-foreground/70">{' — '}</span>
               <span className="text-foreground/70">{book.author}</span>
               {i < now.reading.length - 1 ? (
-                <span aria-hidden="true" className="text-border/80">{', '}</span>
+                <span aria-hidden="true" className="text-muted-foreground/70">{', '}</span>
               ) : null}
             </span>
           ))}
@@ -222,7 +222,7 @@ function NowSubBlock({
             <span key={item}>
               {item}
               {i < now.tinkering.length - 1 ? (
-                <span aria-hidden="true" className="text-border/80">{', '}</span>
+                <span aria-hidden="true" className="text-muted-foreground/70">{', '}</span>
               ) : null}
             </span>
           ))}

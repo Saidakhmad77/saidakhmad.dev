@@ -132,7 +132,7 @@ function AboutBlock({
             {aboutCover.philosophy}
           </p>
           <p className="font-mono text-[12.5px] text-foreground/60">
-            Seoul · D-10 · TOPIK 4 · IELTS 7
+            Seoul · {profile.visa.split(' · ')[0]} · TOPIK 4 · IELTS 7
           </p>
         </div>
       </div>

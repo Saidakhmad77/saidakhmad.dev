@@ -3,6 +3,7 @@ import { Hero } from '@/components/portfolio/Hero'
 import { NowBlock } from '@/components/portfolio/NowBlock'
 import { ParkPilotShowcase } from '@/components/portfolio/ParkPilotShowcase'
 import { ProjectsGrid } from '@/components/portfolio/ProjectsGrid'
+import { HowIThink } from '@/components/portfolio/HowIThink'
 import { SkillsStrip } from '@/components/portfolio/SkillsStrip'
 import { Lab } from '@/components/portfolio/Lab'
 import { NavSimSection } from '@/components/portfolio/NavSimSection'
@@ -17,6 +18,7 @@ export default function Home() {
         <NowBlock />
         <ParkPilotShowcase />
         <ProjectsGrid />
+        <HowIThink />
         <SkillsStrip />
         <Lab />
         <NavSimSection />

@@ -94,8 +94,11 @@
   /* Surface-elevated — for SVG shape fills that need to read against the
      page background without disappearing. A few lightness steps above
      --background on dark, a few steps below on light. The shape's stroke
-     handles outline; this gives it body. */
-  --surface-elevated: oklch(0.14 0.005 240);
+     handles outline; this gives it body.
+     0.14 (only +0.07 over --background's 0.07) read as near-invisible in
+     practice — the delta needs to be closer to --muted/--border's spacing
+     to actually show up, not just be technically distinct. */
+  --surface-elevated: oklch(0.19 0.005 240);
 }
 
 .dark {
