@@ -56,7 +56,7 @@ export function ContactRow({ className }: { className?: string }) {
                   : undefined
             }
             download={l.download ? '' : undefined}
-            className="group inline-flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+            className="press group inline-flex items-center gap-2 text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
           >
             <span
               aria-hidden="true"

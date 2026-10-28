@@ -45,7 +45,7 @@ export function ParkPilotShowcase() {
           title="Featured"
           reduceMotion={!!reduceMotion}
         >
-          <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-xs">
+          <div className="flex items-center gap-2 font-mono text-label uppercase tracking-[0.22em] text-muted-foreground sm:text-xs">
             <span className="text-[color:var(--primary)]">Personal</span>
             <span aria-hidden="true" className="text-border">·</span>
             <span>open source</span>
@@ -85,7 +85,7 @@ export function ParkPilotShowcase() {
                   className="mx-auto block h-auto max-h-[26rem] w-full max-w-[20rem] object-contain"
                 />
               </div>
-              <figcaption className="mt-3 font-mono text-[9.5px] uppercase tracking-[0.22em] text-muted-foreground/55">
+              <figcaption className="mt-3 font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
                 fig · deterministic policy, randomized start
               </figcaption>
             </motion.figure>
@@ -95,17 +95,17 @@ export function ParkPilotShowcase() {
               {/* Coordinate row — org + category + period, ProjectsGrid idiom. */}
               <motion.div
                 variants={variantsItem}
-                className="flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-[11px]"
+                className="flex items-center justify-between gap-4 font-mono text-label uppercase tracking-[0.22em] text-muted-foreground sm:text-xs"
               >
                 <span className="flex items-center gap-3">
                   <span className="text-foreground/70">Personal</span>
                   <span
-                    className="inline-flex items-center border border-[color:var(--primary)]/60 px-1.5 py-[1.5px] font-mono text-[9.5px] uppercase tracking-[0.22em] text-[color:var(--primary)]"
+                    className="inline-flex items-center border border-[color:var(--primary)]/60 px-1.5 py-[1.5px] font-mono text-label uppercase tracking-[0.22em] text-[color:var(--primary)]"
                   >
                     RL
                   </span>
                 </span>
-                <span className="text-muted-foreground/80">2026.06</span>
+                <span className="text-muted-foreground">2026.06</span>
               </motion.div>
 
               {/* Name — mono, featured size. */}
@@ -137,7 +137,7 @@ export function ParkPilotShowcase() {
                     <dt className="font-mono text-[26px] font-medium tracking-[-0.02em] text-foreground tabular-nums sm:text-3xl">
                       <span className="num">{m.value}</span>
                     </dt>
-                    <dd className="mt-1.5 font-mono text-[9.5px] uppercase tracking-[0.2em] text-muted-foreground/65">
+                    <dd className="mt-1.5 font-mono text-label uppercase tracking-[0.2em] text-muted-foreground">
                       {m.label}
                     </dd>
                   </div>
@@ -147,7 +147,7 @@ export function ParkPilotShowcase() {
               {/* Secondary mono line — the training arc, kept as prose stat. */}
               <motion.p
                 variants={variantsItem}
-                className="mt-4 font-mono text-[10.5px] uppercase tracking-[0.22em] text-muted-foreground/70"
+                className="mt-4 font-mono text-label uppercase tracking-[0.22em] text-muted-foreground"
               >
                 <span aria-hidden="true" className="text-muted-foreground/45">{'> '}</span>
                 <span className="num text-foreground/75">398/400 across 4 seeds</span>
@@ -163,7 +163,7 @@ export function ParkPilotShowcase() {
                 variants={variantsItem}
                 className="mt-7 border-l border-[color:var(--accent-warm)]/70 pl-4"
               >
-                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/75">
+                <p className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
                   constraint
                 </p>
                 <p className="mt-2 max-w-[40rem] text-pretty text-[13.5px] leading-relaxed text-foreground/80 sm:text-[14px]">
@@ -193,7 +193,7 @@ export function ParkPilotShowcase() {
                     className="block h-auto w-full object-contain"
                   />
                 </div>
-                <figcaption className="mt-3 font-mono text-[9.5px] uppercase tracking-[0.22em] text-muted-foreground/55">
+                <figcaption className="mt-3 font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
                   fig · episode reward + success rate over 300k steps
                 </figcaption>
               </motion.figure>
@@ -205,7 +205,7 @@ export function ParkPilotShowcase() {
               >
                 {STACK.map((s) => (
                   <li key={s}>
-                    <span className="inline-flex items-center border border-border/70 px-2.5 py-1 font-mono text-[11px] tracking-tight text-foreground/75">
+                    <span className="inline-flex items-center border border-border/70 px-2.5 py-1 font-mono text-label tracking-tight text-foreground/75">
                       {s}
                     </span>
                   </li>

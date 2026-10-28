@@ -84,7 +84,7 @@ export function Hero() {
           <motion.p
             variants={variantsItem}
             aria-label={`Also known as ${profile.nickname}`}
-            className="mt-3 font-mono text-[11.5px] uppercase tracking-[0.22em] text-muted-foreground/70"
+            className="mt-3 font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground"
           >
             <span aria-hidden="true" className="text-muted-foreground/45">
               {'/ '}

@@ -33,14 +33,14 @@ export function SkillsStrip() {
       >
         {skills.map((group) => (
           <motion.div key={group.category} variants={variantsItem} className="flex flex-col gap-3">
-            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60">
+            <span className="font-mono text-label uppercase tracking-[0.2em] text-muted-foreground">
               {group.category}
             </span>
             <div className="flex flex-wrap gap-2">
               {group.items.map((skill) => (
                 <span
                   key={skill}
-                  className="border border-border/50 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.15em] text-foreground/70 transition-colors hover:border-primary/50 hover:text-primary"
+                  className="border border-border/50 px-2.5 py-1 font-mono text-label uppercase tracking-[0.15em] text-foreground/70 transition-colors hover:border-primary/50 hover:text-primary"
                 >
                   {skill}
                 </span>

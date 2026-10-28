@@ -35,7 +35,7 @@ export function Lab() {
           title="Lab"
           reduceMotion={!!reduceMotion}
         >
-          <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/75 sm:text-xs">
+          <div className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground sm:text-xs">
             notebook · not archive
           </div>
         </SectionHeader>
@@ -76,11 +76,11 @@ function PlannedWriting({
         transition={{ duration: 0.4, ease: EASE, delay: 0.05 }}
         className="mt-20 flex items-center gap-3 md:mt-24"
       >
-        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
+        <span className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
           Planned writing
         </span>
         <span aria-hidden="true" className="h-px flex-1 bg-border/40" />
-        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/55">
+        <span className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
           <span className="num">{counts.planned.toString().padStart(2, '0')}</span> planned ·{' '}
           <span className="num">{counts.shipped.toString().padStart(2, '0')}</span> shipped
         </span>
@@ -126,8 +126,8 @@ function WritingRow({
   const rowContent = (
     <>
       <div className="lg:col-span-3 lg:pt-1">
-        <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-[11px]">
-          <span className="num text-muted-foreground/55">{idx}</span>
+        <div className="flex items-center gap-3 font-mono text-label uppercase tracking-[0.22em] text-muted-foreground sm:text-xs">
+          <span className="num text-muted-foreground">{idx}</span>
           <span aria-hidden="true" className="h-2.5 w-px bg-border" />
           {/* Shipped reads in cyan (live, navigable); planned stays neutral. */}
           <span

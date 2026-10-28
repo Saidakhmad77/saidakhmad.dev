@@ -46,7 +46,7 @@ export function NavSimSection() {
             </p>
           </div>
 
-          <ul className="mt-6 space-y-2 border-l border-border/60 pl-4 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground/60">
+          <ul className="mt-6 space-y-2 border-l border-border/60 pl-4 font-mono text-label uppercase tracking-[0.18em] text-muted-foreground">
             {LEGEND_ITEMS.map(([label, description]) => (
               <li key={label}>
                 <span className="text-foreground/70">[ {label} ]</span>{' '}

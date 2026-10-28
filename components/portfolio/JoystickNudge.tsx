@@ -117,7 +117,7 @@ export function JoystickNudge({ className }: { className?: string }) {
             }}
           />
         </div>
-        <p className="font-mono text-[9.5px] uppercase tracking-[0.22em] text-muted-foreground/65">
+        <p className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
           drag · pad
         </p>
       </div>
@@ -125,22 +125,22 @@ export function JoystickNudge({ className }: { className?: string }) {
       {/* Readout + tractor. */}
       <div className="min-w-0 flex-1">
         {/* Mono readout. */}
-        <dl className="grid grid-cols-3 gap-x-3 gap-y-1 font-mono text-[10.5px] uppercase tracking-[0.18em] text-muted-foreground">
+        <dl className="grid grid-cols-3 gap-x-3 gap-y-1 font-mono text-label uppercase tracking-[0.18em] text-muted-foreground">
           <div>
-            <dt className="text-muted-foreground/55">steer</dt>
+            <dt className="text-muted-foreground">steer</dt>
             <dd className="num text-foreground/85">
               {steer >= 0 ? '+' : ''}
               {steer.toFixed(1)}°
             </dd>
           </div>
           <div>
-            <dt className="text-muted-foreground/55">throttle</dt>
+            <dt className="text-muted-foreground">throttle</dt>
             <dd className="num text-foreground/85">
               {(throttleClamped * 100).toFixed(0)}%
             </dd>
           </div>
           <div>
-            <dt className="text-muted-foreground/55">mode</dt>
+            <dt className="text-muted-foreground">mode</dt>
             <dd className="text-foreground/85">
               {Math.abs(throttleClamped) < 0.05 && Math.abs(steer) < 1
                 ? 'IDLE'

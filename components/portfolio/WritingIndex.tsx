@@ -27,7 +27,7 @@ export function WritingIndex({ posts }: { posts: PostMeta[] }) {
         title="Writing"
         reduceMotion={!!reduceMotion}
       >
-        <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/75 sm:text-xs">
+        <div className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground sm:text-xs">
           field notes · engineering log
         </div>
       </SectionHeader>
@@ -83,8 +83,8 @@ function PostRow({
       >
         {/* Coordinate row — index · date · tags. */}
         <div className="lg:col-span-3 lg:pt-1">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-[11px]">
-            <span className="num text-muted-foreground/55">{idx}</span>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 font-mono text-label uppercase tracking-[0.22em] text-muted-foreground sm:text-xs">
+            <span className="num text-muted-foreground">{idx}</span>
             {post.date ? (
               <>
                 <span aria-hidden="true" className="h-2.5 w-px bg-border" />
@@ -100,7 +100,7 @@ function PostRow({
             <ul className="mt-3 flex flex-wrap gap-1.5">
               {post.tags.map((t) => (
                 <li key={t}>
-                  <span className="inline-flex items-center border border-border/60 px-1.5 py-[1.5px] font-mono text-[9.5px] uppercase tracking-[0.18em] text-foreground/65">
+                  <span className="inline-flex items-center border border-border/60 px-1.5 py-[1.5px] font-mono text-label uppercase tracking-[0.18em] text-foreground/65">
                     {t}
                   </span>
                 </li>

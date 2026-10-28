@@ -47,7 +47,7 @@ export default async function WritingPostPage({ params }: PageProps) {
           <article className="mx-auto w-full max-w-[44rem]">
             <Link
               href="/writing"
-              className="group inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70 transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+              className="group inline-flex items-center gap-2 font-mono text-label uppercase tracking-[0.22em] text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
             >
               <span
                 aria-hidden="true"
@@ -59,7 +59,7 @@ export default async function WritingPostPage({ params }: PageProps) {
             </Link>
 
             <header className="mt-10 border-b border-border/40 pb-10">
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-[11px]">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-label uppercase tracking-[0.22em] text-muted-foreground sm:text-xs">
                 {post.date ? (
                   <time dateTime={post.date} className="num text-muted-foreground/85">
                     {post.date}
@@ -71,7 +71,7 @@ export default async function WritingPostPage({ params }: PageProps) {
                     <ul className="flex flex-wrap gap-1.5">
                       {post.tags.map(t => (
                         <li key={t}>
-                          <span className="inline-flex items-center border border-border/60 px-1.5 py-[1.5px] text-[9.5px] tracking-[0.18em] text-foreground/65">
+                          <span className="inline-flex items-center border border-border/60 px-1.5 py-[1.5px] text-label tracking-[0.18em] text-foreground/65">
                             {t}
                           </span>
                         </li>
@@ -96,7 +96,7 @@ export default async function WritingPostPage({ params }: PageProps) {
               <PostContent />
             </div>
 
-            <footer className="mt-16 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-border/40 pt-8 font-mono text-[11px] uppercase tracking-[0.22em] text-muted-foreground/70">
+            <footer className="mt-16 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-border/40 pt-8 font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
               <Link
                 href="/writing"
                 className="transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"

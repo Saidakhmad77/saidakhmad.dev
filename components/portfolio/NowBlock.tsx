@@ -52,7 +52,7 @@ export function NowBlock() {
           title="Now"
           reduceMotion={!!reduceMotion}
         >
-          <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-xs">
+          <div className="flex items-center gap-2 font-mono text-label uppercase tracking-[0.22em] text-muted-foreground sm:text-xs">
             <LiveDot reduceMotion={!!reduceMotion} />
             <span>{role ? formatPeriod(role.period) : 'Open to work'}</span>
           </div>
@@ -71,14 +71,14 @@ export function NowBlock() {
               {role ? role.company : BETWEEN_ROLES.headline}
             </h3>
             {role?.companyKo ? (
-              <span className="text-base text-muted-foreground/70 sm:text-lg">
+              <span className="text-base text-muted-foreground sm:text-lg">
                 <span aria-hidden="true" className="text-muted-foreground/40">/</span>{' '}
                 <span lang="ko">{role.companyKo}</span>
               </span>
             ) : null}
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground sm:text-xs">
+          <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1.5 font-mono text-label uppercase tracking-[0.18em] text-muted-foreground sm:text-xs">
             {role ? (
               <>
                 <span className="text-foreground/85">{role.role}</span>
@@ -86,7 +86,7 @@ export function NowBlock() {
                   <>
                     <span aria-hidden="true" className="text-border">·</span>
                     <span>
-                      <span className="text-muted-foreground/50">Team</span>{' '}
+                      <span className="text-muted-foreground">Team</span>{' '}
                       <span className="text-foreground/75">{role.team}</span>
                     </span>
                   </>
@@ -111,7 +111,7 @@ export function NowBlock() {
           viewport={{ once: true, margin: '-15%' }}
           className="mt-12"
         >
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
+          <p className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
             Mandate
           </p>
           <p className="mt-3 max-w-[42rem] text-pretty text-base leading-relaxed text-foreground/85 lg:text-[17px]">
@@ -135,7 +135,7 @@ export function NowBlock() {
             className="mt-16 md:mt-20"
           >
             <div className="flex items-center gap-3">
-              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
+              <span className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
                 Stack
               </span>
               <span aria-hidden="true" className="h-px flex-1 bg-border/40" />
@@ -143,7 +143,7 @@ export function NowBlock() {
             <ul className="mt-4 flex flex-wrap gap-x-2 gap-y-2">
               {role.stack.map((s) => (
                 <li key={s}>
-                  <span className="inline-flex items-center border border-border/70 px-2.5 py-1 font-mono text-[11px] tracking-tight text-foreground/75">
+                  <span className="inline-flex items-center border border-border/70 px-2.5 py-1 font-mono text-label tracking-tight text-foreground/75">
                     {s}
                   </span>
                 </li>
@@ -235,7 +235,7 @@ function NowSubBlock({
     rows.push({
       label: 'Tinkering',
       render: () => (
-        <span className="font-mono text-[13px] tracking-tight text-muted-foreground/55">
+        <span className="font-mono text-[13px] tracking-tight text-muted-foreground">
           (later)
         </span>
       ),
@@ -252,11 +252,11 @@ function NowSubBlock({
     >
       {/* Manifest divider — "/now" eyebrow + hairline. Same idiom as Stack below. */}
       <div className="flex items-center gap-3">
-        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
+        <span className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
           /now
         </span>
         <span aria-hidden="true" className="h-px flex-1 bg-border/40" />
-        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/55">
+        <span className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
           this month
         </span>
       </div>
@@ -276,7 +276,7 @@ function NowSubBlock({
             key={row.label}
             className="grid grid-cols-1 gap-y-1.5 py-3.5 sm:grid-cols-[7rem_1fr] sm:items-baseline sm:gap-x-6 sm:gap-y-0"
           >
-            <dt className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/60">
+            <dt className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
               {row.label}
             </dt>
             <dd className="text-pretty leading-relaxed">{row.render()}</dd>

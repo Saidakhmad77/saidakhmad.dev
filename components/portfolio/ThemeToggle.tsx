@@ -15,6 +15,15 @@ import { cn } from '@/lib/utils'
 
 const STORAGE_KEY = 'theme'
 const LIGHT_CLASS = 'theme-light'
+// Present on <html> only while the palette is cross-fading. globals.css
+// scopes the site-wide color transition to it so ordinary hovers stay instant.
+const SWITCHING_CLASS = 'theme-switching'
+const SWITCH_MS = 250
+
+// Module-scoped so rapid double-clicks (or two toggles on one page) share one
+// timer: each click restarts the window instead of an older timer stripping
+// the class mid-fade.
+let switchTimer: number | undefined
 
 function subscribeHtmlClass(notify: () => void): () => void {
   if (typeof document === 'undefined') return () => {}
@@ -44,7 +53,16 @@ export function ThemeToggle({ className }: { className?: string }) {
   const toggle = () => {
     if (typeof document === 'undefined') return
     const next = !light
-    document.documentElement.classList.toggle(LIGHT_CLASS, next)
+    const root = document.documentElement
+    if (!reduceMotion) {
+      window.clearTimeout(switchTimer)
+      root.classList.add(SWITCHING_CLASS)
+      switchTimer = window.setTimeout(() => {
+        root.classList.remove(SWITCHING_CLASS)
+        switchTimer = undefined
+      }, SWITCH_MS)
+    }
+    root.classList.toggle(LIGHT_CLASS, next)
     try {
       window.localStorage.setItem(STORAGE_KEY, next ? 'light' : 'dark')
     } catch {
@@ -59,7 +77,10 @@ export function ThemeToggle({ className }: { className?: string }) {
       aria-label={light ? 'Switch to dark mode' : 'Switch to light mode'}
       aria-pressed={light}
       className={cn(
-        'group relative inline-flex h-8 w-8 items-center justify-center rounded-sm border border-border/60 text-muted-foreground transition-colors hover:border-foreground/40 hover:text-foreground',
+        'press group relative inline-flex h-8 w-8 items-center justify-center rounded-sm border border-border/60 text-muted-foreground hover:border-foreground/40 hover:text-foreground',
+        // 32px visual box, 44px hit area — the ::before extends the target
+        // without moving the bordered square.
+        'before:absolute before:-inset-1.5',
         'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background',
         className,
       )}
