@@ -197,19 +197,19 @@ export function RoboGame({ className }: { className?: string }) {
     pushLog('robot reset · targets respawned')
   }, [pushLog])
 
-  const modeColor = tele.mode === 'MANUAL' ? 'text-[oklch(0.80_0.13_65)]' : tele.mode === 'AUTO' ? 'text-primary' : 'text-muted-foreground/50'
+  const modeColor = tele.mode === 'MANUAL' ? 'text-[oklch(0.80_0.13_65)]' : tele.mode === 'AUTO' ? 'text-primary' : 'text-muted-foreground'
   const modeDot = tele.mode === 'MANUAL' ? 'bg-[oklch(0.80_0.13_65)] shadow-[0_0_6px_oklch(0.80_0.13_65)]' : tele.mode === 'AUTO' ? 'bg-primary shadow-[0_0_6px_oklch(0.78_0.16_195)]' : 'bg-muted-foreground/40'
 
   return (
     <div className={cn('border border-border/60 bg-foreground/[0.012] overflow-hidden', className)}>
       <div className="flex items-center justify-between border-b border-border/40 px-4 py-2">
-        <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em]">
-          <span className="text-muted-foreground/40">/</span><span className="text-muted-foreground/80">nav_sim</span><span className="text-border">·</span>
+        <div className="flex items-center gap-3 font-mono text-label uppercase tracking-[0.2em]">
+          <span className="text-muted-foreground/40">/</span><span className="text-muted-foreground">nav_sim</span><span className="text-border">·</span>
           <span className={cn('flex items-center gap-1.5', modeColor)}><span className={cn('h-1.5 w-1.5 rounded-full', modeDot)} />{tele.mode}</span>
         </div>
         <div className="flex items-center gap-3">
-          <span className="font-mono text-[10px] tracking-[0.15em] text-muted-foreground/50">score{' '}<span className="num text-primary">{tele.score.toString().padStart(2, '0')}</span></span>
-          <button onClick={reset} className="border border-border/40 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground/50 transition-colors hover:border-border/70 hover:text-muted-foreground">reset</button>
+          <span className="font-mono text-label tracking-[0.15em] text-muted-foreground">score{' '}<span className="num text-primary">{tele.score.toString().padStart(2, '0')}</span></span>
+          <button type="button" onClick={reset} className="press border border-border/40 px-2 py-0.5 font-mono text-label uppercase tracking-[0.2em] text-muted-foreground hover:border-border/70 hover:text-foreground">reset</button>
         </div>
       </div>
       <div className="flex flex-col xl:flex-row">
@@ -217,31 +217,31 @@ export function RoboGame({ className }: { className?: string }) {
           <canvas ref={canvasRef} tabIndex={0} onFocus={onCanvasFocus} onBlur={onCanvasBlur} width={COLS * CELL} height={ROWS * CELL} onClick={handleClick} className={cn('block outline-none focus-visible:ring-1 focus-visible:ring-primary/50', tele.mode === 'AUTO' ? 'cursor-crosshair' : 'cursor-default')} />
         </div>
         <div className="flex flex-col border-t border-border/40 xl:min-w-[200px] xl:max-w-[220px] xl:border-t-0 xl:border-l">
-          <div className="border-b border-border/40 p-4 font-mono text-[10px] uppercase tracking-[0.15em]">
-            <div className="mb-3 text-muted-foreground/45">telemetry</div>
+          <div className="border-b border-border/40 p-4 font-mono text-label uppercase tracking-[0.15em]">
+            <div className="mb-3 text-muted-foreground">telemetry</div>
             <dl className="grid grid-cols-2 gap-x-3 gap-y-2">
-              <dt className="text-muted-foreground/50">pos</dt><dd className="num text-foreground/75">[{tele.gx},{tele.gy}]</dd>
-              <dt className="text-muted-foreground/50">hdg</dt><dd className="num text-foreground/75">{tele.hdg}°</dd>
-              <dt className="text-muted-foreground/50">spd</dt><dd className="num text-foreground/75">{tele.spd}</dd>
-              <dt className="text-muted-foreground/50">nodes</dt><dd className="num text-foreground/75">{tele.nodes}</dd>
+              <dt className="text-muted-foreground">pos</dt><dd className="num text-foreground/75">[{tele.gx},{tele.gy}]</dd>
+              <dt className="text-muted-foreground">hdg</dt><dd className="num text-foreground/75">{tele.hdg}°</dd>
+              <dt className="text-muted-foreground">spd</dt><dd className="num text-foreground/75">{tele.spd}</dd>
+              <dt className="text-muted-foreground">nodes</dt><dd className="num text-foreground/75">{tele.nodes}</dd>
             </dl>
           </div>
           <div className="border-b border-border/40 p-4">
-            <div className="mb-3 font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground/45">mode</div>
+            <div className="mb-3 font-mono text-label uppercase tracking-[0.15em] text-muted-foreground">mode</div>
             <div className="flex flex-col gap-2">
               {(['MANUAL', 'AUTO'] as Mode[]).map(m => (
-                <button key={m} onClick={() => setMode(m)} className={cn('border px-3 py-1.5 text-left font-mono text-[10px] uppercase tracking-[0.15em] transition-all', tele.mode === m ? m === 'MANUAL' ? 'border-[oklch(0.80_0.13_65/0.7)] bg-[oklch(0.80_0.13_65/0.06)] text-[oklch(0.80_0.13_65)]' : 'border-primary/70 bg-primary/5 text-primary' : 'border-border/40 text-muted-foreground/55 hover:border-border/70 hover:text-muted-foreground')}>{m}</button>
+                <button key={m} type="button" onClick={() => setMode(m)} className={cn('press border px-3 py-1.5 text-left font-mono text-label uppercase tracking-[0.15em]', tele.mode === m ? m === 'MANUAL' ? 'border-[oklch(0.80_0.13_65/0.7)] bg-[oklch(0.80_0.13_65/0.06)] text-[oklch(0.80_0.13_65)]' : 'border-primary/70 bg-primary/5 text-primary' : 'border-border/40 text-muted-foreground hover:border-border/70 hover:text-foreground')}>{m}</button>
               ))}
-              {tele.mode === 'AUTO' && <button onClick={randomWaypoint} className="border border-border/40 px-3 py-1.5 text-left font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground/55 transition-all hover:border-primary/40 hover:text-primary">random</button>}
+              {tele.mode === 'AUTO' && <button type="button" onClick={randomWaypoint} className="press border border-border/40 px-3 py-1.5 text-left font-mono text-label uppercase tracking-[0.15em] text-muted-foreground hover:border-primary/40 hover:text-primary">random</button>}
             </div>
-            <p className="mt-3 font-mono text-[9px] normal-case leading-relaxed tracking-normal text-muted-foreground/35">
+            <p className="mt-3 font-mono text-label normal-case leading-relaxed tracking-normal text-muted-foreground">
               {tele.mode === 'MANUAL' ? 'click canvas, then WASD / arrows to drive' : tele.mode === 'AUTO' ? 'click grid to set waypoint' : 'select a mode above'}
             </p>
           </div>
-          <div className="flex-1 overflow-hidden p-4">
-            <div className="mb-2 font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground/45">log</div>
-            <div className="space-y-1 font-mono text-[9px] leading-relaxed">
-              {log.map((line, i) => <div key={i} className={i === log.length - 1 ? 'text-primary/80' : 'text-muted-foreground/35'}>{line}</div>)}
+          <div className="flex min-h-0 flex-1 flex-col overflow-hidden p-4">
+            <div className="mb-2 font-mono text-label uppercase tracking-[0.15em] text-muted-foreground">log</div>
+            <div className="flex min-h-0 flex-1 flex-col justify-end space-y-1 overflow-hidden font-mono text-label leading-relaxed">
+              {log.map((line, i) => <div key={i} className={i === log.length - 1 ? 'text-primary/80' : 'text-muted-foreground'}>{line}</div>)}
             </div>
           </div>
         </div>

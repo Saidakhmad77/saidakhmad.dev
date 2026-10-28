@@ -52,7 +52,7 @@ export function ClosingSection() {
           title="Contact"
           reduceMotion={!!reduceMotion}
         >
-          <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-xs">
+          <div className="flex items-center gap-2 font-mono text-label uppercase tracking-[0.22em] text-muted-foreground sm:text-xs">
             <LiveDot reduceMotion={!!reduceMotion} />
             <span>Open to work</span>
           </div>
@@ -114,7 +114,7 @@ function AboutBlock({
         {/* Bilingual "self-introduction" header — small but unmistakable
             personality signal that wasn't on the old site at all. */}
         <div className="flex items-baseline gap-3">
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
+          <p className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
             About
           </p>
           <span aria-hidden="true" className="h-px w-6 bg-border/50" />
@@ -192,7 +192,7 @@ function CredentialsBlock({
   return (
     <div>
       <div className="flex items-center gap-3">
-        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
+        <span className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
           {label}
         </span>
         <span aria-hidden="true" className="h-px flex-1 bg-border/40" />
@@ -208,7 +208,7 @@ function EducationStrip({ ed }: { ed: Education }) {
       <h3 className="text-base font-medium tracking-[-0.01em] text-foreground sm:text-[17px]">
         {ed.school}
       </h3>
-      <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-muted-foreground sm:text-[11.5px]">
+      <p className="font-mono text-label uppercase tracking-[0.16em] text-muted-foreground sm:text-xs">
         <span className="text-foreground/80">{ed.degree}</span>
         <span aria-hidden="true" className="mx-2 text-border">·</span>
         <span>{ed.period}</span>
@@ -228,7 +228,7 @@ function LanguageRow({ lang, isLast }: { lang: Language; isLast: boolean }) {
       <span className="font-mono text-[12px] tracking-tight text-foreground/85">
         {lang.name}
       </span>
-      <span className="flex items-baseline gap-2 font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground">
+      <span className="flex items-baseline gap-2 font-mono text-label uppercase tracking-[0.16em] text-muted-foreground">
         <span>{lang.level}</span>
         {lang.cert ? (
           <>
@@ -260,12 +260,12 @@ function CertificateRow({
           {cert.name}
         </span>
         {cert.issuer ? (
-          <span className="ml-2 font-mono text-[10.5px] tracking-tight text-muted-foreground/75">
+          <span className="ml-2 font-mono text-label tracking-tight text-muted-foreground">
             {cert.issuer}
           </span>
         ) : null}
       </div>
-      <span className="shrink-0 font-mono text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground">
+      <span className="shrink-0 font-mono text-label uppercase tracking-[0.16em] text-muted-foreground">
         {cert.date}
       </span>
     </li>
@@ -306,11 +306,11 @@ function UsesBlock({
         variants={variantsItem}
         className="flex items-center gap-3"
       >
-        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
+        <span className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
           /uses
         </span>
         <span aria-hidden="true" className="h-px flex-1 bg-border/40" />
-        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/55">
+        <span className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
           daily drivers
         </span>
       </motion.div>
@@ -338,13 +338,13 @@ function UsesCategory({
       variants={variants}
       className="grid grid-cols-1 gap-y-3 py-5 sm:grid-cols-[10rem_1fr] sm:items-baseline sm:gap-x-6 sm:gap-y-0 md:grid-cols-[12rem_1fr]"
     >
-      <span className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-muted-foreground/65">
+      <span className="font-mono text-label uppercase tracking-[0.2em] text-muted-foreground">
         {cat.category}
       </span>
       <ul className="flex flex-wrap gap-x-1.5 gap-y-1.5">
         {cat.items.map((item) => (
           <li key={item}>
-            <span className="inline-flex items-center border border-border/55 px-2 py-[3px] font-mono text-[10.5px] tracking-tight text-foreground/65">
+            <span className="inline-flex items-center border border-border/55 px-2 py-[3px] font-mono text-label tracking-tight text-foreground/65">
               {item}
             </span>
           </li>
@@ -427,7 +427,7 @@ function ClosingContact({
         transition={{ duration: 0.4, ease: EASE, delay: 0.05 }}
         className="mt-24 flex items-center gap-3 md:mt-32"
       >
-        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
+        <span className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
           Reach out
         </span>
         <span aria-hidden="true" className="h-px flex-1 bg-border/40" />
@@ -484,12 +484,12 @@ function ClosingContactRow({
         }
         download={link.download ? '' : undefined}
         className={cn(
-          'group grid grid-cols-[5.5rem_1fr_auto] items-center gap-x-4 py-5 sm:grid-cols-[7rem_1fr_auto] sm:gap-x-6 md:py-6',
+          'press group grid grid-cols-[5.5rem_1fr_auto] items-center gap-x-4 py-5 [--press-scale:0.99] sm:grid-cols-[7rem_1fr_auto] sm:gap-x-6 md:py-6',
           'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background',
         )}
       >
         {/* Channel label — mono caps, fixed-width column reads like a manifest. */}
-        <span className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-muted-foreground/75">
+        <span className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
           {link.label}
         </span>
 
@@ -527,7 +527,7 @@ function Footer({ reduceMotion }: { reduceMotion: boolean }) {
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: '-5%' }}
       transition={{ duration: 0.4, ease: EASE, delay: 0.1 }}
-      className="mt-16 flex flex-col gap-y-3 border-t border-border/30 pt-6 font-mono text-[11px] tracking-tight text-muted-foreground/70 sm:mt-20 sm:flex-row sm:items-center sm:justify-between sm:gap-x-6"
+      className="mt-16 flex flex-col gap-y-3 border-t border-border/30 pt-6 font-mono text-label tracking-tight text-muted-foreground sm:mt-20 sm:flex-row sm:items-center sm:justify-between sm:gap-x-6"
     >
       {/* Identity — copyright. */}
       <span>
@@ -536,20 +536,20 @@ function Footer({ reduceMotion }: { reduceMotion: boolean }) {
 
       {/* Location echo — mirrors the hero's "SEONGNAM · KR". */}
       <span className="hidden sm:inline">
-        <span className="text-muted-foreground/50">Seoul</span>
+        <span className="text-muted-foreground">Seoul</span>
         <span aria-hidden="true" className="mx-2 text-border">·</span>
-        <span className="text-muted-foreground/50">KR</span>
+        <span className="text-muted-foreground">KR</span>
       </span>
 
       {/* Build metadata — version + source link. */}
       <span className="flex items-center gap-x-2">
-        <span className="text-muted-foreground/50">{BUILD_VERSION}</span>
+        <span className="text-muted-foreground">{BUILD_VERSION}</span>
         <span aria-hidden="true" className="text-border">·</span>
         <a
           href={profile.contact.githubUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="group inline-flex items-center gap-1.5 text-muted-foreground/70 transition-colors hover:text-foreground/85 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+          className="press group inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground/85 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background"
         >
           <span>Source on GitHub</span>
           <span

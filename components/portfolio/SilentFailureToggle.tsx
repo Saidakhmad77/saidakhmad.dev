@@ -60,7 +60,7 @@ export function SilentFailureToggle({ className }: { className?: string }) {
         aria-pressed={silent}
         title="Toggle silent-failure mode — see what 'succeeded but wrong' looks like"
         className={cn(
-          'group inline-flex items-center gap-2 border px-3 py-2 font-mono text-[10.5px] uppercase tracking-[0.22em] transition-colors',
+          'press group inline-flex items-center gap-2 border px-3 py-2 font-mono text-label uppercase tracking-[0.22em]',
           'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-offset-4 focus-visible:ring-offset-background',
           silent
             ? 'border-[color:var(--accent-fail)] text-[color:var(--accent-fail)] focus-visible:ring-[color:var(--accent-fail)]'
@@ -84,7 +84,7 @@ export function SilentFailureToggle({ className }: { className?: string }) {
         <div role="status" aria-live="polite" className="silent-banner">
           <span className="silent-banner-inner">
             <span>{'// would have succeeded — wrong result'}</span>
-            <span aria-hidden="true" className="text-[color:var(--accent-fail)]/55">
+            <span aria-hidden="true" className="text-[color:var(--accent-fail)]/85">
               ESC to dismiss
             </span>
           </span>

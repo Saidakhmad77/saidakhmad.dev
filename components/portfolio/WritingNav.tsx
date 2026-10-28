@@ -56,7 +56,7 @@ export function WritingNav() {
           <span className="text-foreground">S</span>
           <span className="text-muted-foreground/70 transition-colors group-hover:text-primary">/</span>
           <span className="text-foreground">N</span>
-          <span className="ml-2 hidden text-muted-foreground/60 sm:inline">saidakhmad.dev</span>
+          <span className="ml-2 hidden text-muted-foreground sm:inline">saidakhmad.dev</span>
         </Link>
 
         <div className="flex items-center gap-3">

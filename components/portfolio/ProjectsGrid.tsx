@@ -65,7 +65,7 @@ export function ProjectsGrid() {
           title="Field Notes"
           reduceMotion={!!reduceMotion}
         >
-          <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-xs">
+          <div className="flex items-center gap-2 font-mono text-label uppercase tracking-[0.22em] text-muted-foreground sm:text-xs">
             <span>{projects.length.toString().padStart(2, '0')} entries</span>
             {span ? (
               <>
@@ -106,7 +106,7 @@ export function ProjectsGrid() {
           transition={{ duration: 0.4, ease: EASE, delay: 0.05 }}
           className="mt-20 flex items-center gap-3 md:mt-24"
         >
-          <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
+          <span className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
             Also shipped
           </span>
           <span aria-hidden="true" className="h-px flex-1 bg-border/40" />
@@ -167,14 +167,14 @@ function FeaturedEntry({
 
       <article className="relative pl-6 sm:pl-8">
         {/* Coordinate row — index + org + period + category badge. */}
-        <div className="flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-[11px]">
+        <div className="flex items-center justify-between gap-4 font-mono text-label uppercase tracking-[0.22em] text-muted-foreground sm:text-xs">
           <span className="flex items-center gap-3">
-            <span className="num text-muted-foreground/60">{idx}</span>
+            <span className="num text-muted-foreground">{idx}</span>
             <span aria-hidden="true" className="h-2.5 w-px bg-border" />
             <span className="text-foreground/70">{project.org}</span>
             <CategoryBadge category={project.category} />
           </span>
-          <span className="text-muted-foreground/80">{period}</span>
+          <span className="text-muted-foreground">{period}</span>
         </div>
 
         {/* Visualisation panel — replaces the empty clip slot. A compact,
@@ -200,7 +200,7 @@ function FeaturedEntry({
         <ul className="mt-5 flex flex-wrap gap-x-2 gap-y-2">
           {project.stack.map((s) => (
             <li key={s}>
-              <span className="inline-flex items-center border border-border/70 px-2.5 py-1 font-mono text-[11px] tracking-tight text-foreground/75">
+              <span className="inline-flex items-center border border-border/70 px-2.5 py-1 font-mono text-label tracking-tight text-foreground/75">
                 {s}
               </span>
             </li>
@@ -220,8 +220,8 @@ function FeaturedEntry({
 function ConstraintRow({ project, compact }: { project: Project; compact: boolean }) {
   if (compact) {
     return (
-      <p className="mt-4 border-l border-[color:var(--accent-warm)]/70 pl-3 font-mono text-[11px] leading-relaxed text-muted-foreground sm:text-[11.5px]">
-        <span className="uppercase tracking-[0.18em] text-muted-foreground/65">
+      <p className="mt-4 border-l border-[color:var(--accent-warm)]/70 pl-3 font-mono text-label leading-relaxed text-muted-foreground sm:text-xs">
+        <span className="uppercase tracking-[0.18em] text-muted-foreground">
           constraint ·
         </span>{' '}
         <span className="text-foreground/85">{project.constraintLabel}</span>
@@ -230,7 +230,7 @@ function ConstraintRow({ project, compact }: { project: Project; compact: boolea
   }
   return (
     <div className="mt-5 border-l border-[color:var(--accent-warm)]/70 pl-4">
-      <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/75">
+      <p className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
         constraint
       </p>
       <p className="mt-2 text-pretty text-[13.5px] leading-relaxed text-foreground/80 sm:text-[14px]">
@@ -251,7 +251,7 @@ function CategoryBadge({ category }: { category: ProjectCategory }) {
   return (
     <span
       className={cn(
-        'inline-flex items-center border px-1.5 py-[1.5px] font-mono text-[9.5px] uppercase tracking-[0.22em]',
+        'inline-flex items-center border px-1.5 py-[1.5px] font-mono text-label uppercase tracking-[0.22em]',
         cat.color,
       )}
     >
@@ -267,7 +267,7 @@ function CategoryBadge({ category }: { category: ProjectCategory }) {
 
 function MetricLine({ metric }: { metric: string }) {
   return (
-    <p className="mt-2 font-mono text-[10.5px] uppercase tracking-[0.22em] text-muted-foreground/70">
+    <p className="mt-2 font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
       <span aria-hidden="true" className="text-muted-foreground/45">{'> '}</span>
       <span className="num text-foreground/75">{metric}</span>
     </p>
@@ -318,7 +318,7 @@ function ProjectViz({ slug }: { slug: string }) {
           </svg>
         )}
       </div>
-      <p className="mt-3 font-mono text-[9.5px] uppercase tracking-[0.22em] text-muted-foreground/55">
+      <p className="mt-3 font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
         {VIZ_CAPTION[slug] ?? 'signature'}
       </p>
     </div>
@@ -475,14 +475,14 @@ function SupportingEntry({
         )}
       >
         {/* Coordinate row. */}
-        <div className="flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground sm:text-[11px]">
+        <div className="flex items-center justify-between gap-4 font-mono text-label uppercase tracking-[0.22em] text-muted-foreground sm:text-xs">
           <span className="flex items-center gap-3">
-            <span className="num text-muted-foreground/60">{idx}</span>
+            <span className="num text-muted-foreground">{idx}</span>
             <span aria-hidden="true" className="h-2.5 w-px bg-border" />
             <span className="text-foreground/70">{project.org}</span>
             <CategoryBadge category={project.category} />
           </span>
-          <span className="text-muted-foreground/80">{period}</span>
+          <span className="text-muted-foreground">{period}</span>
         </div>
 
         {/* Project name — mono, smaller than featured but still substantial. */}
@@ -505,7 +505,7 @@ function SupportingEntry({
         <ul className="mt-4 flex flex-wrap gap-x-2 gap-y-2">
           {project.stack.map((s) => (
             <li key={s}>
-              <span className="inline-flex items-center border border-border/70 px-2.5 py-1 font-mono text-[11px] tracking-tight text-foreground/75">
+              <span className="inline-flex items-center border border-border/70 px-2.5 py-1 font-mono text-label tracking-tight text-foreground/75">
                 {s}
               </span>
             </li>

@@ -143,7 +143,7 @@ export function SolarReadout() {
     return (
       <div
         aria-hidden="true"
-        className="mt-7 inline-flex items-center gap-3 border border-border/50 px-3 py-2 font-mono text-[10.5px] uppercase tracking-[0.18em] text-muted-foreground/60"
+        className="mt-7 inline-flex items-center gap-3 border border-border/50 px-3 py-2 font-mono text-label uppercase tracking-[0.18em] text-muted-foreground"
       >
         <span>SOLAR · SEOUL · …</span>
       </div>
@@ -165,7 +165,7 @@ export function SolarReadout() {
     <div
       role="group"
       aria-label={`Live Seoul solar readout — ${phase.replace('_', ' ')}, elevation ${elevationDeg.toFixed(1)} degrees, ${kelvin} kelvin`}
-      className="mt-7 inline-flex max-w-full flex-wrap items-center gap-x-4 gap-y-2 border border-border/60 bg-foreground/[0.015] px-3.5 py-2.5 font-mono text-[10.5px] uppercase tracking-[0.18em] text-muted-foreground sm:gap-x-5"
+      className="mt-7 inline-flex max-w-full flex-wrap items-center gap-x-4 gap-y-2 border border-border/60 bg-foreground/[0.015] px-3.5 py-2.5 font-mono text-label uppercase tracking-[0.18em] text-muted-foreground sm:gap-x-5"
     >
       {/* Tiny sun-arc SVG. */}
       <svg
@@ -231,7 +231,7 @@ function Cell({
 }) {
   return (
     <span className="inline-flex items-baseline gap-1.5 whitespace-nowrap">
-      <span className="text-muted-foreground/55">{label}</span>
+      <span className="text-muted-foreground">{label}</span>
       <span
         className={
           accent === 'warm'

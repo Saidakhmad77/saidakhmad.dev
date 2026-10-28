@@ -41,7 +41,7 @@ export function HowIThink() {
           title="How I Think"
           reduceMotion={!!reduceMotion}
         >
-          <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/75 sm:text-xs">
+          <div className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground sm:text-xs">
             three lessons · one cover letter
           </div>
         </SectionHeader>
@@ -81,11 +81,11 @@ export function HowIThink() {
           className="mt-20 md:mt-24"
         >
           <div className="flex items-center gap-3">
-            <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
+            <span className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
               Trajectory
             </span>
             <span aria-hidden="true" className="h-px flex-1 bg-border/40" />
-            <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/55">
+            <span className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
               full detail in the resume
             </span>
           </div>
@@ -139,7 +139,7 @@ function PrincipleCard({
           {principle.ordinal}
         </span>
         <div className="min-w-0 flex-1 pb-2">
-          <span className="block font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/65">
+          <span className="block font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
             principle
           </span>
           <span aria-hidden="true" className={cn('mt-2 block h-px w-full', accentBar)} />
@@ -154,7 +154,7 @@ function PrincipleCard({
 
       {/* Example. */}
       <div className="mt-5 border-t border-border/40 pt-4">
-        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/70">
+        <p className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
           From the field · {principle.exampleTitle}
         </p>
         <p className="mt-2 text-pretty text-[13.5px] leading-relaxed text-muted-foreground">
@@ -180,7 +180,7 @@ function Proof({
   if (kind === 'solar') {
     return (
       <div className="flex flex-col gap-2">
-        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/65">
+        <span className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
           live data
         </span>
         <SolarReadout />
@@ -190,11 +190,11 @@ function Proof({
   if (kind === 'silent') {
     return (
       <div className="flex flex-col gap-3">
-        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/65">
+        <span className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
           try it
         </span>
         <SilentFailureToggle />
-        <p className="font-mono text-[10.5px] leading-relaxed text-muted-foreground/65">
+        <p className="font-mono text-label leading-relaxed text-muted-foreground">
           flips every <code className="text-foreground/70">.num</code> on the page to its silent-failure state.
         </p>
       </div>
@@ -203,7 +203,7 @@ function Proof({
   if (kind === 'joystick') {
     return (
       <div className="flex flex-col gap-2">
-        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground/65">
+        <span className="font-mono text-label uppercase tracking-[0.22em] text-muted-foreground">
           steer me
         </span>
         <JoystickNudge />

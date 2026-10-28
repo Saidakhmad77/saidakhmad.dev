@@ -46,7 +46,7 @@ export function HelloWave() {
       >
         👋
       </motion.span>
-      <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-foreground/70">
+      <span className="font-mono text-label uppercase tracking-[0.22em] text-foreground/70">
         / hi
       </span>
     </motion.div>

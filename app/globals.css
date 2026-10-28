@@ -49,6 +49,13 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Readout-label floor. Every small mono label (eyebrows, telemetry keys,
+     chips, captions) uses `text-label` — 11px in rem so it scales with the
+     user's font-size setting. Nothing readable on the site goes below this.
+     No line-height on purpose: labels inherit leading like the old
+     arbitrary px sizes did, so row heights stay put. */
+  --text-label: 0.6875rem;
 }
 
 :root {
@@ -186,15 +193,54 @@ html.theme-light {
 }
 
 /* Smooth theme switch — fade the cross-cutting tokens so the page doesn't
-   harshly flash on toggle. 250ms is short enough to feel snappy. */
-html, html * {
+   harshly flash on toggle. Scoped to the ~250ms window in which ThemeToggle
+   sets `html.theme-switching`; outside that window every element keeps its
+   own (instant or utility-defined) transitions, so hovers don't lag. */
+html.theme-switching,
+html.theme-switching * {
   transition: background-color 200ms ease, border-color 200ms ease,
               color 200ms ease, fill 200ms ease, stroke 200ms ease;
 }
-/* Respect users who don't want motion. */
+/* Respect users who don't want motion. ThemeToggle also skips the class. */
 @media (prefers-reduced-motion: reduce) {
-  html, html * {
+  html.theme-switching,
+  html.theme-switching * {
     transition: none;
+  }
+}
+
+/* ─── Press feedback ─────────────────────────────────────────────────────────
+   `press` = the one pressed state for every tappable control. Scales down
+   almost instantly on :active (60ms) and eases back on release. Replaces
+   `transition-colors` on the element (it carries the color properties too),
+   so hover color fades and the press scale share one transition list.
+   Large surfaces (full-width rows) dial it back with `[--press-scale:0.99]`.
+   Non-replaced inline elements can't scale — use on inline-block/flex/grid. */
+@utility press {
+  transition-property: color, background-color, border-color, outline-color,
+    text-decoration-color, fill, stroke, opacity, box-shadow, scale;
+  transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+  transition-duration: var(--tw-duration, var(--default-transition-duration));
+  &:active {
+    scale: var(--press-scale, 0.97);
+    transition-duration: 60ms;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &:active {
+      scale: none;
+    }
+  }
+}
+
+/* ─── Glass fallback ─────────────────────────────────────────────────────────
+   The nav bar and the mobile menu sheet are translucent + blurred. Users who
+   ask for reduced transparency get a solid surface instead. Targeted by a
+   stable data attribute so Tailwind class churn can't break it. */
+@media (prefers-reduced-transparency: reduce) {
+  [data-glass] {
+    background-color: var(--background);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 }
 
@@ -292,7 +338,7 @@ body::before {
   background: oklch(var(--background) / 0.85);
   backdrop-filter: blur(8px);
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: var(--text-label);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--accent-fail);
